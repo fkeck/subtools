@@ -27,8 +27,8 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
     subs.time <- strsplit(subs.time, split = " --> ")
     timecode.in <- sapply(subs.time, function(x) x[1])
     timecode.out <- sapply(subs.time, function(x) x[2])
-    res$Timecode.in <- gsub(",", ".", res$Timecode.in)
-    res$Timecode.out <- gsub(",", ".", res$Timecode.out)
+    timecode.in <- gsub(",", ".", timecode.in)
+    timecode.out <- gsub(",", ".", timecode.out)
 
   }
 
@@ -62,13 +62,9 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
     res$Text <- cleanTags(res$Text, format = format)
   }
 
-  if(any(names(meta.data) %in% c("class", "names", "row.names"))){
-    stop("Forbidden metadata tag.")
-  }
+
   if(length(meta.data) > 0){
-    for(i in 1:length(meta.data)){
-      attr(res, names(meta.data)[i]) <- meta.data[[i]]
-    }
+    attr(res, "metadata") <- meta.data
   }
   return(res)
 }
@@ -77,11 +73,8 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
 # strptime(res$Timecode.in[20], format = "%H:%M:%S")
 # pp <- as.difftime(res$Timecode.in, format = "%H:%M:%S", units = "sec")
 
-
-
-
-
 ##### TESTS
+devtools::load_all()
 # INRA
 file <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1//true.blood.s01e07.Burning House of Love.dvdrip.xvid-reward.eng.ass"
 dir.season <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1/"
@@ -93,7 +86,7 @@ file <- "/home/francois/Téléchargements/got3/Game.of.Thrones.S03E09.HDTV.en..s
 dir <- "/home/francois/Téléchargements/got3"
 
 
-a <- read.subtitles(file, format="srt")
+a <- read.subtitles(file, format="ass")
 a <- read.subtitles.season(dir = dir.serie, format="auto")
 a <- read.subtitles.serie(dir = dir.serie)
 a <- read.subtitles.multiseries(dir = dir.mseries)

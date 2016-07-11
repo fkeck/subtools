@@ -28,7 +28,7 @@ read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
   res <- vector(mode = "list", length = n.season)
   for(i in 1:n.season){
     res[[i]] <- read.subtitles.season(file.list[i], quietly = TRUE, format = format, ...)
-    res[[i]] <- lapply(res[[i]], function(x){attr(x, "Serie") <- .extr_filename(dir); return(x)})
+    res[[i]] <- lapply(res[[i]], function(x){attr(x, "metadata")$serie <- .extr_filename(dir); return(x)})
   }
   res <- unlist(res, recursive = FALSE)
 
@@ -55,19 +55,4 @@ read.subtitles.multiseries <- function(dir, quietly = FALSE, format = "auto", ..
   invisible(res)
 }
 
-##### TESTS
-# INRA
-file <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1//true.blood.s01e07.Burning House of Love.dvdrip.xvid-reward.eng.ass"
-dir.season <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1/"
-dir.serie <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs//True Blood/"
-dir.mseries <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/"
 
-# Laptop
-file <- "/home/francois/Téléchargements/got3/Game.of.Thrones.S03E09.HDTV.en..srt"
-dir <- "/home/francois/Téléchargements/got3"
-
-
-a <- read.subtitles(file, format="srt")
-a <- read.subtitles.season(dir = dir.serie, format="auto")
-a <- read.subtitles.serie(dir = dir.serie)
-a <- read.subtitles.multiseries(dir = dir.mseries)
