@@ -1,20 +1,32 @@
 
-read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = list()){
-
-  if(format == "auto"){
-    format <- .extr_extension(file)
-  }
-  format <- match.arg(format, choices = c("srt", "sub", "ssa", "ass", "webvtt", "auto"), several.ok = FALSE)
+read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data = list()){
 
   subs <- readLines(file, warn = FALSE)
-
   i <- 1
   while(subs[i] == ""){i <- i + 1}
   j <- length(subs)
   while(subs[j] == ""){j <- j - 1}
   subs <- subs[seq.int(i, j)]
+      
+  
+  format <- match.arg(format, choices = c("srt", "subrip",
+                                          "sub", "subviewer", "microdvd",
+                                          "ssa", "ass", "substation",
+                                          "vtt", "webvtt", "auto"),
+                      several.ok = FALSE)
+  if(format == "auto"){
+    format <- .extr_extension(file)
+  }
+  if(format == "sub"){                  #This is a very light test
+    if(substr(subs[1] == "{")){
+      format <- "microdvd"
+    } else {
+      format <- "subviewer"
+    }
+  }
 
-  if(format == "srt"){
+
+  if(format %in% c("srt", "subrip")){
     subs.newlines <- c(0, which(subs == ""))
     subs.n.li <- subs.newlines + 1
     subs.time.li <- subs.newlines + 2
@@ -32,7 +44,7 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
 
   }
 
-  if(format %in% c("ssa", "ass")){
+  if(format %in% c("ssa", "ass", "substation")){
     subs.events.h <- subs[grep("^Format:.*Start,.*Text", subs)]
 
     subs.events.li <- grep("^Dialogue:", subs)
@@ -54,7 +66,8 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
     timecode.out <- subs.events[, "End"]
     subs.n <- order(timecode.in)
   }
-
+  
+  
   res <- data.frame(subs.n, timecode.in, timecode.out, subs.txt, stringsAsFactors = FALSE)
   names(res) <- c("ID", "Timecode.in", "Timecode.out", "Text")
 
@@ -74,16 +87,4 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
 # strptime(res$Timecode.in[20], format = "%H:%M:%S")
 # pp <- as.difftime(res$Timecode.in, format = "%H:%M:%S", units = "sec")
 
-##### TESTS
-devtools::load_all()
-# INRA
-file <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1//true.blood.s01e07.Burning House of Love.dvdrip.xvid-reward.eng.ass"
-dir.season <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/Season 1/"
-dir.serie <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs//True Blood/"
-dir.mseries <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/"
 
-
-a <- read.subtitles(file, format = "auto")
-a <- read.subtitles.season(dir = dir.serie, format="auto")
-a <- read.subtitles.serie(dir = dir.serie)
-a <- read.subtitles.multiseries(dir = dir.mseries)

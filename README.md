@@ -1,4 +1,9 @@
 
+SubRip .srt
+SubStation Alpha .ssa .ass
+SubViewer .sub
+MicroDVD .sub
+WebVTT .vtt
 
 # reading functions
 read.subtitles() [srt, ass, sub, webvtt]
