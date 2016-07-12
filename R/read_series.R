@@ -17,6 +17,8 @@ read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
   if(!quietly){
   cat(paste("Read:", n.sub, "episodes"))
   }
+  
+  class(res) <- "MultiSubtitles"
   invisible(res)
 }
 
@@ -35,6 +37,8 @@ read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
   if(!quietly){
     cat(paste("Read:", n.season, "seasons,", length(res), "episodes"))
   }
+  
+  class(res) <- "MultiSubtitles"
   invisible(res)
 }
 
@@ -52,6 +56,8 @@ read.subtitles.multiseries <- function(dir, quietly = FALSE, format = "auto", ..
   if(!quietly){
     cat(paste("Read:", n.series, "series,", length(res), "episodes"))
   }
+  
+  class(res) <- "MultiSubtitles"
   invisible(res)
 }
 
