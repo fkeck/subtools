@@ -62,10 +62,11 @@ read.subtitles <- function(file, format = "srt", clean.tags = TRUE, meta.data = 
     res$Text <- cleanTags(res$Text, format = format)
   }
 
-
   if(length(meta.data) > 0){
     attr(res, "metadata") <- meta.data
   }
+
+  class(res) <- c("Subtitles", "data.frame")
   return(res)
 }
 
@@ -81,12 +82,8 @@ dir.season <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/True Blood/
 dir.serie <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs//True Blood/"
 dir.mseries <- "/home/francois/Google Drive/Sync work/blog/Rsubs/subs/"
 
-# Laptop
-file <- "/home/francois/Téléchargements/got3/Game.of.Thrones.S03E09.HDTV.en..srt"
-dir <- "/home/francois/Téléchargements/got3"
 
-
-a <- read.subtitles(file, format="ass")
+a <- read.subtitles(file, format = "auto")
 a <- read.subtitles.season(dir = dir.serie, format="auto")
 a <- read.subtitles.serie(dir = dir.serie)
 a <- read.subtitles.multiseries(dir = dir.mseries)
