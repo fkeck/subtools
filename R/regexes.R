@@ -16,18 +16,18 @@
 .extr_snum <- function(x){
   x <- .extr_filename(x)
   x <- toupper(x)
-  
+
   res <- vector(mode = "character", length = length(x))
-  
+
   mode0 <- grepl("[ -_\\.]S[0-9]+", x)  # S01
   mode1 <- grepl("SEASON.{1}[0-9]+", x)  # SEASON.2
   mode2 <- grepl("S[0-9]+E[0-9]+", x)    # S03E05
-  
+
   mode0.r <- unlist(regmatches(x, gregexpr("(?<=[ -_\\.]S)[0-9]+", x, perl = TRUE)))
   mode1.r <- unlist(regmatches(x, gregexpr("(?<=SEASON.{1})[0-9]+", x, perl = TRUE)))
   mode2.r <- unlist(regmatches(x, regexpr("S[0-9]+E[0-9]+", x)))
   mode2.r <- unlist(regmatches(mode2.r, gregexpr("(?<=S).*(?=E)", mode2.r, perl = TRUE)))
-  
+
   res[mode0] <- mode0.r
   res[mode1] <- mode1.r
   res[mode2] <- mode2.r
@@ -39,18 +39,18 @@
 .extr_enum <- function(x){
   x <- .extr_filename(x)
   x <- toupper(x)
-  
+
   res <- vector(mode = "character", length = length(x))
-  
+
   mode0 <- grepl("[ -_\\.]E[0-9]+", x)  # E01
   mode1 <- grepl("EPISODE.{1}[0-9]+", x)  # EPISODE.2
   mode2 <- grepl("S[0-9]+E[0-9]+", x)    # S03E05
-  
+
   mode0.r <- unlist(regmatches(x, gregexpr("(?<=[ -_\\.]E)[0-9]+", x, perl = TRUE)))
   mode1.r <- unlist(regmatches(x, gregexpr("(?<=EPISODE.{1})[0-9]+", x, perl = TRUE)))
   mode2.r <- unlist(regmatches(x, regexpr("S[0-9]+E[0-9]+", x)))
   mode2.r <- unlist(regmatches(mode2.r, gregexpr("(?<=E).*", mode2.r, perl = TRUE)))
-  
+
   res[mode0] <- mode0.r
   res[mode1] <- mode1.r
   res[mode2] <- mode2.r
@@ -59,3 +59,43 @@
 }
 
 
+# Format time
+.format_subtime <- function(x){
+  x <- gsub(",", ".", x)
+  x <- strsplit(x, split = ":")
+
+  l <- lapply(x, length)
+  x <- mapply(function(x, l) c(rep("00", -l + 3), x), x = x, l = l, SIMPLIFY = FALSE)
+
+  x.h <- sapply(x, function(x) as.numeric(x[1]))
+  x.m <- sapply(x, function(x) as.numeric(x[2]))
+  x.s <- sapply(x, function(x) as.numeric(x[3]))
+
+  x.h <- sprintf("%02d", x.h)
+  x.m <- sprintf("%02d", x.m)
+  x.s <- sprintf("%06.3f", x.s)
+
+  res <- paste(x.h, x.m, x.s, sep = ":")
+  return(res)
+}
+
+
+# Add two times HH:MM:SS
+.add_timecodes <- function(x, y){
+
+  x <- as.numeric(strsplit(x, split = ":")[[1]])
+  y <- as.numeric(strsplit(y, split = ":")[[1]])
+
+  ss <- (x[3] + y[3]) %% 60
+  ssm <- (x[3] + y[3]) %/% 60
+
+  mm <- (x[2] + y[2] + ssm) %% 60
+  mmh <- (x[2] + y[2] + ssm) %/% 60
+
+  hh <- x[1] + y[1] + mmh
+  res <-   paste(sprintf("%02d", hh),
+                 sprintf("%02d", mm),
+                 sprintf("%06.3f", ss),
+                 sep = ":")
+  return(res)
+}
