@@ -7,8 +7,8 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
   j <- length(subs)
   while(subs[j] == ""){j <- j - 1}
   subs <- subs[seq.int(i, j)]
-      
-  
+
+
   format <- match.arg(format, choices = c("srt", "subrip",
                                           "sub", "subviewer", "microdvd",
                                           "ssa", "ass", "substation",
@@ -39,8 +39,6 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
     subs.time <- strsplit(subs.time, split = " --> ")
     timecode.in <- sapply(subs.time, function(x) x[1])
     timecode.out <- sapply(subs.time, function(x) x[2])
-    timecode.in <- gsub(",", ".", timecode.in)
-    timecode.out <- gsub(",", ".", timecode.out)
 
   }
 
@@ -66,10 +64,12 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
     timecode.out <- subs.events[, "End"]
     subs.n <- order(timecode.in)
   }
-  
-  
+
+
   res <- data.frame(subs.n, timecode.in, timecode.out, subs.txt, stringsAsFactors = FALSE)
   names(res) <- c("ID", "Timecode.in", "Timecode.out", "Text")
+  res[ ,"Timecode.in"] <- .format_subtime(res[ ,"Timecode.in"])
+  res[ ,"Timecode.out"] <- .format_subtime(res[ ,"Timecode.out"])
 
   if(clean.tags){
     res$Text <- cleanTags(res$Text, format = format)
@@ -82,9 +82,5 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
   class(res) <- c("Subtitles", "data.frame")
   return(res)
 }
-
-
-# strptime(res$Timecode.in[20], format = "%H:%M:%S")
-# pp <- as.difftime(res$Timecode.in, format = "%H:%M:%S", units = "sec")
 
 
