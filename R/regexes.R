@@ -80,7 +80,7 @@
 }
 
 
-# Add two times HH:MM:SS
+# Add two timecodes HH:MM:SS
 .add_timecodes <- function(x, y){
 
   x <- as.numeric(strsplit(x, split = ":")[[1]])
@@ -93,6 +93,40 @@
   mmh <- (x[2] + y[2] + ssm) %/% 60
 
   hh <- x[1] + y[1] + mmh
+  
+  res <-   paste(sprintf("%02d", hh),
+                 sprintf("%02d", mm),
+                 sprintf("%06.3f", ss),
+                 sep = ":")
+  return(res)
+}
+
+# Difference between two timecodes
+.diff_timecodes <- function(x, y){
+  
+  xm <- max(c(x, y))
+  ym <- min(c(x, y))
+  x <- as.numeric(strsplit(xm, split = ":")[[1]])
+  y <- as.numeric(strsplit(ym, split = ":")[[1]])
+  
+  ss <- (x[3] - y[3])
+  if(ss < 0){
+    ss <- 60 + ss
+    ssm <- 1
+  } else {
+    ssm <- 0
+  }
+    
+  mm <- x[2] - y[2] - ssm
+  if(mm < 0){
+    mm <- 60 + mm
+    mmh <- 1
+  } else {
+    mmh <- 0
+  }
+  
+  hh <- x[1] - y[1] - mmh
+  
   res <-   paste(sprintf("%02d", hh),
                  sprintf("%02d", mm),
                  sprintf("%06.3f", ss),
