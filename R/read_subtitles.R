@@ -1,4 +1,23 @@
 
+#' Read subtitles
+#'
+#' Reads subtitles from a file.
+#'
+#' @param file the name of the file which the subtitles are to be read from.
+#' If it does not contain an absolute path, the file name is relative to the current working directory.
+#' @param format a character string specifying the format of the subtitles.
+#' Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} and \code{"webvtt"}.
+#' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
+#'
+#' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
+#' @param meta.data a list of metadata to be attached to the subtitles.
+#'
+#' @return
+#' A \code{data.frame} with 4 columns (class \code{Subtitles}).
+#'
+#' @export
+#'
+#' @examples
 read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data = list()){
 
   subs <- readLines(file, warn = FALSE)
@@ -70,6 +89,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
   names(res) <- c("ID", "Timecode.in", "Timecode.out", "Text")
   res[ ,"Timecode.in"] <- .format_subtime(res[ ,"Timecode.in"])
   res[ ,"Timecode.out"] <- .format_subtime(res[ ,"Timecode.out"])
+  class(res) <- c("Subtitles", "data.frame")
 
   if(clean.tags){
     res$Text <- cleanTags(res$Text, format = format)
@@ -79,8 +99,8 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
     attr(res, "metadata") <- meta.data
   }
 
-  class(res) <- c("Subtitles", "data.frame")
   return(res)
 }
+
 
 
