@@ -133,3 +133,22 @@
                  sep = ":")
   return(res)
 }
+
+.div_timecode <- function(x, k){
+  x <- as.numeric(strsplit(x, split = ":")[[1]])
+  
+  hh <- x[1] %/% k
+  hh.m <- (x[1] / k - hh) * 60
+  
+  mm <- (x[2] %/% k) + hh.m
+  mm.s <- ((x[2] / k) - (x[2] %/% k)) * 60
+  
+  ss <- (x[3] / k) + mm.s
+  
+  res <-   paste(sprintf("%02d", hh),
+                 sprintf("%02d", mm),
+                 sprintf("%06.3f", ss),
+                 sep = ":")
+  return(res)
+}
+
