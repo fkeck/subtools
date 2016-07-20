@@ -59,7 +59,7 @@
 }
 
 
-# Format time
+# Format time as HH:MM:SS.mS
 .format_subtime <- function(x){
   x <- gsub(",", ".", x)
   x <- strsplit(x, split = ":")
@@ -93,7 +93,7 @@
   mmh <- (x[2] + y[2] + ssm) %/% 60
 
   hh <- x[1] + y[1] + mmh
-  
+
   res <-   paste(sprintf("%02d", hh),
                  sprintf("%02d", mm),
                  sprintf("%06.3f", ss),
@@ -103,12 +103,12 @@
 
 # Difference between two timecodes
 .diff_timecodes <- function(x, y){
-  
+
   xm <- max(c(x, y))
   ym <- min(c(x, y))
   x <- as.numeric(strsplit(xm, split = ":")[[1]])
   y <- as.numeric(strsplit(ym, split = ":")[[1]])
-  
+
   ss <- (x[3] - y[3])
   if(ss < 0){
     ss <- 60 + ss
@@ -116,7 +116,7 @@
   } else {
     ssm <- 0
   }
-    
+
   mm <- x[2] - y[2] - ssm
   if(mm < 0){
     mm <- 60 + mm
@@ -124,9 +124,9 @@
   } else {
     mmh <- 0
   }
-  
+
   hh <- x[1] - y[1] - mmh
-  
+
   res <-   paste(sprintf("%02d", hh),
                  sprintf("%02d", mm),
                  sprintf("%06.3f", ss),
@@ -134,17 +134,18 @@
   return(res)
 }
 
+# Divides timecode by an integer (k)
 .div_timecode <- function(x, k){
   x <- as.numeric(strsplit(x, split = ":")[[1]])
-  
+
   hh <- x[1] %/% k
   hh.m <- (x[1] / k - hh) * 60
-  
+
   mm <- (x[2] %/% k) + hh.m
   mm.s <- ((x[2] / k) - (x[2] %/% k)) * 60
-  
+
   ss <- (x[3] / k) + mm.s
-  
+
   res <-   paste(sprintf("%02d", hh),
                  sprintf("%02d", mm),
                  sprintf("%06.3f", ss),
