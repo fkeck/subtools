@@ -10,7 +10,7 @@
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #'
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
-#' @param meta.data a list of metadata to be attached to the subtitles.
+#' @param metadata a list of metadata to be attached to the subtitles.
 #'
 #' @return
 #' A \code{data.frame} with 4 columns (class \code{Subtitles}).
@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data = list()){
+read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list()){
 
   subs <- readLines(file, warn = FALSE)
   i <- 1
@@ -84,23 +84,30 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, meta.data =
     subs.n <- order(timecode.in)
   }
 
-
-  res <- data.frame(subs.n, timecode.in, timecode.out, subs.txt, stringsAsFactors = FALSE)
-  names(res) <- c("ID", "Timecode.in", "Timecode.out", "Text")
-  res[ ,"Timecode.in"] <- .format_subtime(res[ ,"Timecode.in"])
-  res[ ,"Timecode.out"] <- .format_subtime(res[ ,"Timecode.out"])
-  class(res) <- c("Subtitles", "data.frame")
+  res <- Subtitles(text = subs.txt, timecode.in = timecode.in, timecode.out = timecode.out, id = subs.n, metadata = metadata)
 
   if(clean.tags){
-    res$Text <- cleanTags(res$Text, format = format)
-  }
-
-  if(length(meta.data) > 0){
-    attr(res, "metadata") <- meta.data
+    res$subtitles$Text <- cleanTags(res$subtitles$Text, format = format)
   }
 
   return(res)
 }
 
 
+Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
 
+  subtitles <- data.frame(id, timecode.in, timecode.out, text, stringsAsFactors = FALSE)
+  names(subtitles) <- c("ID", "Timecode.in", "Timecode.out", "Text")
+  subtitles[ ,"Timecode.in"] <- .format_subtime(subtitles[ ,"Timecode.in"])
+  subtitles[ ,"Timecode.out"] <- .format_subtime(subtitles[ ,"Timecode.out"])
+
+  res <- list(subtitles = subtitles, metadata = metadata)
+  class(res) <- "Subtitles"
+  return(res)
+}
+
+print.Subtitles <- function(x, printlen = 10L){
+  cat("Subtitles object:\n")
+  print(x$subtitles[1:printlen, ])
+  cat("-----", dim(x$subtitles)[1] - printlen, "lines omitted.")
+}
