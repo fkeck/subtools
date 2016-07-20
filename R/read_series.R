@@ -5,19 +5,19 @@ read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
   file.list <- file.list[grep(".srt$|.sub$|.ssa$|.ass$|.vtt$", file.list)]
   n.sub <- length(file.list)
 
-  meta.data <- data.frame(season = rep(.extr_filename(dir), n.sub),
+  metadata <- data.frame(season = rep(.extr_filename(dir), n.sub),
                           season_num = .extr_snum(file.list),
                           episode_num = .extr_enum(file.list),
                           stringsAsFactors = FALSE)
   res <- vector(mode = "list", length = n.sub)
   for(i in 1:n.sub){
-    res[[i]] <- read.subtitles(file.list[i], meta.data = meta.data[i, ], format = format, ...)
+    res[[i]] <- read.subtitles(file.list[i], metadata = metadata[i, ], format = format, ...)
   }
 
   if(!quietly){
   cat(paste("Read:", n.sub, "episodes"))
   }
-  
+
   class(res) <- "MultiSubtitles"
   invisible(res)
 }
@@ -30,14 +30,14 @@ read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
   res <- vector(mode = "list", length = n.season)
   for(i in 1:n.season){
     res[[i]] <- read.subtitles.season(file.list[i], quietly = TRUE, format = format, ...)
-    res[[i]] <- lapply(res[[i]], function(x){attr(x, "metadata")$serie <- .extr_filename(dir); return(x)})
+    res[[i]] <- lapply(res[[i]], function(x){x$metadata$serie <- .extr_filename(dir); return(x)})
   }
   res <- unlist(res, recursive = FALSE)
 
   if(!quietly){
     cat(paste("Read:", n.season, "seasons,", length(res), "episodes"))
   }
-  
+
   class(res) <- "MultiSubtitles"
   invisible(res)
 }
@@ -56,7 +56,7 @@ read.subtitles.multiseries <- function(dir, quietly = FALSE, format = "auto", ..
   if(!quietly){
     cat(paste("Read:", n.series, "series,", length(res), "episodes"))
   }
-  
+
   class(res) <- "MultiSubtitles"
   invisible(res)
 }
