@@ -6,22 +6,24 @@ MicroDVD .sub
 WebVTT .vtt
 
 # reading functions
-read.subtitles() [srt, ass, sub, webvtt]
-read.season(dir = "", ...)
-read.serie(dir = "", ...)
-read.multiseries(dir = "", ...)
+OK read.subtitles()
+OK read.season(dir = "", ...)
+OK read.serie(dir = "", ...)
+OK read.multiseries(dir = "", ...)
 
 # writing functions
 write.subtitles
 
 # Coerce functions
 as.tm
-as.txt
+OK rawText
 
 # Utilities
-c(..., add.time = TRUE)
-cleanTags
+OK combineSubs
+OK cleanTags
 cleanCaptions
 cleanPatterns(x, patterns = "")
 sentencify
 getMetadata/setMetadata
+
+print.Subtitles
