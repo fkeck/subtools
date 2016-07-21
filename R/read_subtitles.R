@@ -106,8 +106,13 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
   return(res)
 }
 
-print.Subtitles <- function(x, printlen = 10L){
+print.Subtitles <- function(x, printlen = 1000L){
   cat("Subtitles object:\n")
-  print(x$subtitles[1:printlen, ])
-  cat("-----", dim(x$subtitles)[1] - printlen, "lines omitted.")
+  xlen <- dim(x$subtitles)[1]
+  if(printlen > xlen){
+    print(x$subtitles)
+  } else {
+    print(x$subtitles[seq_len(printlen), ])
+    cat("-----", xlen - printlen, "lines omitted.")
+  }
 }
