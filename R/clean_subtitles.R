@@ -1,5 +1,9 @@
 
-cleanTags <- function(x, format = "srt"){
+cleanTags <- function(x, format = "srt", clean.empty = TRUE){
+  
+  if(!is(x, "Subtitles")){
+    stop("x must be a 'Subtitles' object.")
+  }
 
   format <- match.arg(format, choices = c("srt", "subrip",
                                           "sub", "subviewer", "microdvd",
@@ -7,17 +11,50 @@ cleanTags <- function(x, format = "srt"){
                                           "vtt", "webvtt", "all"), several.ok = FALSE)
 
   if(format %in% c("srt", "subrip", "all")){
-    x <- gsub("<.+?>", "", x)
+    x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
   }
 
   if(format %in% c("ass", "ssa", "substation", "all")){
-    x <- gsub("\\{\\\\.+?\\}", "", x)
+    x$subtitles$Text <- gsub("\\{\\\\.+?\\}", "", x$subtitles$Text)
   }
 
+  if(clean.empty){
+    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+  }
+  
   return(x)
 }
 
 
+cleanCaptions <- function(x, clean.empty = TRUE){
+  
+  if(!is(x, "Subtitles")){
+    stop("x must be a 'Subtitles' object.")
+  }
+  x$subtitles$Text <- gsub("\\( .+? \\)", "", x$subtitles$Text)
+ 
+  if(clean.empty){
+    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+  }
+  return(x)
+}
+
+
+
+cleanPatterns <- function(x, pattern, clean.empty = TRUE){
+  
+  if(!is(x, "Subtitles")){
+    stop("x must be a 'Subtitles' object.")
+  }
+  x$subtitles$Text <- gsub(pattern, "", x$subtitles$Text)
+  
+  if(clean.empty){
+    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+  }
+  return(x)
+}
+
+  
 sentencify <- function(x){
   ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$subtitles$Text)
   f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
