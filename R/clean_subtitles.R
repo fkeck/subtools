@@ -19,15 +19,15 @@ cleanTags <- function(x, format = "srt"){
 
 
 sentencify <- function(x){
-  ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$Text)
-  f <- as.factor(findInterval(1:length(x$Text)-1, ended))
-  new.txt <- split(x$Text, f)
+  ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$subtitles$Text)
+  f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
+  new.txt <- split(x$subtitles$Text, f)
   new.txt <- sapply(new.txt, paste, collapse = " ", USE.NAMES = FALSE)
 
-  new.tcin <- split(x$Timecode.in, f)
+  new.tcin <- split(x$subtitles$Timecode.in, f)
   new.tcin <- sapply(new.tcin, min, USE.NAMES = FALSE)
 
-  new.tcout <- split(x$Timecode.out, f)
+  new.tcout <- split(x$subtitles$Timecode.out, f)
   new.tcout <- sapply(new.tcout, max, USE.NAMES = FALSE)
 
   new.txt <- strsplit(new.txt, split = "(?<=[\\.\\?!]|--) (?=[-A-Z])", perl = TRUE)
@@ -50,17 +50,24 @@ sentencify <- function(x){
           r2[i] <- .add_timecodes(r1[i], d)
         }
       }
+      r1 <- unlist(lapply(r1, .add_timecodes, y = "00:00:00.010"))
+      r2 <- unlist(lapply(r2, .diff_timecodes, y = "00:00:00.010"))
     }
     return(list(r1, r2))
   }
-  mapply(function(tcin, tcout, n) fun(tcin, tcout, n),
-         tcin = new.tcin, tcout = new.tcout, n = new.txt.length,
-         SIMPLIFY = FALSE)
 
-
+  tc <- mapply(function(tcin, tcout, n) fun(tcin, tcout, n),
+               tcin = new.tcin, tcout = new.tcout, n = new.txt.length,
+               SIMPLIFY = FALSE)
+  new.tcin <- unlist(lapply(tc, function(x) x[[1]]))
+  new.tcout <- unlist(lapply(tc, function(x) x[[2]]))
   new.txt <- unlist(new.txt)
-  }
+  new.id <- seq_len(length(new.txt))
+  res <- Subtitles(text = new.txt, timecode.in = new.tcin,
+                   timecode.out = new.tcout, id = new.id,
+                   metadata = x$metadata)
+  return(res)
 }
 
 
-x <- a [[7]]
+#x<-a[[5]]
