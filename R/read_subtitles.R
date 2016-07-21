@@ -105,12 +105,15 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 #' The format must be "HH:MM:SS.mS".
 #' @param id a vector of numeric ID for subtitles.
 #' If not provided it is generated automatically from \code{timecode.in} order.
-#' @param metadata
+#' @param metadata a list of metadata to be attached to the subtitles.
 #'
-#' @return
+#' @return a \code{Subtitles} object i.e. a list of 2 elements:
+#' \describe{
+#'   \item{\code{subtitles}}{a \code{data.frame} with 4 columns containing IDs, timecodes and text of the subtitles.}
+#'   \item{\code{metadata}}{a list of metadata attached to the subtitles.}
+#' }
 #' @export
 #'
-#' @examples
 Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
   if(missing(id)){
     id <- order(timecode.in)
@@ -125,6 +128,14 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
   return(res)
 }
 
+
+#' Print \code{Subtitles} objects
+#'
+#' @param x a \code{Subtitles} object.
+#' @param printlen the maximum number of subtitles to print.
+#'
+#' @export
+#'
 print.Subtitles <- function(x, printlen = 1000L){
   cat("Subtitles object:\n")
   xlen <- dim(x$subtitles)[1]
