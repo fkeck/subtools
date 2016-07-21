@@ -13,11 +13,10 @@
 #' @param metadata a list of metadata to be attached to the subtitles.
 #'
 #' @return
-#' A \code{data.frame} with 4 columns (class \code{Subtitles}).
+#' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
 #'
 #' @export
 #'
-#' @examples
 read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list()){
 
   subs <- readLines(file, warn = FALSE)
@@ -87,15 +86,35 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   res <- Subtitles(text = subs.txt, timecode.in = timecode.in, timecode.out = timecode.out, id = subs.n, metadata = metadata)
 
   if(clean.tags){
-    res$subtitles$Text <- cleanTags(res$subtitles$Text, format = format)
+    res <- cleanTags(res, format = format)
   }
 
   return(res)
 }
 
 
-Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
 
+#' Create a \code{Subtitles} object
+#'
+#' This function creates objects of class \code{Subtitles}.
+#'
+#' @param text a character vector of subtitles text content.
+#' @param timecode.in a character vector giving the time that the subtitles appear on the screen.
+#' The format must be "HH:MM:SS.mS".
+#' @param timecode.out a character vector giving the time that the subtitles disappear.
+#' The format must be "HH:MM:SS.mS".
+#' @param id a vector of numeric ID for subtitles.
+#' If not provided it is generated automatically from \code{timecode.in} order.
+#' @param metadata
+#'
+#' @return
+#' @export
+#'
+#' @examples
+Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
+  if(missing(id)){
+    id <- order(timecode.in)
+  }
   subtitles <- data.frame(id, timecode.in, timecode.out, text, stringsAsFactors = FALSE)
   names(subtitles) <- c("ID", "Timecode.in", "Timecode.out", "Text")
   subtitles[ ,"Timecode.in"] <- .format_subtime(subtitles[ ,"Timecode.in"])
