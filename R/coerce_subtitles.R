@@ -1,4 +1,12 @@
 
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
 rawText <- function(x){
   if(inherits(x, "Subtitles")){
     res <- x$subtitles$Text

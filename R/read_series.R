@@ -1,4 +1,15 @@
 
+#' Title
+#'
+#' @param dir
+#' @param quietly
+#' @param format
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
 
   file.list <- list.files(dir, full.names = TRUE)

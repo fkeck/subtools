@@ -1,6 +1,16 @@
 
+#' Title
+#'
+#' @param x
+#' @param format
+#' @param clean.empty
+#'
+#' @return
+#' @export
+#'
+#' @examples
 cleanTags <- function(x, format = "srt", clean.empty = TRUE){
-  
+
   if(!is(x, "Subtitles")){
     stop("x must be a 'Subtitles' object.")
   }
@@ -21,18 +31,18 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
   if(clean.empty){
     x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
   }
-  
+
   return(x)
 }
 
 
 cleanCaptions <- function(x, clean.empty = TRUE){
-  
+
   if(!is(x, "Subtitles")){
     stop("x must be a 'Subtitles' object.")
   }
   x$subtitles$Text <- gsub("\\( .+? \\)", "", x$subtitles$Text)
- 
+
   if(clean.empty){
     x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
   }
@@ -42,19 +52,27 @@ cleanCaptions <- function(x, clean.empty = TRUE){
 
 
 cleanPatterns <- function(x, pattern, clean.empty = TRUE){
-  
+
   if(!is(x, "Subtitles")){
     stop("x must be a 'Subtitles' object.")
   }
   x$subtitles$Text <- gsub(pattern, "", x$subtitles$Text)
-  
+
   if(clean.empty){
     x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
   }
   return(x)
 }
 
-  
+
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
 sentencify <- function(x){
   ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$subtitles$Text)
   f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
