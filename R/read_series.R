@@ -22,7 +22,7 @@ read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
                           stringsAsFactors = FALSE)
   res <- vector(mode = "list", length = n.sub)
   for(i in 1:n.sub){
-    res[[i]] <- read.subtitles(file.list[i], metadata = metadata[i, ], format = format, ...)
+    res[[i]] <- read.subtitles(file.list[i], metadata = as.list(metadata[i, ]), format = format, ...)
   }
 
   if(!quietly){
