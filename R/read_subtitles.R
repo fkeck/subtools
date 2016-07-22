@@ -10,7 +10,7 @@
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #'
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
-#' @param metadata a list of metadata to be attached to the subtitles.
+#' @param metadata a named list of metadata to be attached to the subtitles.
 #'
 #' @return
 #' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
@@ -83,7 +83,9 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     subs.n <- order(timecode.in)
   }
 
-  res <- Subtitles(text = subs.txt, timecode.in = timecode.in, timecode.out = timecode.out, id = subs.n, metadata = metadata)
+  res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
+                   timecode.out = timecode.out, id = subs.n,
+                   metadata = metadata)
 
   if(clean.tags){
     res <- cleanTags(res, format = format)
@@ -105,12 +107,12 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 #' The format must be "HH:MM:SS.mS".
 #' @param id a vector of numeric ID for subtitles.
 #' If not provided it is generated automatically from \code{timecode.in} order.
-#' @param metadata a list of metadata to be attached to the subtitles.
+#' @param metadata a named list of metadata to be attached to the subtitles.
 #'
 #' @return a \code{Subtitles} object i.e. a list of 2 elements:
 #' \describe{
 #'   \item{\code{subtitles}}{a \code{data.frame} with 4 columns containing IDs, timecodes and text of the subtitles.}
-#'   \item{\code{metadata}}{a list of metadata attached to the subtitles.}
+#'   \item{\code{metadata}}{a named list of metadata attached to the subtitles.}
 #' }
 #' @export
 #'
