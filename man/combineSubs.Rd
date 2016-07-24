@@ -7,11 +7,12 @@
 combineSubs(..., collapse = TRUE, sequential = TRUE)
 }
 \arguments{
-\item{...}{xxx}
+\item{...}{\code{Subtitles} or \code{MultiSubtitles} objects to be concatenated.}
 
-\item{collapse}{xxx}
+\item{collapse}{XXX}
 
-\item{sequential}{xxx}
+\item{sequential}{logical. If \code{TRUE} (default) timecodes
+are recalculated to follow concatenation.}
 }
 \value{
 xxx

@@ -2,17 +2,19 @@
 % Please edit documentation in R/coerce_subtitles.R
 \name{rawText}
 \alias{rawText}
-\title{Title}
+\title{Get subtitles text}
 \usage{
-rawText(x)
+rawText(x, collapse = " ")
 }
 \arguments{
-\item{x}{xxx}
+\item{x}{an object of class \code{Subtitles} or \code{MultiSubtitles}.}
+
+\item{collapse}{a character string to separate the subtitles lines.}
 }
 \value{
-xxx
+A character string.
 }
 \description{
-Title
+This function returns the raw text content of subtitles objects as a character string.
 }
 

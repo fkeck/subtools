@@ -2,17 +2,18 @@
 % Please edit documentation in R/clean_subtitles.R
 \name{sentencify}
 \alias{sentencify}
-\title{Title}
+\title{Reorganize subtitles as sentences}
 \usage{
 sentencify(x)
 }
 \arguments{
-\item{x}{xxx}
+\item{x}{a \code{Subtitles} object.}
 }
 \value{
-xxx
+A \code{Subtitles} object.
 }
 \description{
-Title
+This function reorganizes a \code{Subtitles} object
+in order that each subtitle line is a complete sentence.
 }
 
