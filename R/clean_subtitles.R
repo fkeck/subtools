@@ -7,8 +7,8 @@
 #'
 #' @param x a \code{Subtitles} object.
 #' @param format the original format of the \code{Subtitles} object.
-#' @pattern a character string containing a regular expression to be matched and clean.
-#' @param clean.empty logical.Should empty remaining lines ("") deleted after cleaning.
+#' @param a character string containing a regular expression to be matched and clean.
+#' @param clean.empty logical. Should empty remaining lines ("") deleted after cleaning.
 #'
 #' @return A \code{Subtitles} object.
 #' @export
