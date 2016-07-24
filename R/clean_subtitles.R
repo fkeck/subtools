@@ -1,14 +1,13 @@
 
 #' Title
 #'
-#' @param x
-#' @param format
-#' @param clean.empty
+#' @param x xxx
+#' @param format xxx
+#' @param clean.empty xxx
 #'
-#' @return
+#' @return xxx
 #' @export
 #'
-#' @examples
 cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 
   if(!is(x, "Subtitles")){
@@ -67,12 +66,11 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 
 #' Title
 #'
-#' @param x
+#' @param x xxx
 #'
-#' @return
+#' @return xxx
 #' @export
 #'
-#' @examples
 sentencify <- function(x){
   ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$subtitles$Text)
   f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
@@ -125,4 +123,3 @@ sentencify <- function(x){
 }
 
 
-#x<-a[[5]]

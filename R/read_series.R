@@ -1,15 +1,36 @@
 
-#' Title
+#' Read series subtitles
 #'
-#' @param dir
-#' @param quietly
-#' @param format
-#' @param ...
+#' These functions read one or several subtitles files organized in directories.
+#' They are especially designed to import subtitles of series with multiple episodes.
 #'
-#' @return
+#' @param dir the name of the directory which the subtitles are to be read from (see Details).
+#' @param quietly a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.
+#' @param format a character string specifying the format of the subtitles
+#' (default is "\code{auto}", see \code{\link{read.subtitles}} for details).
+#' @param ... further arguments to be passed to \code{\link{read.subtitles}}.
+#'
+#' @details These functions read subtitles files at different levels from a 3-levels directory (see the tree below).
+#' The function \code{read.subtitles.multiseries} reads everything recursively from "Series_Collection".
+#' The function \code{read.subtitles.serie} reads everything recursively from a serie folder (e.g. "Serie_A").
+#' The function \code{read.subtitles.season} reads everything from a season folder (e.g. "Season_1").
+#' To read a specific episode file (e.g. "Episode_1.srt), use \code{\link{read.subtitles}}.
+#'\preformatted{
+#'Series_Collection
+#'|-- Serie_A
+#'|   |-- Season_1
+#'|   |   |-- Episode_1.srt
+#'|-- Serie_B
+#'|   |-- Season_1
+#'|   |   |-- Episode_1.srt
+#'|   |-- Season_2
+#'|   |   |-- Episode_1.srt
+#'|   |   |-- Episode_2.srt}
+#'
+#' @return An object of class \code{MultiSubtitles};
+#' i.e. a list of \code{\link{Subtitles}} objects.
 #' @export
-#'
-#' @examples
+#' @rdname read_series
 read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
 
   file.list <- list.files(dir, full.names = TRUE)
@@ -34,6 +55,7 @@ read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
 }
 
 
+#' @rdname read_series
 read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
   file.list <- dir(dir, full.names = TRUE)
   n.season <- length(file.list)
@@ -54,6 +76,7 @@ read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
 }
 
 
+#' @rdname read_series
 read.subtitles.multiseries <- function(dir, quietly = FALSE, format = "auto", ...){
   file.list <- dir(dir, full.names = TRUE)
   n.series <- length(file.list)

@@ -1,13 +1,12 @@
 #' Title
 #'
-#' @param ...
-#' @param collapse
-#' @param sequential
+#' @param ... xxx
+#' @param collapse xxx
+#' @param sequential xxx
 #'
-#' @return
+#' @return xxx
 #' @export
 #'
-#' @examples
 combineSubs <- function(..., collapse = TRUE, sequential = TRUE){
   input <- list(...)
   sl <- list()

@@ -8,7 +8,6 @@
 #' @param format a character string specifying the format of the subtitles.
 #' Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
-#'
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
 #'
