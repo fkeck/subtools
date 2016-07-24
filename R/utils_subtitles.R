@@ -1,8 +1,9 @@
 #' Title
 #'
-#' @param ... xxx
-#' @param collapse xxx
-#' @param sequential xxx
+#' @param ... \code{Subtitles} or \code{MultiSubtitles} objects to be concatenated.
+#' @param collapse XXX
+#' @param sequential logical. If \code{TRUE} (default) timecodes
+#' are recalculated to follow concatenation.
 #'
 #' @return xxx
 #' @export

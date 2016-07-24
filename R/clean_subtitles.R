@@ -1,13 +1,18 @@
 
-#' Title
+#' Clean subtitles
 #'
-#' @param x xxx
-#' @param format xxx
-#' @param clean.empty xxx
+#' Functions to clean subtitles. \code{cleanTags} cleans formatting tags.
+#' \code{cleanCaptions} cleans close captions.
+#' \code{cleanPatterns} provide a more general and flexible cleaning function base on regular expressions.
 #'
-#' @return xxx
+#' @param x a \code{Subtitles} object.
+#' @param format the original format of the \code{Subtitles} object.
+#' @pattern a character string containing a regular expression to be matched and clean.
+#' @param clean.empty logical.Should empty remaining lines ("") deleted after cleaning.
+#'
+#' @return A \code{Subtitles} object.
 #' @export
-#'
+#' @rdname clean
 cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 
   if(!is(x, "Subtitles")){
@@ -35,6 +40,7 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 }
 
 
+#' @rdname clean
 cleanCaptions <- function(x, clean.empty = TRUE){
 
   if(!is(x, "Subtitles")){
@@ -49,7 +55,7 @@ cleanCaptions <- function(x, clean.empty = TRUE){
 }
 
 
-
+#' @rdname clean
 cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 
   if(!is(x, "Subtitles")){
@@ -64,11 +70,14 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 }
 
 
-#' Title
+#' Reorganize subtitles as sentences
 #'
-#' @param x xxx
+#' This function reorganizes a \code{Subtitles} object
+#' in order that each subtitle line is a complete sentence.
 #'
-#' @return xxx
+#' @param x a \code{Subtitles} object.
+#'
+#' @return A \code{Subtitles} object.
 #' @export
 #'
 sentencify <- function(x){
