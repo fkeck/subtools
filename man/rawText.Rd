@@ -7,7 +7,10 @@
 rawText(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{xxx}
+}
+\value{
+xxx
 }
 \description{
 Title

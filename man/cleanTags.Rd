@@ -7,7 +7,14 @@
 cleanTags(x, format = "srt", clean.empty = TRUE)
 }
 \arguments{
-\item{clean.empty}{}
+\item{x}{xxx}
+
+\item{format}{xxx}
+
+\item{clean.empty}{xxx}
+}
+\value{
+xxx
 }
 \description{
 Title

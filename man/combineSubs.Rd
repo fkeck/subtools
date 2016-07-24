@@ -7,7 +7,14 @@
 combineSubs(..., collapse = TRUE, sequential = TRUE)
 }
 \arguments{
-\item{sequential}{}
+\item{...}{xxx}
+
+\item{collapse}{xxx}
+
+\item{sequential}{xxx}
+}
+\value{
+xxx
 }
 \description{
 Title
