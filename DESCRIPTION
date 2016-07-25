@@ -1,12 +1,12 @@
 Package: subtools
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Manipulate Subtitles in R
 Version: 0.1
 Date: 2016-07-11
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
+Author: Francois Keck <francois.keck@gmail.com>
+Maintainer: Francois Keck <francois.keck@gmail.com>
 Description: More about what it does (maybe more than one line)
-License: What license is it under?
+License: GPL-3
 LazyData: TRUE
 Suggests:
     testthat
