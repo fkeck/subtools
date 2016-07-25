@@ -23,7 +23,18 @@ rawText <- function(x, collapse = " "){
 }
 
 
-
+#' Convert subtitles to a tm corpus
+#'
+#' This function converts \code{Subtitles} and \code{MultiSubtitles} objects
+#' to virtual corpora as defined by package \pkg{tm}.
+#'
+#' @param x an object of class \code{Subtitles} or \code{MultiSubtitles}.
+#' @param collapse a character string to separate the subtitles lines.
+#'
+#' @return An object of class \code{VCorpus}.
+#' @seealso \code{\link[tm]{Corpus}}, \code{\link[tm]{VCorpus}}.
+#' @export
+#'
 tmCorpus <- function(x){
   
   if(is(x, "Subtitles")){
