@@ -10,13 +10,16 @@
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
+#' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
+#' If \code{NA} (default), the function tries to extract the frame.rate from the file.
+#' If it fails the frame rate is set at 24p (23.976).
 #'
 #' @return
 #' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
 #'
 #' @export
 #'
-read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list()){
+read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA){
 
   subs <- readLines(file, warn = FALSE)
   i <- 1
@@ -35,7 +38,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     format <- .extr_extension(file)
   }
   if(format == "sub"){                  #This is a very light test
-    if(substr(subs[1] == "{")){
+    if(substr(subs[1], start = 1L, stop = 1L) == "{"){
       format <- "microdvd"
     } else {
       format <- "subviewer"
@@ -82,6 +85,35 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     subs.n <- order(timecode.in)
   }
 
+  if(format == "microdvd"){
+    
+    if(is.na(frame.rate)){
+      if(grepl("\\{1\\}\\{1\\}([0-9\\.]+)$", subs[1])){
+        frame.rate <- as.numeric(gsub("(\\{.+\\})+", "", subs[1]))
+        subs <- subs[-1]
+      } else {
+        frame.rate <- 23.976
+      }
+    }
+    
+    subs <- gsub("\\|(\\{.+\\})+", "|", subs)
+    
+    timecode <- regmatches(subs, regexpr("^\\{[0-9]+\\}\\{[0-9]+\\}", subs))
+    timecode <- strsplit(timecode, split = "\\}\\{")
+    timecode <- lapply(timecode, gsub, pattern = "[\\{\\}]", replacement = "")
+    timecode.in <- sapply(timecode, function(x) x[1])
+    timecode.in <- as.numeric(timecode.in) / frame.rate
+    timecode.in <- .s_to_hms(timecode.in)
+    timecode.out <- sapply(timecode, function(x) x[2])
+    timecode.out <- as.numeric(timecode.out) / frame.rate
+    timecode.out <- .s_to_hms(timecode.out)
+    
+    subs.txt <- gsub("(\\{.+\\})+", "", subs)
+    subs.txt <- gsub("\\|", " ", subs.txt)
+    
+    subs.n <- order(timecode.in)
+  }
+  
   res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
                    timecode.out = timecode.out, id = subs.n,
                    metadata = metadata)
