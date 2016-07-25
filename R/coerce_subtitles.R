@@ -21,3 +21,34 @@ rawText <- function(x, collapse = " "){
   }
   return(res)
 }
+
+
+
+tmCorpus <- function(x){
+  
+  if(is(x, "Subtitles")){
+    txt <- rawText(x)
+    meta <- x$metadata
+    meta.df <- as.data.frame(meta)
+    attr(meta.df, which = "row.names") <- 1L
+  }
+  
+  if(is(x, "MultiSubtitles")){  
+    txt <- lapply(x, rawText)
+    meta <- lapply(x, function(x) x$metadata)
+    meta.df.names <- unique(unlist(lapply(meta, names)))
+    meta.df <- data.frame(matrix(NA, nrow = length(meta), ncol = length(meta.df.names)))
+    colnames(meta.df) <- meta.df.names
+    for(i in 1:dim(meta.df)[1]){
+      meta.df[i, ][names(meta[[i]])] <- meta[[i]]
+    }
+    attr(meta.df, which = "row.names") <- seq_len(length(x))
+  }
+  
+  txt <- VectorSource(txt)
+  res <- Corpus(txt)
+  res$dmeta <- meta.df
+  
+  return(res)
+}
+
