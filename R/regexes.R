@@ -153,3 +153,12 @@
   return(res)
 }
 
+#Converts seconds to HH:MM:SS (vectorized)
+.s_to_hms <- function(x){
+  hh <- x %/% 3600
+  mm <- (x %% 3600) %/% 60
+  ss <- (x %% 3600) %% 60
+  res <- paste(hh, mm, ss, sep = ":")
+  res <- .format_subtime(res)
+  return(res)
+}
