@@ -4,7 +4,8 @@
 #'
 #' @param x an object of class \code{Subtitles}.
 #' @param file a character string naming a file for writing.
-#' @param format a character string giving the file format. Not used (only SubRip format is implemented).
+#' @param format a character string giving the file format.
+#' Not used (only SubRip format is currently implemented).
 #'
 #' @export
 #'
