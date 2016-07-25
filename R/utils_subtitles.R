@@ -1,11 +1,14 @@
-#' Title
+#' Combine subtitles
+#'
+#' Combine \code{Subtitles} or/and \code{MultiSubtitles} objects.
 #'
 #' @param ... \code{Subtitles} or \code{MultiSubtitles} objects to be concatenated.
-#' @param collapse XXX
+#' @param collapse logical. If \code{TRUE}, subtitles are combined in a single \code{Subtitles} object.
 #' @param sequential logical. If \code{TRUE} (default) timecodes
 #' are recalculated to follow concatenation.
 #'
-#' @return xxx
+#' @return A \code{Subtitles} object if \code{collapse = TRUE} (default).
+#' A \code{MultiSubtitles} object if \code{collapse = FALSE}.
 #' @export
 #'
 combineSubs <- function(..., collapse = TRUE, sequential = TRUE){
