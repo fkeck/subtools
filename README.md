@@ -1,8 +1,8 @@
 
 OK SubRip .srt
 OK SubStation Alpha .ssa .ass
-SubViewer .sub
-MicroDVD .sub
+OK SubViewer .sub
+OK MicroDVD .sub
 WebVTT .vtt
 
 # reading functions
@@ -15,7 +15,7 @@ OK read.multiseries(dir = "", ...)
 OK write.subtitles
 
 # Coerce functions
-as.tm
+OK as.tm
 OK rawText
 
 # Utilities
@@ -23,7 +23,7 @@ OK rawText
 OK combineSubs
 OK cleanTags
 OK cleanCaptions
-OK cleanPatterns(x, patterns = "")
+OK cleanPatterns
 OK sentencify
 
 OK Subtitles
