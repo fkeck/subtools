@@ -88,7 +88,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   if(format == "microdvd"){
     
     if(is.na(frame.rate)){
-      if(grepl("\\{1\\}\\{1\\}([0-9\\.]+)$", subs[1])){
+      if(grepl("\\{[10]\\}\\{[10]\\}([0-9\\.]+)$", subs[1])){
         frame.rate <- as.numeric(gsub("(\\{.+\\})+", "", subs[1]))
         subs <- subs[-1]
       } else {
