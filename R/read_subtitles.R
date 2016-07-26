@@ -6,13 +6,14 @@
 #' @param file the name of the file which the subtitles are to be read from.
 #' If it does not contain an absolute path, the file name is relative to the current working directory.
 #' @param format a character string specifying the format of the subtitles.
-#' Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} and \code{"webvtt"}.
+#' Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails the frame rate is set at 24p (23.976).
+#'
 #'
 #' @return
 #' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
@@ -112,6 +113,26 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     subs.txt <- gsub("\\|", " ", subs.txt)
     
     subs.n <- order(timecode.in)
+  }
+  
+  if(format == "subviewer"){
+    
+    subs <- subs[!grepl("^\\[.+\\]", subs)]
+    subs <- subs[seq(min(which(subs != "")), max(which(subs != "")))]
+    subs.newlines <- c(0, which(subs == ""))
+    subs.time.li <- subs.newlines + 1
+    subs.txt.li <- subs.newlines + 2
+    
+    subs.txt <- subs[subs.txt.li]
+    subs.txt <- gsub("\\[br\\]", " ", subs.txt)
+
+    subs.time <- subs[subs.time.li]
+    subs.time <- strsplit(subs.time, split = ",")
+    timecode.in <- sapply(subs.time, function(x) x[1])
+    timecode.out <- sapply(subs.time, function(x) x[2])
+    
+    subs.n <- order(timecode.in)
+    
   }
   
   res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
