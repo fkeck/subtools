@@ -204,3 +204,21 @@ print.Subtitles <- function(x, printlen = 1000L){
     cat("-----", xlen - printlen, "lines omitted.")
   }
 }
+
+#' Extract parts of \code{Subtitles} objects
+#'
+#' @param x a \code{Subtitles} object.
+#' @param i elements to extract or replace.
+#' Can be numeric, character, or logical.
+#' 
+#' @return A \code{Subtitles} object.
+#'
+#' @export
+#'
+`[.Subtitles` <- function(x, i){
+  if (!missing(i)) {
+    x$subtitles <- x$subtitles[i, ]
+  }
+  return(x)
+}
+
