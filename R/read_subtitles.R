@@ -13,6 +13,7 @@
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails the frame rate is set at 24p (23.976).
+#' @param encoding the name of the encoding to be used.
 #'
 #'
 #' @return
@@ -20,9 +21,12 @@
 #'
 #' @export
 #'
-read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA){
+read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA, encoding = "UTF-8"){
 
-  subs <- readLines(file, warn = FALSE)
+  con <- file(file, encoding = encoding)
+  subs <- readLines(con, warn = FALSE, encoding = encoding)
+  close(con)
+  
   i <- 1
   while(subs[i] == ""){i <- i + 1}
   j <- length(subs)
