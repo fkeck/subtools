@@ -5,19 +5,25 @@
 \title{Read subtitles}
 \usage{
 read.subtitles(file, format = "auto", clean.tags = TRUE,
-  metadata = list())
+  metadata = list(), frame.rate = NA, encoding = "UTF-8")
 }
 \arguments{
 \item{file}{the name of the file which the subtitles are to be read from.
 If it does not contain an absolute path, the file name is relative to the current working directory.}
 
 \item{format}{a character string specifying the format of the subtitles.
-Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} and \code{"webvtt"}.
+Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
 
 \item{clean.tags}{logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.}
 
 \item{metadata}{a named list of metadata to be attached to the subtitles.}
+
+\item{frame.rate}{a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
+If \code{NA} (default), the function tries to extract the frame.rate from the file.
+If it fails the frame rate is set at 24p (23.976).}
+
+\item{encoding}{the name of the encoding to be used.}
 }
 \value{
 An object of class \code{Subtitles} (see \code{\link{Subtitles}}).

@@ -11,7 +11,8 @@ write.subtitles(x, file, format = "srt")
 
 \item{file}{a character string naming a file for writing.}
 
-\item{format}{a character string giving the file format. Not used (only SubRip format is implemented).}
+\item{format}{a character string giving the file format.
+Not used (only SubRip format is currently implemented).}
 }
 \description{
 This function writes a \code{Subtitles} object in a file.
