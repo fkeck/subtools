@@ -8,6 +8,7 @@ Maintainer: Francois Keck <francois.keck@gmail.com>
 Description: More about what it does (maybe more than one line)
 License: GPL-3
 LazyData: TRUE
+Import: tm
 Suggests:
     testthat
 RoxygenNote: 5.0.1
