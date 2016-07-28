@@ -35,7 +35,7 @@ rawText <- function(x, collapse = " "){
 #' @seealso \code{\link[tm]{Corpus}}, \code{\link[tm]{VCorpus}}.
 #' @export
 #'
-tmCorpus <- function(x){
+tmCorpus <- function(x, collapse = " "){
   
   if(is(x, "Subtitles")){
     txt <- rawText(x)
@@ -45,7 +45,7 @@ tmCorpus <- function(x){
   }
   
   if(is(x, "MultiSubtitles")){  
-    txt <- lapply(x, rawText)
+    txt <- lapply(x, rawText, collapse = collapse)
     meta <- lapply(x, function(x) x$metadata)
     meta.df.names <- unique(unlist(lapply(meta, names)))
     meta.df <- data.frame(matrix(NA, nrow = length(meta), ncol = length(meta.df.names)))

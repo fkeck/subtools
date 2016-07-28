@@ -4,7 +4,7 @@
 \alias{tmCorpus}
 \title{Convert subtitles to a tm corpus}
 \usage{
-tmCorpus(x)
+tmCorpus(x, collapse = " ")
 }
 \arguments{
 \item{x}{an object of class \code{Subtitles} or \code{MultiSubtitles}.}
