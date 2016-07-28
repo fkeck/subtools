@@ -7,7 +7,7 @@
 #'
 #' @param x a \code{Subtitles} object.
 #' @param format the original format of the \code{Subtitles} object.
-#' @param a character string containing a regular expression to be matched and clean.
+#' @param pattern a character string containing a regular expression to be matched and clean.
 #' @param clean.empty logical. Should empty remaining lines ("") deleted after cleaning.
 #'
 #' @return A \code{Subtitles} object.
@@ -81,7 +81,7 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 #' @export
 #'
 sentencify <- function(x){
-  ended <- grep("[\\.\\?!♪]\"$|[\\.\\?!♪]$", x$subtitles$Text)
+  ended <- grep("[\\.\\?!]\"$|[\\.\\?!]$", x$subtitles$Text)
   f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
   new.txt <- split(x$subtitles$Text, f)
   new.txt <- sapply(new.txt, paste, collapse = " ", USE.NAMES = FALSE)

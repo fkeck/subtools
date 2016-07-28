@@ -19,7 +19,7 @@ cleanPatterns(x, pattern, clean.empty = TRUE)
 
 \item{clean.empty}{logical. Should empty remaining lines ("") deleted after cleaning.}
 
-\item{a}{character string containing a regular expression to be matched and clean.}
+\item{pattern}{a character string containing a regular expression to be matched and clean.}
 }
 \value{
 A \code{Subtitles} object.
