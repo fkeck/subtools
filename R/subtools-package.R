@@ -1,5 +1,5 @@
-# Package subtools
-
+#' subtools
+#' 
 #' @import tm
 #' 
 #' @name subtools

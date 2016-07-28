@@ -4,4 +4,8 @@
 \name{subtools}
 \alias{subtools}
 \alias{subtools-package}
+\title{subtools}
+\description{
+subtools
+}
 
