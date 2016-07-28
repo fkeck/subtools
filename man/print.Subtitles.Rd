@@ -4,12 +4,14 @@
 \alias{print.Subtitles}
 \title{Print \code{Subtitles} objects}
 \usage{
-\method{print}{Subtitles}(x, printlen = 1000L)
+\method{print}{Subtitles}(x, printlen = 1000L, ...)
 }
 \arguments{
 \item{x}{a \code{Subtitles} object.}
 
 \item{printlen}{the maximum number of subtitles to print.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \description{
 Print \code{Subtitles} objects

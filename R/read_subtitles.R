@@ -191,16 +191,17 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
 #'
 #' @param x a \code{Subtitles} object.
 #' @param printlen the maximum number of subtitles to print.
+#' @param ... further arguments passed to or from other methods.
 #'
 #' @export
 #'
-print.Subtitles <- function(x, printlen = 1000L){
+print.Subtitles <- function(x, printlen = 1000L, ...){
   cat("Subtitles object:\n")
   xlen <- dim(x$subtitles)[1]
   if(printlen > xlen){
-    print(x$subtitles)
+    print(x$subtitles, ...)
   } else {
-    print(x$subtitles[seq_len(printlen), ])
+    print(x$subtitles[seq_len(printlen), ], ...)
     cat("-----", xlen - printlen, "lines omitted.")
   }
 }
