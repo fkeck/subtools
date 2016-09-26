@@ -7,6 +7,13 @@
 #' @param collapse a character string to separate the subtitles lines.
 #'
 #' @return A character string.
+#'
+#' @examples
+#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' s <- read.subtitles(f)
+#' rawText(s)
+#' cat(rawText(s, collapse = "\n"))
+#'
 #' @export
 #'
 rawText <- function(x, collapse = " "){
@@ -36,15 +43,15 @@ rawText <- function(x, collapse = " "){
 #' @export
 #'
 tmCorpus <- function(x, collapse = " "){
-  
+
   if(is(x, "Subtitles")){
     txt <- rawText(x)
     meta <- x$metadata
     meta.df <- as.data.frame(meta)
     attr(meta.df, which = "row.names") <- 1L
   }
-  
-  if(is(x, "MultiSubtitles")){  
+
+  if(is(x, "MultiSubtitles")){
     txt <- lapply(x, rawText, collapse = collapse)
     meta <- lapply(x, function(x) x$metadata)
     meta.df.names <- unique(unlist(lapply(meta, names)))
@@ -55,11 +62,11 @@ tmCorpus <- function(x, collapse = " "){
     }
     attr(meta.df, which = "row.names") <- seq_len(length(x))
   }
-  
+
   txt <- VectorSource(txt)
   res <- Corpus(txt)
   res$dmeta <- meta.df
-  
+
   return(res)
 }
 
