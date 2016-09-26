@@ -56,6 +56,7 @@ read.subtitles.season <- function(dir, quietly = FALSE, format = "auto", ...){
 
 
 #' @rdname read_series
+#' @export
 read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
   file.list <- dir(dir, full.names = TRUE)
   n.season <- length(file.list)
@@ -77,6 +78,7 @@ read.subtitles.serie <- function(dir, quietly = FALSE, format = "auto", ...){
 
 
 #' @rdname read_series
+#' @export
 read.subtitles.multiseries <- function(dir, quietly = FALSE, format = "auto", ...){
   file.list <- dir(dir, full.names = TRUE)
   n.series <- length(file.list)
