@@ -19,10 +19,11 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
     stop("x must be a 'Subtitles' object.")
   }
 
-  format <- match.arg(format, choices = c("srt", "subrip",
-                                          "sub", "subviewer", "microdvd",
-                                          "ssa", "ass", "substation",
-                                          "vtt", "webvtt", "all"), several.ok = FALSE)
+  format <- match.arg(format,
+                      choices = c("srt", "subrip",
+                                  "sub", "subviewer", "microdvd",
+                                  "ssa", "ass", "substation", "all"),
+                      several.ok = FALSE)
 
   if(format %in% c("srt", "subrip", "all")){
     x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
@@ -78,6 +79,12 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 #' @param x a \code{Subtitles} object.
 #'
 #' @return A \code{Subtitles} object.
+#'
+#' @examples
+#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' s <- read.subtitles(f)
+#' sentencify(s)
+#'
 #' @export
 #'
 sentencify <- function(x){
