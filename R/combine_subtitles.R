@@ -9,6 +9,14 @@
 #'
 #' @return A \code{Subtitles} object if \code{collapse = TRUE} (default).
 #' A \code{MultiSubtitles} object if \code{collapse = FALSE}.
+#'
+#' @examples
+#' f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' s1 <- read.subtitles(f1)
+#' f2 <- system.file("extdata", "ex_substation.ass", package = "subtools")
+#' s2 <- read.subtitles(f2)
+#' combineSubs(s1, s2)
+#'
 #' @export
 #'
 combineSubs <- function(..., collapse = TRUE, sequential = TRUE){
