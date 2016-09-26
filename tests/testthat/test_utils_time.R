@@ -14,7 +14,7 @@ test_that(".format_subtime deals with comma sep", {
 })
 
 
-test_that(".format_subtime guaranties a fixed length output", {
+test_that(".format_subtime guaranties a fixed length output of 12 if HH<100", {
   expect_equal(nchar(.format_subtime("00:00:00,123")), 12)
   expect_equal(nchar(.format_subtime("0:0:0")), 12)
   expect_equal(nchar(.format_subtime("1:2:3.123")), 12)
