@@ -3,7 +3,6 @@ OK SubRip .srt
 OK SubStation Alpha .ssa .ass
 OK SubViewer .sub
 OK MicroDVD .sub
-WebVTT .vtt
 
 # reading functions
 OK read.subtitles()
@@ -19,7 +18,6 @@ OK as.tm
 OK rawText
 
 # Utilities
-[.MultiSubtitles
 OK combineSubs
 OK cleanTags
 OK cleanCaptions
@@ -28,3 +26,4 @@ OK sentencify
 
 OK Subtitles
 OK print.Subtitles
+OK [.Subtitles
