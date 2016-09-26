@@ -1,0 +1,28 @@
+
+1
+00:00:22,50 --> 00:00:24,10
+Lorem ipsum dolor sit amet,
+consectetur adipiscing elit.
+
+2
+00:00:25,50 --> 00:00:27,10
+Donec eu nisl commodo,
+elementum dui ut, gravida orci.
+
+3
+00:00:28,70 --> 00:00:29,10
+Nulla aliquam,
+
+4
+00:00:29,90 --> 00:00:31,10
+nibh cursus interdum volutpat,
+
+5
+00:00:31,90 --> 00:00:33,10
+dolor lacus hendrerit tellus,
+vel faucibus justo nisi quis felis.
+
+6
+00:00:33,90 --> 00:00:34,80
+Suspendisse potenti.
+

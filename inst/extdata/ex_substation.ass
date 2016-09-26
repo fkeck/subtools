@@ -1,0 +1,23 @@
+[Script Info]
+Title: Substation alpha file example
+Original Script: FK
+ScriptType: v4.00+
+PlayResX: 384
+PlayResY: 288
+PlayDepth: 0
+Timer: 100.0
+WrapStyle: 0
+
+[v4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic,  Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,20,&H00FFFFFF,&H00000000,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,0,2,15,15,15,0
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:22.50,0:00:24.10,Default,,0000,0000,0000,,Lorem ipsum dolor sit amet,\Nconsectetur adipiscing elit.
+Dialogue: 0,0:00:25.50,0:00:27.10,Default,,0000,0000,0000,,Donec eu nisl commodo,\Nelementum dui ut, gravida orci.
+Dialogue: 0,0:00:28.70,0:00:29.10,Default,,0000,0000,0000,,Nulla aliquam,
+Dialogue: 0,0:00:29.90,0:00:31.10,Default,,0000,0000,0000,,nibh cursus interdum volutpat,
+Dialogue: 0,0:00:31.90,0:00:33.10,Default,,0000,0000,0000,,dolor lacus hendrerit tellus,\Nvel faucibus justo nisi quis felis.
+Dialogue: 0,0:00:33.90,0:00:34.80,Default,,0000,0000,0000,,Suspendisse potenti.
+
