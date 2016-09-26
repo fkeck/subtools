@@ -6,18 +6,24 @@
 #' @param file the name of the file which the subtitles are to be read from.
 #' If it does not contain an absolute path, the file name is relative to the current working directory.
 #' @param format a character string specifying the format of the subtitles.
-#' Five formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
+#' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"} and \code{"subviewer"} (v.2).
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
-#' If it fails the frame rate is set at 24p (23.976).
+#' If it fails, the frame rate is set at 24p (23.976).
 #' @param encoding the name of the encoding to be used.
 #'
 #'
 #' @return
 #' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
+#'
+#' @examples
+#'
+#' #read SubRip file
+#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' read.subtitles(f)
 #'
 #' @export
 #'
@@ -26,7 +32,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   con <- file(file, encoding = encoding)
   subs <- readLines(con, warn = FALSE, encoding = encoding)
   close(con)
-  
+
   i <- 1
   while(subs[i] == ""){i <- i + 1}
   j <- length(subs)
@@ -36,8 +42,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
   format <- match.arg(format, choices = c("srt", "subrip",
                                           "sub", "subviewer", "microdvd",
-                                          "ssa", "ass", "substation",
-                                          "vtt", "webvtt", "auto"),
+                                          "ssa", "ass", "substation", "auto"),
                       several.ok = FALSE)
   if(format == "auto"){
     format <- .extr_extension(file)
@@ -91,7 +96,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   }
 
   if(format == "microdvd"){
-    
+
     if(is.na(frame.rate)){
       if(grepl("\\{[10]\\}\\{[10]\\}([0-9\\.]+)$", subs[1])){
         frame.rate <- as.numeric(gsub("(\\{.+\\})+", "", subs[1]))
@@ -100,9 +105,9 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
         frame.rate <- 23.976
       }
     }
-    
+
     subs <- gsub("\\|(\\{.+\\})+", "|", subs)
-    
+
     timecode <- regmatches(subs, regexpr("^\\{[0-9]+\\}\\{[0-9]+\\}", subs))
     timecode <- strsplit(timecode, split = "\\}\\{")
     timecode <- lapply(timecode, gsub, pattern = "[\\{\\}]", replacement = "")
@@ -112,21 +117,21 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     timecode.out <- sapply(timecode, function(x) x[2])
     timecode.out <- as.numeric(timecode.out) / frame.rate
     timecode.out <- .s_to_hms(timecode.out)
-    
+
     subs.txt <- gsub("(\\{.+\\})+", "", subs)
     subs.txt <- gsub("\\|", " ", subs.txt)
-    
+
     subs.n <- order(timecode.in)
   }
-  
+
   if(format == "subviewer"){
-    
+
     subs <- subs[!grepl("^\\[.+\\]", subs)]
     subs <- subs[seq(min(which(subs != "")), max(which(subs != "")))]
     subs.newlines <- c(0, which(subs == ""))
     subs.time.li <- subs.newlines + 1
     subs.txt.li <- subs.newlines + 2
-    
+
     subs.txt <- subs[subs.txt.li]
     subs.txt <- gsub("\\[br\\]", " ", subs.txt)
 
@@ -134,11 +139,12 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     subs.time <- strsplit(subs.time, split = ",")
     timecode.in <- sapply(subs.time, function(x) x[1])
     timecode.out <- sapply(subs.time, function(x) x[2])
-    
+
     subs.n <- order(timecode.in)
-    
+
   }
-  
+
+
   res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
                    timecode.out = timecode.out, id = subs.n,
                    metadata = metadata)
@@ -187,16 +193,15 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
 }
 
 
-#' Print \code{Subtitles} objects
+#' Print methods for subtitles
 #'
-#' @param x a \code{Subtitles} object.
+#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
 #' @param printlen the maximum number of subtitles to print.
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @export
-#'
+#' @rdname print_sub
 print.Subtitles <- function(x, printlen = 1000L, ...){
-  cat("Subtitles object:\n")
   xlen <- dim(x$subtitles)[1]
   if(printlen > xlen){
     print(x$subtitles, ...)
@@ -206,12 +211,22 @@ print.Subtitles <- function(x, printlen = 1000L, ...){
   }
 }
 
+#' @rdname print_sub
+print.MultiSubtitles <- function(x, printlen = 10L, ...){
+  cat("MultiSubtitles object:\n")
+  for(i in 1:length(x)){
+    cat("Subtitles object [[", i, "]]\n", sep = "")
+    print.Subtitles(x[[i]], printlen = printlen)
+    cat("\n\n")
+  }
+}
+
 #' Extract parts of \code{Subtitles} objects
 #'
 #' @param x a \code{Subtitles} object.
-#' @param i elements to extract or replace.
+#' @param i elements to extract.
 #' Can be numeric, character, or logical.
-#' 
+#'
 #' @return A \code{Subtitles} object.
 #'
 #' @export
@@ -223,3 +238,14 @@ print.Subtitles <- function(x, printlen = 1000L, ...){
   return(x)
 }
 
+
+#' Summary for \code{MultiSubtitles} objects
+#'
+#' @param x a \code{MultiSubtitles} object.
+#' @param ... further arguments passed to or from other methods.
+#'
+#' @export
+#'
+summary.MultiSubtitles <- function(x, ...){
+  cat("MultiSubtitles object with", length(x), "Subtitles.")
+}
