@@ -15,28 +15,35 @@
 #' @rdname clean
 cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 
-  if(!is(x, "Subtitles")){
-    stop("x must be a 'Subtitles' object.")
+  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
   }
 
-  format <- match.arg(format,
-                      choices = c("srt", "subrip",
-                                  "sub", "subviewer", "microdvd",
-                                  "ssa", "ass", "substation", "all"),
-                      several.ok = FALSE)
+  if(is(x, "MultiSubtitles")){
 
-  if(format %in% c("srt", "subrip", "all")){
-    x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
+    x <- lapply(x, cleanTags, pattern = pattern, clean.empty = clean.empty)
+    class(x) <- "MultiSubtitles"
+
+  } else {
+
+    format <- match.arg(format,
+                        choices = c("srt", "subrip",
+                                    "sub", "subviewer", "microdvd",
+                                    "ssa", "ass", "substation", "all"),
+                        several.ok = FALSE)
+
+    if(format %in% c("srt", "subrip", "all")){
+      x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
+    }
+
+    if(format %in% c("ass", "ssa", "substation", "all")){
+      x$subtitles$Text <- gsub("\\{\\\\.+?\\}", "", x$subtitles$Text)
+    }
+
+    if(clean.empty){
+      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+    }
   }
-
-  if(format %in% c("ass", "ssa", "substation", "all")){
-    x$subtitles$Text <- gsub("\\{\\\\.+?\\}", "", x$subtitles$Text)
-  }
-
-  if(clean.empty){
-    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
-  }
-
   return(x)
 }
 
