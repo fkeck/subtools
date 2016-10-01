@@ -224,7 +224,7 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 #' Extract parts of \code{Subtitles} objects
 #'
 #' @param x a \code{Subtitles} object.
-#' @param i elements to extract.
+#' @param i a vector of elements to extract.
 #' Can be numeric, character, or logical.
 #'
 #' @return A \code{Subtitles} object.

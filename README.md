@@ -26,4 +26,7 @@ OK sentencify
 
 OK Subtitles
 OK print.Subtitles
+OK print.MultiSubtitles
+OK summary.Subtitles
+OK summary.MultiSubtitles
 OK [.Subtitles
