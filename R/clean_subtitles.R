@@ -3,14 +3,14 @@
 #'
 #' Functions to clean subtitles. \code{cleanTags} cleans formatting tags.
 #' \code{cleanCaptions} cleans close captions.
-#' \code{cleanPatterns} provide a more general and flexible cleaning function base on regular expressions.
+#' \code{cleanPatterns} provides a more general and flexible cleaning based on regular expressions.
 #'
-#' @param x a \code{Subtitles} object.
-#' @param format the original format of the \code{Subtitles} object.
-#' @param pattern a character string containing a regular expression to be matched and clean.
+#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
+#' @param format the original format of the \code{Subtitles} objects.
+#' @param pattern a character string containing a regular expression to be matched and cleaned.
 #' @param clean.empty logical. Should empty remaining lines ("") deleted after cleaning.
 #'
-#' @return A \code{Subtitles} object.
+#' @return A \code{Subtitles} or \code{MultiSubtitles} object.
 #' @export
 #' @rdname clean
 cleanTags <- function(x, format = "srt", clean.empty = TRUE){
@@ -21,7 +21,7 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 
   if(is(x, "MultiSubtitles")){
 
-    x <- lapply(x, cleanTags, pattern = pattern, clean.empty = clean.empty)
+    x <- lapply(x, cleanTags, format = format, clean.empty = clean.empty)
     class(x) <- "MultiSubtitles"
 
   } else {
@@ -51,13 +51,22 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 #' @rdname clean
 cleanCaptions <- function(x, clean.empty = TRUE){
 
-  if(!is(x, "Subtitles")){
-    stop("x must be a 'Subtitles' object.")
+  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
   }
-  x$subtitles$Text <- gsub("\\( .+? \\)", "", x$subtitles$Text)
 
-  if(clean.empty){
-    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+  if(is(x, "MultiSubtitles")){
+
+    x <- lapply(x, cleanCaptions, clean.empty = clean.empty)
+    class(x) <- "MultiSubtitles"
+
+  } else {
+
+    x$subtitles$Text <- gsub("\\( .+? \\)", "", x$subtitles$Text)
+
+    if(clean.empty){
+      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+    }
   }
   return(x)
 }
@@ -66,13 +75,22 @@ cleanCaptions <- function(x, clean.empty = TRUE){
 #' @rdname clean
 cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 
-  if(!is(x, "Subtitles")){
-    stop("x must be a 'Subtitles' object.")
+  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
   }
-  x$subtitles$Text <- gsub(pattern, "", x$subtitles$Text)
 
-  if(clean.empty){
-    x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+  if(is(x, "MultiSubtitles")){
+
+    x <- lapply(x, cleanPatterns, pattern = pattern, clean.empty = clean.empty)
+    class(x) <- "MultiSubtitles"
+
+  } else {
+
+    x$subtitles$Text <- gsub(pattern, "", x$subtitles$Text)
+
+    if(clean.empty){
+      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+    }
   }
   return(x)
 }
