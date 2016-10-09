@@ -70,3 +70,40 @@ tmCorpus <- function(x, collapse = " "){
   return(res)
 }
 
+
+#' Convert subtitles to a dataframe
+#'
+#' This function converts \code{Subtitles} and \code{MultiSubtitles} objects
+#' to a dataframe with one subtitle line per row; text, timecodes,
+#' and (expanded) meta-data as columns.
+#'
+#' @param x an object of class \code{Subtitles} or \code{MultiSubtitles}.
+#'
+#' @return A data frame.
+#' @export
+#'
+subDataFrame <- function(x){
+  if(is(x, "Subtitles")){
+    res <- x$subtitles
+    if(!is.null(x$metadata)){
+      res <- cbind(res, sapply(x$metadata, function(x) rep(x, nrow(res))))
+    }
+  }
+
+  if(is(x, "MultiSubtitles")){
+    res <- lapply(x, function(x) x$subtitles)
+    res <- do.call("rbind", res)
+
+    meta <- lapply(x, function(x) x$metadata)
+    meta.df.names <- unique(unlist(lapply(meta, names)))
+    meta.df <- data.frame(matrix(NA, nrow = length(meta), ncol = length(meta.df.names)))
+    colnames(meta.df) <- meta.df.names
+    for(i in 1:dim(meta.df)[1]){
+      meta.df[i, ][names(meta[[i]])] <- meta[[i]]
+    }
+    meta.df <- meta.df[rep(seq_len(nrow(meta.df)), sapply(x, function(x) nrow(x$subtitles))), ]
+    res <- cbind(res, meta.df)
+  }
+
+  return(res)
+}
