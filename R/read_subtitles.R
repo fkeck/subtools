@@ -241,19 +241,19 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 
 #' Summary methods for subtitles
 #'
-#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
+#' @param object a \code{Subtitles} or \code{MultiSubtitles} object.
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @export
 #' @rdname summary_sub
-summary.Subtitles <- function(x, ...){
+summary.Subtitles <- function(object, ...){
   cat("Subtitles object")
-  cat("\n  Text lines:", dim(x$subtitles)[1])
-  cat("\n  Duration:", .diff_timecodes(x$subtitles$Timecode.out[dim(x$subtitles)[1]], x$subtitles$Timecode.in[1]))
-  cat("\n  Metadata:", length(x$metadata), "tags:", paste0(names(x$metadata), collapse = ", "))
+  cat("\n  Text lines:", dim(object$subtitles)[1])
+  cat("\n  Duration:", .diff_timecodes(object$subtitles$Timecode.out[dim(object$subtitles)[1]], object$subtitles$Timecode.in[1]))
+  cat("\n  Metadata:", length(object$metadata), "tags:", paste0(names(object$metadata), collapse = ", "))
 }
 
 #' @rdname summary_sub
-summary.MultiSubtitles <- function(x, ...){
-  cat("MultiSubtitles object with", length(x), "Subtitles.")
+summary.MultiSubtitles <- function(object, ...){
+  cat("MultiSubtitles object with", length(object), "Subtitles.")
 }

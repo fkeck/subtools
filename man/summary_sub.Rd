@@ -5,12 +5,12 @@
 \alias{summary.Subtitles}
 \title{Summary methods for subtitles}
 \usage{
-\method{summary}{Subtitles}(x, ...)
+\method{summary}{Subtitles}(object, ...)
 
-\method{summary}{MultiSubtitles}(x, ...)
+\method{summary}{MultiSubtitles}(object, ...)
 }
 \arguments{
-\item{x}{a \code{Subtitles} or \code{MultiSubtitles} object.}
+\item{object}{a \code{Subtitles} or \code{MultiSubtitles} object.}
 
 \item{...}{further arguments passed to or from other methods.}
 }
