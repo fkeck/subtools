@@ -4,7 +4,7 @@
 \alias{write.subtitles}
 \title{Write subtitles}
 \usage{
-write.subtitles(x, file, format = "srt")
+write.subtitles(x, file, format = "srt", encoding = "UTF-8")
 }
 \arguments{
 \item{x}{an object of class \code{Subtitles}.}
@@ -13,6 +13,8 @@ write.subtitles(x, file, format = "srt")
 
 \item{format}{a character string giving the file format.
 Not used (only SubRip format is currently implemented).}
+
+\item{encoding}{the name of the encoding to be used.}
 }
 \description{
 This function writes a \code{Subtitles} object in a file.

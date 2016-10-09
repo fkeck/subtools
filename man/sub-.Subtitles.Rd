@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{a \code{Subtitles} object.}
 
-\item{i}{elements to extract.
+\item{i}{a vector of elements to extract.
 Can be numeric, character, or logical.}
 }
 \value{
