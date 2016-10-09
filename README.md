@@ -1,32 +1,9 @@
+# subtools
 
-OK SubRip .srt
-OK SubStation Alpha .ssa .ass
-OK SubViewer .sub
-OK MicroDVD .sub
+## Read, write and manipulate subtitles in R
 
-# reading functions
-OK read.subtitles()
-OK read.season(dir = "", ...)
-OK read.serie(dir = "", ...)
-OK read.multiseries(dir = "", ...)
+## Install
+To install the package from Gihub you can use devtools:
 
-# writing functions
-OK write.subtitles
+    devtools::install_github("fkeck/oviz")
 
-# Coerce functions
-OK as.tm
-OK rawText
-
-# Utilities
-OK combineSubs
-OK cleanTags
-OK cleanCaptions
-OK cleanPatterns
-OK sentencify
-
-OK Subtitles
-OK print.Subtitles
-OK print.MultiSubtitles
-OK summary.Subtitles
-OK summary.MultiSubtitles
-OK [.Subtitles
