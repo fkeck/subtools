@@ -1,6 +1,6 @@
 #' subtools
 #'
-#' @import tm
+#' @importFrom tm Corpus VectorSource
 #' @importFrom methods is
 #' @importFrom utils read.csv
 #'
