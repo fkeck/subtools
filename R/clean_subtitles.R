@@ -49,6 +49,7 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
 
 
 #' @rdname clean
+#' @export
 cleanCaptions <- function(x, clean.empty = TRUE){
 
   if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
@@ -73,6 +74,7 @@ cleanCaptions <- function(x, clean.empty = TRUE){
 
 
 #' @rdname clean
+#' @export
 cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 
   if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
