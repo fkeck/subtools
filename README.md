@@ -7,5 +7,5 @@
 ### Install
 To install the package from Gihub you can use devtools:
 
-    devtools::install_github("fkeck/oviz")
+    devtools::install_github("fkeck/subtools")
 
