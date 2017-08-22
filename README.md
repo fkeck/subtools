@@ -9,3 +9,5 @@ To install the package from Gihub you can use devtools:
 
     devtools::install_github("fkeck/subtools")
 
+### Demo
+A quick introduction can be found [here](http://www.pieceofk.fr/?p=437).
