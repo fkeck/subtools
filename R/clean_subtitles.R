@@ -29,16 +29,18 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
     format <- match.arg(format,
                         choices = c("srt", "subrip",
                                     "sub", "subviewer", "microdvd",
-                                    "ssa", "ass", "substation", "all"),
+                                    "ssa", "ass", "substation",
+                                    "vtt", "webvtt", "all"),
                         several.ok = FALSE)
 
-    if(format %in% c("srt", "subrip", "all")){
+    if(format %in% c("srt", "subrip", "vtt", "webvtt", "all")){
       x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
     }
 
     if(format %in% c("ass", "ssa", "substation", "all")){
       x$subtitles$Text <- gsub("\\{\\\\.+?\\}", "", x$subtitles$Text)
     }
+
 
     if(clean.empty){
       x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
