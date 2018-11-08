@@ -29,6 +29,7 @@
 #'
 read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA, encoding = "UTF-8"){
 
+
   con <- file(file, encoding = encoding)
   subs <- readLines(con, warn = FALSE, encoding = encoding)
   close(con)
@@ -42,7 +43,8 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
   format <- match.arg(format, choices = c("srt", "subrip",
                                           "sub", "subviewer", "microdvd",
-                                          "ssa", "ass", "substation", "auto"),
+                                          "ssa", "ass", "substation",
+                                          "vtt", "webvtt","auto"),
                       several.ok = FALSE)
   if(format == "auto"){
     format <- .extr_extension(file)
@@ -144,6 +146,47 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
   }
 
+  if(format %in% c("webvtt", "vtt")){
+
+    if(subs[1] != "WEBVTT") {
+      stop("Invalid VTT format")
+    }
+
+    subs <- subs[-1]
+    subs <- c(subs, "")
+
+    subs.newlines <- c(0, which(subs == ""))
+    blocks.delim <- cbind(subs.newlines[-length(subs.newlines)] + 1, subs.newlines[-1] - 1)
+    blocks <- apply(blocks.delim, 1, function(x) subs[x[1]:x[2]])
+
+
+    # Delete blocks that are not subtitles REGION STYLE NOTE
+    test.cuetiming <- function(x){
+      if (is.na(x)){
+        res <- FALSE
+      } else {
+        res <- grepl("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}$", x)
+      }
+      return(res)
+    }
+
+    blocks <- blocks[sapply(blocks, function(x) any(sapply(x , function(y) test.cuetiming(y))))]
+
+    blocks.tc.pos <- sapply(blocks, function(x) which(sapply(x , function(y) test.cuetiming(y))))
+
+    subs.n <- mapply(function(x, y, z) ifelse(y == 1, z, x[1]),
+                     x = blocks,
+                     y = blocks.tc.pos,
+                     z = seq(1, length(blocks)))
+    subs.time <- mapply(function(x, y) x[y], x = blocks, y = blocks.tc.pos)
+    subs.txt <- mapply(function(x, y) paste(x[(y + 1) : length(x)], collapse = " "),
+                       x = blocks,
+                       y = blocks.tc.pos)
+
+    subs.time <- strsplit(subs.time, split = "[[:blank:]]+-->[[:blank:]]+")
+    timecode.in <- sapply(subs.time, function(x) x[1])
+    timecode.out <- sapply(subs.time, function(x) x[2])
+  }
 
   res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
                    timecode.out = timecode.out, id = subs.n,
