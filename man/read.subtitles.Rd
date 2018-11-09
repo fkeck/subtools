@@ -12,10 +12,10 @@ read.subtitles(file, format = "auto", clean.tags = TRUE,
 If it does not contain an absolute path, the file name is relative to the current working directory.}
 
 \item{format}{a character string specifying the format of the subtitles.
-Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"} and \code{"subviewer"} (v.2).
+Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
 
-\item{clean.tags}{logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.}
+\item{clean.tags}{logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{cleanTags}}.}
 
 \item{metadata}{a named list of metadata to be attached to the subtitles.}
 
@@ -31,11 +31,13 @@ An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
 \description{
 Reads subtitles from a file.
 }
+\details{
+The support of WebVTT is basic and experimental.
+}
 \examples{
 
-#read SubRip file
+# read a SubRip file
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 read.subtitles(f)
 
 }
-

@@ -22,4 +22,3 @@ s <- read.subtitles(f)
 sentencify(s)
 
 }
-

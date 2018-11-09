@@ -21,4 +21,3 @@ to virtual corpora as defined by package \pkg{tm}.
 \seealso{
 \code{\link[tm]{Corpus}}, \code{\link[tm]{VCorpus}}.
 }
-

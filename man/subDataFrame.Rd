@@ -17,4 +17,3 @@ This function converts \code{Subtitles} and \code{MultiSubtitles} objects
 to a dataframe with one subtitle line per row; text, timecodes,
 and (expanded) meta-data as columns.
 }
-

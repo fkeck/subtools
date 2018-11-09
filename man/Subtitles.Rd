@@ -30,4 +30,3 @@ a \code{Subtitles} object i.e. a list of 2 elements:
 \description{
 This function creates objects of class \code{Subtitles}.
 }
-

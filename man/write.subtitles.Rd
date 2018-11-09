@@ -19,4 +19,3 @@ Not used (only SubRip format is currently implemented).}
 \description{
 This function writes a \code{Subtitles} object in a file.
 }
-

@@ -29,4 +29,3 @@ s2 <- read.subtitles(f2)
 combineSubs(s1, s2)
 
 }
-

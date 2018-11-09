@@ -18,4 +18,3 @@ A \code{Subtitles} object.
 \description{
 Extract parts of \code{Subtitles} objects
 }
-

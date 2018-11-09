@@ -6,22 +6,23 @@
 #' @param file the name of the file which the subtitles are to be read from.
 #' If it does not contain an absolute path, the file name is relative to the current working directory.
 #' @param format a character string specifying the format of the subtitles.
-#' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"} and \code{"subviewer"} (v.2).
+#' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
-#' @param clean.tags logical. If \code{"TRUE"}, formating tags are deleted from subtitles using \code{\link{cleanTags}}.
+#' @param clean.tags logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{cleanTags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails, the frame rate is set at 24p (23.976).
 #' @param encoding the name of the encoding to be used.
 #'
+#' @details The support of WebVTT is basic and experimental.
 #'
 #' @return
 #' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
 #'
 #' @examples
 #'
-#' #read SubRip file
+#' # read a SubRip file
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' read.subtitles(f)
 #'

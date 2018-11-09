@@ -24,4 +24,3 @@ rawText(s)
 cat(rawText(s, collapse = "\\n"))
 
 }
-
