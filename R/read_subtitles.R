@@ -24,6 +24,8 @@
 #'
 #' # read a SubRip file
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
+
 #' read.subtitles(f)
 #'
 #' @export
@@ -50,7 +52,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   if(format == "auto"){
     format <- .extr_extension(file)
   }
-  if(format == "sub"){                  #This is a very light test
+  if(format == "sub"){                  #This is a very light test to solve the .sub extension
     if(substr(subs[1], start = 1L, stop = 1L) == "{"){
       format <- "microdvd"
     } else {
@@ -149,24 +151,24 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
   if(format %in% c("webvtt", "vtt")){
 
-    if(subs[1] != "WEBVTT") {
-      stop("Invalid VTT format")
+    if(!grepl("^WEBVTT", subs[1])) {
+      stop("Invalid WebVTT format")
     }
 
-    subs <- subs[-1]
-    subs <- c(subs, "")
+    subs <- subs[-1]      # Remove header
+    subs <- c(subs, "")   # Add a virtual last line
 
     subs.newlines <- c(0, which(subs == ""))
     blocks.delim <- cbind(subs.newlines[-length(subs.newlines)] + 1, subs.newlines[-1] - 1)
     blocks <- apply(blocks.delim, 1, function(x) subs[x[1]:x[2]])
 
 
-    # Delete blocks that are not subtitles REGION STYLE NOTE
+    # Select Cue blocks only (drop REGION, STYLE, NOTE)
     test.cuetiming <- function(x){
       if (is.na(x)){
         res <- FALSE
       } else {
-        res <- grepl("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}$", x)
+        res <- grepl("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}", x)
       }
       return(res)
     }
@@ -178,11 +180,21 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
     subs.n <- mapply(function(x, y, z) ifelse(y == 1, z, x[1]),
                      x = blocks,
                      y = blocks.tc.pos,
-                     z = seq(1, length(blocks)))
+                     z = seq(1, length(blocks))) # If cues are not labelled, they are numbered
+
+    #Extract and clean timing
     subs.time <- mapply(function(x, y) x[y], x = blocks, y = blocks.tc.pos)
+    subs.time <- regmatches(subs.time, regexpr("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}", subs.time))
+
+    # Extract text content and deal with escape sequences
     subs.txt <- mapply(function(x, y) paste(x[(y + 1) : length(x)], collapse = " "),
                        x = blocks,
                        y = blocks.tc.pos)
+    subs.txt <- gsub("&amp;", "&", subs.txt)
+    subs.txt <- gsub("&lt;", "<", subs.txt)
+    subs.txt <- gsub("&gt;", ">", subs.txt)
+    subs.txt <- gsub("&lrm;|&rlm;", "", subs.txt) # Left-to-right mark and right-to-left mark are not supported
+    subs.txt <- gsub("&nbsp;", " ", subs.txt)
 
     subs.time <- strsplit(subs.time, split = "[[:blank:]]+-->[[:blank:]]+")
     timecode.in <- sapply(subs.time, function(x) x[1])

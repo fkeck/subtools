@@ -51,6 +51,6 @@ test_that("Reading WebVTT format", {
   expect_equal(length(read.subtitles(f)), 2)
   expect_is(read.subtitles(f)$subtitles, "data.frame")
   expect_equal(ncol(read.subtitles(f)$subtitles), 4)
-  expect_equal(nrow(read.subtitles(f)$subtitles), 2)
+  expect_equal(nrow(read.subtitles(f)$subtitles), 3)
   expect_is(read.subtitles(f)$metadata, "list")
 })

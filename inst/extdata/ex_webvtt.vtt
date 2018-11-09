@@ -1,4 +1,4 @@
-WEBVTT
+WEBVTT From: https://www.w3.org/TR/webvtt1/#introduction-caption
 
 NOTE
 This file was written by Jill. I hope
@@ -8,7 +8,13 @@ bear in mind:
 not be 100% accurate
 - I didn’t pay too close attention to
 when the cues should start or end.
-From: https://www.w3.org/TR/webvtt1/#introduction-caption
+
+STYLE
+::cue {
+  background-image: linear-gradient(to bottom, dimgray, lightgray);
+  color: papayawhip;
+}
+
 
 00:01.000 --> 00:04.000
 Never drink liquid nitrogen.
@@ -18,5 +24,10 @@ NOTE check next cue
 00:05.000 --> 00:09.000
 — It will perforate your stomach.
 — You could die.
+
+A dangerous cue
+000:00:11.000 --> 000:00:14.000 line:63% position:72% align:start
+<v Laura>Dès Noël où un zéphyr haï me vêt de glaçons würmiens,
+je dîne d’exquis rôtis de bœuf au kir à l’aÿ d’âge mûr &amp; <000:00:13.000>cætera !</v>
 
 NOTE end of file
