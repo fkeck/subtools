@@ -7,6 +7,7 @@
 #'
 #' @param file a character string giving the path to the MKV file.
 #' @param mkvmerge.exec a character string giving the path to the \code{mkvmerge} executable.
+#' @param print.info print basic informations about subtitle tracks. Default is \code{TRUE}.
 #'
 #' @return A list with complete data about the MKV is invisibly returned.
 #' If the MKV has at least 1 subtitles track and \code{print.info} is \code{TRUE}, basic informations are printed.

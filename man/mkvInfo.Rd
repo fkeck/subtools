@@ -10,6 +10,8 @@ mkvInfo(file, mkvmerge.exec = "mkvmerge", print.info = TRUE)
 \item{file}{a character string giving the path to the MKV file.}
 
 \item{mkvmerge.exec}{a character string giving the path to the \code{mkvmerge} executable.}
+
+\item{print.info}{print basic informations about subtitle tracks. Default is \code{TRUE}.}
 }
 \value{
 A list with complete data about the MKV is invisibly returned.

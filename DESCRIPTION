@@ -11,7 +11,8 @@ LazyData: TRUE
 Imports:
     tm,
     methods,
-    utils
+    utils,
+    jsonlite
 Suggests:
     testthat
 RoxygenNote: 6.0.1

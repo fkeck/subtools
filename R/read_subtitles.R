@@ -268,6 +268,7 @@ print.Subtitles <- function(x, printlen = 1000L, ...){
 }
 
 #' @rdname print_sub
+#' @export
 print.MultiSubtitles <- function(x, printlen = 10L, ...){
   cat("MultiSubtitles object:\n")
   for(i in 1:length(x)){
@@ -286,6 +287,7 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 #' @return A \code{Subtitles} object.
 #'
 #' @export
+#'
 #'
 `[.Subtitles` <- function(x, i){
   if (!missing(i)) {
@@ -310,6 +312,7 @@ summary.Subtitles <- function(object, ...){
 }
 
 #' @rdname summary_sub
+#' @export
 summary.MultiSubtitles <- function(object, ...){
   cat("MultiSubtitles object with", length(object), "Subtitles.")
 }
