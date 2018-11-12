@@ -38,6 +38,7 @@ The support of WebVTT is basic and experimental.
 
 # read a SubRip file
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 read.subtitles(f)
 
 }
