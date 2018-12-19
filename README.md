@@ -1,3 +1,4 @@
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # subtools <img src="man/figures/subtools.png" width="120"" align="right" />
 
