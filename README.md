@@ -1,6 +1,7 @@
-[![Build Status](https://travis-ci.org/fkeck/subtools.svg?branch=master)](https://travis-ci.org/fkeck/subtools)
 
-# subtools
+# subtools <img src="man/figures/subtools.png" height="120" width="120"" align="right" style="padding-left:10px;background-color:white;" />
+
+[![Build Status](https://travis-ci.org/fkeck/subtools.svg?branch=master)](https://travis-ci.org/fkeck/subtools)
 
 ### Read, write and manipulate subtitles in R
 
