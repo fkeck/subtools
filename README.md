@@ -1,7 +1,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# subtools <img src="man/figures/subtools.png" width="120"" align="right" />
+<img src="man/figures/subtools.png" width="120"" align="right" />
 
+# subtools
 [![Build Status](https://travis-ci.org/fkeck/subtools.svg?branch=master)](https://travis-ci.org/fkeck/subtools)
 
 ### Read, write and manipulate subtitles in R
