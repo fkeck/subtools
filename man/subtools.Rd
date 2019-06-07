@@ -4,7 +4,19 @@
 \name{subtools}
 \alias{subtools}
 \alias{subtools-package}
-\title{subtools}
+\title{Read and Manipulate Video Subtitles}
 \description{
-subtools
+A collection of functions to read, write and manipulate video subtitles.
+Supported formats include "srt", "subrip", "sub", "subviewer", "microdvd",
+"ssa", "ass", "substation", "vtt", and "webvtt".
 }
+\author{
+\strong{Maintainer}: Francois Keck \email{francois.keck@gmail.com}
+
+Other contributors:
+\itemize{
+  \item Bob Rudis \email{bob@rud.is} (0000-0001-5670-2640) [contributor]
+}
+
+}
+\keyword{internal}

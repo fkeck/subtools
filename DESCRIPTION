@@ -1,18 +1,25 @@
 Package: subtools
 Type: Package
-Title: Manipulate Subtitles in R
-Version: 0.1
-Date: 2016-07-11
-Author: Francois Keck <francois.keck@gmail.com>
+Title: Read and Manipulate Video Subtitles
+Version: 0.2
+Date: 2019-06-07
+Authors@R: c(
+      person("Francois", "Keck", email = "francois.keck@gmail.com", role =  c("aut", "cre")),
+      person("Bob", "Rudis", email = "bob@rud.is", role = "ctb",
+             comment = c(ORCID = "0000-0001-5670-2640"))
+    )
 Maintainer: Francois Keck <francois.keck@gmail.com>
-Description: A collection of functions to read, write and manipulate subtitles files.
+Description: A collection of functions to read, write and manipulate video subtitles.
+    Supported formats include "srt", "subrip", "sub", "subviewer", "microdvd", 
+    "ssa", "ass", "substation", "vtt", and "webvtt".
 License: GPL-3
 LazyData: TRUE
+Encoding: UTF-8
 Imports:
     tm,
     methods,
     utils,
     jsonlite
 Suggests:
-    testthat
-RoxygenNote: 6.0.1
+    testthat (>= 2.1.0)
+RoxygenNote: 6.1.1

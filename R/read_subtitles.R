@@ -1,10 +1,7 @@
-
-#' Read subtitles
+#' Convert an R object to a `Subtitles` object
 #'
-#' Reads subtitles from a file.
-#'
-#' @param file the name of the file which the subtitles are to be read from.
-#' If it does not contain an absolute path, the file name is relative to the current working directory.
+#' @md
+#' @param an R object that can be coerced into a `Subtitles` object
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
@@ -14,29 +11,31 @@
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails, the frame rate is set at 24p (23.976).
 #' @param encoding the name of the encoding to be used.
-#'
-#' @details The support of WebVTT is basic and experimental.
-#'
-#' @return
-#' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
-#'
-#' @examples
-#'
-#' # read a SubRip file
-#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-#' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
-
-#' read.subtitles(f)
-#'
+#' @param ... passed on to downstream methods
 #' @export
-#'
-read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA, encoding = "UTF-8"){
+#' @examples
+#' as_subtitle(
+#'   c("WEBVTT",
+#'     "X-TIMESTAMP-MAP=MPEGTS:181083,LOCAL:00:00:00.000",
+#'     "",
+#'     "3",
+#'     "00:00:21.199 --> 00:00:22.333", ">> FEMALE SPEAKER:",
+#'     "Don't stay up too late.",
+#'     "",
+#'     ""
+#'   ), format = "webvtt"
+#' )
+as_subtitle <- function(x, format = "auto", clean.tags = TRUE, metadata = list(),
+                        frame.rate = NA, encoding = "UTF-8", ...){
+  UseMethod("as_subtitle", x)
+}
 
+#' @rdname as_subtitle
+#' @export
+as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata = list(),
+                                frame.rate = NA, encoding = "UTF-8", ...){
 
-  con <- file(file, encoding = encoding)
-  subs <- readLines(con, warn = FALSE, encoding = encoding)
-  close(con)
-
+  subs <- x
   i <- 1
   while(subs[i] == ""){i <- i + 1}
   j <- length(subs)
@@ -49,9 +48,7 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
                                           "ssa", "ass", "substation",
                                           "vtt", "webvtt","auto"),
                       several.ok = FALSE)
-  if(format == "auto"){
-    format <- .extr_extension(file)
-  }
+
   if(format == "sub"){                  #This is a very light test to solve the .sub extension
     if(substr(subs[1], start = 1L, stop = 1L) == "{"){
       format <- "microdvd"
@@ -210,9 +207,66 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
   }
 
   return(res)
+
 }
 
+#' @rdname as_subtitle
+#' @export
+as_subtitle.character <- as_subtitle.default
 
+#' Read subtitles
+#'
+#' Reads subtitles from a file.
+#'
+#' @param file the name of the file which the subtitles are to be read from.
+#' If it does not contain an absolute path, the file name is relative to the current working directory.
+#' @inheritParams as_subtitle
+#'
+#' @details The support of WebVTT is basic and experimental.
+#'
+#' @return
+#' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
+#'
+#' @examples
+#'
+#' # read a SubRip file
+#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
+#' read.subtitles(f)
+#'
+#' # snake case
+#' read_subtitles(
+#'   system.file("extdata", "ex_webvtt.vtt", package = "subtools"),
+#'   format = "webvtt"
+#' )
+#'
+#' @export
+#'
+read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA, encoding = "UTF-8"){
+
+  if(format == "auto"){
+    format <- .extr_extension(file)
+  }
+
+  con <- file(file, encoding = encoding)
+  subs <- readLines(con, warn = FALSE, encoding = encoding)
+  close(con)
+
+  as_subtitle(
+    x = subs,
+    format = format,
+    clean.tags = clean.tags,
+    metadata = metadata,
+    frame.rate = frame.rate,
+    encoding = encoding
+  )
+
+}
+
+#' @rdname read.subtitles
+#' @export
+#' @noRd
+read_subtitles <- read.subtitles
 
 #' Create a \code{Subtitles} object
 #'
