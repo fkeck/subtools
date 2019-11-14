@@ -16,6 +16,8 @@ as_subtitle(x, format = "auto", clean.tags = TRUE, metadata = list(),
   metadata = list(), frame.rate = NA, encoding = "UTF-8", ...)
 }
 \arguments{
+\item{x}{an R object that can be coerced into a \code{Subtitles} object}
+
 \item{format}{a character string specifying the format of the subtitles.
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
@@ -31,8 +33,6 @@ If it fails, the frame rate is set at 24p (23.976).}
 \item{encoding}{the name of the encoding to be used.}
 
 \item{...}{passed on to downstream methods}
-
-\item{an}{R object that can be coerced into a \code{Subtitles} object}
 }
 \description{
 Convert an R object to a \code{Subtitles} object

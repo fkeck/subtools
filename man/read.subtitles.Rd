@@ -2,9 +2,13 @@
 % Please edit documentation in R/read_subtitles.R
 \name{read.subtitles}
 \alias{read.subtitles}
+\alias{read_subtitles}
 \title{Read subtitles}
 \usage{
 read.subtitles(file, format = "auto", clean.tags = TRUE,
+  metadata = list(), frame.rate = NA, encoding = "UTF-8")
+
+read_subtitles(file, format = "auto", clean.tags = TRUE,
   metadata = list(), frame.rate = NA, encoding = "UTF-8")
 }
 \arguments{

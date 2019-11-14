@@ -1,7 +1,7 @@
 #' Convert an R object to a `Subtitles` object
 #'
 #' @md
-#' @param an R object that can be coerced into a `Subtitles` object
+#' @param x an R object that can be coerced into a `Subtitles` object
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
@@ -265,8 +265,10 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
 #' @rdname read.subtitles
 #' @export
-#' @noRd
 read_subtitles <- read.subtitles
+
+
+
 
 #' Create a \code{Subtitles} object
 #'
