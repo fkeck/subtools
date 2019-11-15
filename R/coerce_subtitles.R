@@ -85,7 +85,7 @@ tmCorpus <- function(x, collapse = " "){
 subDataFrame <- function(x){
   if(is(x, "Subtitles")){
     res <- x$subtitles
-    if(!is.null(x$metadata)){
+    if(length(x$metadata) > 0){
       res <- cbind(res, sapply(x$metadata, function(x) rep(x, nrow(res))))
     }
   }
@@ -105,5 +105,23 @@ subDataFrame <- function(x){
     res <- cbind(res, meta.df)
   }
 
+  return(res)
+}
+
+
+
+#' Convert subtitles to a tibble
+#'
+#' This function converts \code{Subtitles} and \code{MultiSubtitles} objects
+#' to a \code{tibble} with one subtitle line per row; text, timecodes,
+#' and (expanded) meta-data as columns.
+#'
+#' @param x an object of class \code{Subtitles} or \code{MultiSubtitles}.
+#'
+#' @return A \code{tibble}.
+#' @export
+as_tibble.Subtitles <- function(x) {
+  res <- subDataFrame(x)
+  res <- as_tibble(res)
   return(res)
 }

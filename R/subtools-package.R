@@ -9,6 +9,7 @@
 #' @importFrom methods is
 #' @importFrom utils read.csv
 #' @importFrom jsonlite fromJSON
+#' @importFrom tibble as_tibble
 #'
 #' @name subtools
 "_PACKAGE"
