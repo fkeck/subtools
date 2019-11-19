@@ -57,3 +57,14 @@
   res <- as.numeric(res)
   return(res)
 }
+
+
+# For WebVTT parsing: select cue blocks only (drop REGION, STYLE, NOTE)
+.test_cuetiming <- function(x){
+  if (is.na(x)){
+    res <- FALSE
+  } else {
+    res <- grepl("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}", x)
+  }
+  return(res)
+}

@@ -4,7 +4,7 @@
 \alias{Subtitles}
 \title{Create a \code{Subtitles} object}
 \usage{
-Subtitles(text, timecode.in, timecode.out, id, metadata = list())
+Subtitles(text, timecode.in, timecode.out, id, metadata = data.frame())
 }
 \arguments{
 \item{text}{a character vector of subtitles text content.}
@@ -18,15 +18,12 @@ The format must be "HH:MM:SS.mS".}
 \item{id}{a vector of numeric ID for subtitles.
 If not provided it is generated automatically from \code{timecode.in} order.}
 
-\item{metadata}{a named list of metadata to be attached to the subtitles.}
+\item{metadata}{a one-row dataframe or tibble.}
 }
 \value{
-a \code{Subtitles} object i.e. a list of 2 elements:
-\describe{
-  \item{\code{subtitles}}{a \code{data.frame} with 4 columns containing IDs, timecodes and text of the subtitles.}
-  \item{\code{metadata}}{a named list of metadata attached to the subtitles.}
-}
+a \code{Subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
+timecodes and text of the subtitles and optionally metadata in extra columns.
 }
 \description{
-This function creates objects of class \code{Subtitles}.
+A \code{Subtitles} is a special form of \code{tibble}.
 }

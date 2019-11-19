@@ -1,9 +1,9 @@
 
 #' Clean subtitles
 #'
-#' Functions to clean subtitles. \code{cleanTags} cleans formatting tags.
-#' \code{cleanCaptions} cleans close captions.
-#' \code{cleanPatterns} provides a more general and flexible cleaning based on regular expressions.
+#' Functions to clean subtitles. \code{clean_tags} cleans formatting tags.
+#' \code{clean_captions} cleans close captions.
+#' \code{clean_patterns} provides a more general and flexible cleaning based on regular expressions.
 #'
 #' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
 #' @param format the original format of the \code{Subtitles} objects.
@@ -13,15 +13,15 @@
 #' @return A \code{Subtitles} or \code{MultiSubtitles} object.
 #' @export
 #' @rdname clean
-cleanTags <- function(x, format = "srt", clean.empty = TRUE){
+clean_tags <- function(x, format = "srt", clean.empty = TRUE){
 
-  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
-  }
+  # if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+  #   stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  # }
 
   if(is(x, "MultiSubtitles")){
 
-    x <- lapply(x, cleanTags, format = format, clean.empty = clean.empty)
+    x <- lapply(x, clean_tags, format = format, clean.empty = clean.empty)
     class(x) <- "MultiSubtitles"
 
   } else {
@@ -34,41 +34,16 @@ cleanTags <- function(x, format = "srt", clean.empty = TRUE){
                         several.ok = FALSE)
 
     if(format %in% c("srt", "subrip", "vtt", "webvtt", "all")){
-      x$subtitles$Text <- gsub("<.+?>", "", x$subtitles$Text)
+      x$Text_content <- gsub("<.+?>", "", x$Text_content)
     }
 
     if(format %in% c("ass", "ssa", "substation", "all")){
-      x$subtitles$Text <- gsub("\\{\\\\.+?\\}", "", x$subtitles$Text)
+      x$Text_content <- gsub("\\{\\\\.+?\\}", "", x$Text_content)
     }
 
 
     if(clean.empty){
-      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
-    }
-  }
-  return(x)
-}
-
-
-#' @rdname clean
-#' @export
-cleanCaptions <- function(x, clean.empty = TRUE){
-
-  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
-  }
-
-  if(is(x, "MultiSubtitles")){
-
-    x <- lapply(x, cleanCaptions, clean.empty = clean.empty)
-    class(x) <- "MultiSubtitles"
-
-  } else {
-
-    x$subtitles$Text <- gsub("\\( .+? \\)", "", x$subtitles$Text)
-
-    if(clean.empty){
-      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+      x <- x[x$Text_content != "", ]
     }
   }
   return(x)
@@ -77,7 +52,7 @@ cleanCaptions <- function(x, clean.empty = TRUE){
 
 #' @rdname clean
 #' @export
-cleanPatterns <- function(x, pattern, clean.empty = TRUE){
+clean_captions <- function(x, clean.empty = TRUE){
 
   if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
     stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
@@ -85,15 +60,40 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 
   if(is(x, "MultiSubtitles")){
 
-    x <- lapply(x, cleanPatterns, pattern = pattern, clean.empty = clean.empty)
+    x <- lapply(x, clean_captions, clean.empty = clean.empty)
     class(x) <- "MultiSubtitles"
 
   } else {
 
-    x$subtitles$Text <- gsub(pattern, "", x$subtitles$Text)
+    x$Text_content <- gsub("\\( .+? \\)", "", x$Text_content)
 
     if(clean.empty){
-      x$subtitles <- x$subtitles[x$subtitles$Text != "", ]
+      x <- x[x$Text_content != "", ]
+    }
+  }
+  return(x)
+}
+
+
+#' @rdname clean
+#' @export
+clean_patterns <- function(x, pattern, clean.empty = TRUE){
+
+  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  }
+
+  if(is(x, "MultiSubtitles")){
+
+    x <- lapply(x, clean_patterns, pattern = pattern, clean.empty = clean.empty)
+    class(x) <- "MultiSubtitles"
+
+  } else {
+
+    x$Text_content <- gsub(pattern, "", x$Text_content)
+
+    if(clean.empty){
+      x <- x[x$Text_content != "", ]
     }
   }
   return(x)
@@ -111,21 +111,21 @@ cleanPatterns <- function(x, pattern, clean.empty = TRUE){
 #'
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-#' s <- read.subtitles(f)
+#' s <- read_subtitles(f)
 #' sentencify(s)
 #'
 #' @export
 #'
 sentencify <- function(x){
-  ended <- grep("[\\.\\?!]\"$|[\\.\\?!]$", x$subtitles$Text)
-  f <- as.factor(findInterval(1:length(x$subtitles$Text)-1, ended))
-  new.txt <- split(x$subtitles$Text, f)
+  ended <- grep("[\\.\\?!]\"$|[\\.\\?!]$", x$Text_content)
+  f <- as.factor(findInterval(1:length(x$Text_content)-1, ended))
+  new.txt <- split(x$Text_content, f)
   new.txt <- sapply(new.txt, paste, collapse = " ", USE.NAMES = FALSE)
 
-  new.tcin <- split(x$subtitles$Timecode.in, f)
+  new.tcin <- split(x$Timecode_in, f)
   new.tcin <- sapply(new.tcin, min, USE.NAMES = FALSE)
 
-  new.tcout <- split(x$subtitles$Timecode.out, f)
+  new.tcout <- split(x$Timecode_out, f)
   new.tcout <- sapply(new.tcout, max, USE.NAMES = FALSE)
 
   new.txt <- strsplit(new.txt, split = "(?<=[\\.\\?!]|--) (?=[-A-Z])", perl = TRUE)
@@ -163,7 +163,7 @@ sentencify <- function(x){
   new.id <- seq_len(length(new.txt))
   res <- Subtitles(text = new.txt, timecode.in = new.tcin,
                    timecode.out = new.tcout, id = new.id,
-                   metadata = x$metadata)
+                   metadata = x$metadata) # PROBLEM WITH METADATA THEY MUST BE REDISTRIBUTED ALONG
   return(res)
 }
 

@@ -66,7 +66,7 @@ mkvInfo <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #' @details The function \code{\link{mkvInfo}} is a simple way to identify the ID of subtitles tracks from a MKV file.
 #'
 #' Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
-#' See \code{\link{read.subtitles}} for the list of formats currently supported.
+#' See \code{\link{read_subtitles}} for the list of formats currently supported.
 #'
 #' @return An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
 #' If several tracks are requested (via \code{id}), an object of class \code{MultiSubtitles};
@@ -120,7 +120,7 @@ mkvSubExtract <- function(file, id = 2,
 
       comm <- paste(mkvextract.exec, " tracks ", file, " ", id[i], ":", sub.file, sep = "")
       system(comm, ignore.stdout = TRUE)
-      sub.list[[i]] <- read.subtitles(sub.file)
+      sub.list[[i]] <- read_subtitles(sub.file)
     }
   }
 

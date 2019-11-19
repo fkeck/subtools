@@ -12,9 +12,9 @@
 #'
 #' @examples
 #' f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-#' s1 <- read.subtitles(f1)
+#' s1 <- read_subtitles(f1)
 #' f2 <- system.file("extdata", "ex_substation.ass", package = "subtools")
-#' s2 <- read.subtitles(f2)
+#' s2 <- read_subtitles(f2)
 #' combineSubs(s1, s2)
 #'
 #' @export
@@ -34,23 +34,23 @@ combineSubs <- function(..., collapse = TRUE, sequential = TRUE){
     id.max <- 0
     tcout.max <- "00:00:00.000"
     for(i in 1:length(sl)){
-      sl[[i]]$subtitles$ID <- as.numeric(sl[[i]]$subtitles$ID) + id.max
-      id.max <- max(sl[[i]]$subtitles$ID)
+      sl[[i]]$ID <- as.numeric(sl[[i]]$ID) + id.max
+      id.max <- max(sl[[i]]$ID)
 
-      sl[[i]]$subtitles$Timecode.in <- sapply(sl[[i]]$subtitles$Timecode.in,
+      sl[[i]]$Timecode_in <- sapply(sl[[i]]$Timecode_in,
                                               .add_timecodes,
                                               y = tcout.max, USE.NAMES = FALSE)
-      sl[[i]]$subtitles$Timecode.out <- sapply(sl[[i]]$subtitles$Timecode.out,
+      sl[[i]]$Timecode_out <- sapply(sl[[i]]$Timecode_out,
                                                .add_timecodes,
                                               y = tcout.max, USE.NAMES = FALSE)
-      tcout.max <- max(sl[[i]]$subtitles$Timecode.out)
+      tcout.max <- max(sl[[i]]$Timecode_out)
     }
   }
 
   if(collapse){
     sl <- do.call("rbind", lapply(sl, function(x) x$subtitles))
-    res <- Subtitles(text = sl$Text, timecode.in = sl$Timecode.in,
-                     timecode.out = sl$Timecode.out, id = sl$ID,
+    res <- Subtitles(text = sl$Text, timecode.in = sl$Timecode_in,
+                     timecode.out = sl$Timecode_out, id = sl$ID,
                      metadata = list())
   } else {
     res <- sl

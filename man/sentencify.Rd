@@ -18,7 +18,7 @@ in order that each subtitle line is a complete sentence.
 }
 \examples{
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-s <- read.subtitles(f)
+s <- read_subtitles(f)
 sentencify(s)
 
 }

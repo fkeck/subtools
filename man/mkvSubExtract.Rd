@@ -31,7 +31,7 @@ You must have \code{mkvmerge} and \code{mkvextract} installed on your computer.
 The function \code{\link{mkvInfo}} is a simple way to identify the ID of subtitles tracks from a MKV file.
 
 Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
-See \code{\link{read.subtitles}} for the list of formats currently supported.
+See \code{\link{read_subtitles}} for the list of formats currently supported.
 }
 \references{
 \url{https://mkvtoolnix.download/downloads.html}

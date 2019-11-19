@@ -5,7 +5,7 @@
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
-#' @param clean.tags logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{cleanTags}}.
+#' @param clean.tags logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.
 #' @param metadata a named list of metadata to be attached to the subtitles.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
@@ -25,14 +25,14 @@
 #'     ""
 #'   ), format = "webvtt"
 #' )
-as_subtitle <- function(x, format = "auto", clean.tags = TRUE, metadata = list(),
+as_subtitle <- function(x, format = "auto", clean.tags = TRUE, metadata = data.frame(),
                         frame.rate = NA, encoding = "UTF-8", ...){
   UseMethod("as_subtitle", x)
 }
 
 #' @rdname as_subtitle
 #' @export
-as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata = list(),
+as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata = data.frame(),
                                 frame.rate = NA, encoding = "UTF-8", ...){
 
   subs <- x
@@ -159,20 +159,9 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
     blocks.delim <- cbind(subs.newlines[-length(subs.newlines)] + 1, subs.newlines[-1] - 1)
     blocks <- apply(blocks.delim, 1, function(x) subs[x[1]:x[2]])
 
+    blocks <- blocks[sapply(blocks, function(x) any(sapply(x , function(y) .test_cuetiming(y))))]
 
-    # Select Cue blocks only (drop REGION, STYLE, NOTE)
-    test.cuetiming <- function(x){
-      if (is.na(x)){
-        res <- FALSE
-      } else {
-        res <- grepl("^(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}[[:blank:]]+-->[[:blank:]]+(?:[0-9]{2, }:)?[0-9]{2}:[0-9]{2}.[0-9]{3}", x)
-      }
-      return(res)
-    }
-
-    blocks <- blocks[sapply(blocks, function(x) any(sapply(x , function(y) test.cuetiming(y))))]
-
-    blocks.tc.pos <- sapply(blocks, function(x) which(sapply(x , function(y) test.cuetiming(y))))
+    blocks.tc.pos <- sapply(blocks, function(x) which(sapply(x , function(y) .test_cuetiming(y))))
 
     subs.n <- mapply(function(x, y, z) ifelse(y == 1, z, x[1]),
                      x = blocks,
@@ -203,7 +192,7 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
                    metadata = metadata)
 
   if(clean.tags){
-    res <- cleanTags(res, format = format)
+    res <- clean_tags(res, format = format)
   }
 
   return(res)
@@ -232,17 +221,10 @@ as_subtitle.character <- as_subtitle.default
 #' # read a SubRip file
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
-#' read.subtitles(f)
+#' read_subtitles(f)
 #'
-#' # snake case
-#' read_subtitles(
-#'   system.file("extdata", "ex_webvtt.vtt", package = "subtools"),
-#'   format = "webvtt"
-#' )
 #'
-#' @export
-#'
-read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = list(), frame.rate = NA, encoding = "UTF-8"){
+read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = data.frame(), frame.rate = NA, encoding = "UTF-8"){
 
   if(format == "auto"){
     format <- .extr_extension(file)
@@ -263,16 +245,10 @@ read.subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 
 }
 
-#' @rdname read.subtitles
-#' @export
-read_subtitles <- read.subtitles
-
-
-
 
 #' Create a \code{Subtitles} object
 #'
-#' This function creates objects of class \code{Subtitles}.
+#' A \code{Subtitles} is a special form of \code{tibble}.
 #'
 #' @param text a character vector of subtitles text content.
 #' @param timecode.in a character vector giving the time that the subtitles appear on the screen.
@@ -281,49 +257,43 @@ read_subtitles <- read.subtitles
 #' The format must be "HH:MM:SS.mS".
 #' @param id a vector of numeric ID for subtitles.
 #' If not provided it is generated automatically from \code{timecode.in} order.
-#' @param metadata a named list of metadata to be attached to the subtitles.
+#' @param metadata a one-row dataframe or tibble.
 #'
-#' @return a \code{Subtitles} object i.e. a list of 2 elements:
-#' \describe{
-#'   \item{\code{subtitles}}{a \code{data.frame} with 4 columns containing IDs, timecodes and text of the subtitles.}
-#'   \item{\code{metadata}}{a named list of metadata attached to the subtitles.}
-#' }
+#' @return a \code{Subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
+#' timecodes and text of the subtitles and optionally metadata in extra columns.
+#'
 #' @export
 #'
-Subtitles <- function(text, timecode.in, timecode.out, id, metadata = list()){
+Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame()){
   if(missing(id)){
+    warning("ID missing: A numerical sequence was used instead.")
     id <- order(timecode.in)
   }
-  subtitles <- data.frame(id, timecode.in, timecode.out, text, stringsAsFactors = FALSE)
-  names(subtitles) <- c("ID", "Timecode.in", "Timecode.out", "Text")
-  subtitles[ ,"Timecode.in"] <- .format_subtime(subtitles[ ,"Timecode.in"])
-  subtitles[ ,"Timecode.out"] <- .format_subtime(subtitles[ ,"Timecode.out"])
+  subtitles <- tibble::tibble(ID = id,
+                              Timecode_in = timecode.in,
+                              Timecode_out = timecode.out,
+                              Text_content = text)
+  subtitles$Timecode_in <- .format_subtime(subtitles$Timecode_in)
+  subtitles$Timecode_out <- .format_subtime(subtitles$Timecode_out)
 
-  res <- list(subtitles = subtitles, metadata = metadata)
-  class(res) <- "Subtitles"
-  return(res)
+  if(nrow(metadata) == 1){
+    metadata <- tibble::as_tibble(metadata)
+    metadata <- metadata[rep(1, nrow(subtitles)), ]
+    subtitles <- cbind(subtitles, metadata)
+  }
+
+  class(subtitles) <- c(class(subtitles), "Subtitles")
+
+  return(subtitles)
 }
 
 
-#' Print methods for subtitles
+#' Print method for MultiSubtitles
 #'
-#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
+#' @param x a \code{MultiSubtitles} object.
 #' @param printlen the maximum number of subtitles to print.
 #' @param ... further arguments passed to or from other methods.
 #'
-#' @export
-#' @rdname print_sub
-print.Subtitles <- function(x, printlen = 1000L, ...){
-  xlen <- dim(x$subtitles)[1]
-  if(printlen > xlen){
-    print(x$subtitles, ...)
-  } else {
-    print(x$subtitles[seq_len(printlen), ], ...)
-    cat("-----", xlen - printlen, "lines omitted.")
-  }
-}
-
-#' @rdname print_sub
 #' @export
 print.MultiSubtitles <- function(x, printlen = 10L, ...){
   cat("MultiSubtitles object:\n")
@@ -334,41 +304,33 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
   }
 }
 
-#' Extract parts of \code{Subtitles} objects
+
+
+#' Get basic informations for subtitle objects
 #'
-#' @param x a \code{Subtitles} object.
-#' @param i a vector of elements to extract.
-#' Can be numeric, character, or logical.
+#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
 #'
-#' @return A \code{Subtitles} object.
+#' @examples
+#' s <- read_subtitles(
+#'   system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' )
+#' sub_info(s)
 #'
 #' @export
-#'
-#'
-`[.Subtitles` <- function(x, i){
-  if (!missing(i)) {
-    x$subtitles <- x$subtitles[i, ]
+sub_info <- function(x){
+
+  if(is(x, "Subtitles")){
+    cat("Subtitles object")
+    cat("\n  Text lines:", nrow(x))
+    cat("\n  Duration:", .diff_timecodes(x$Timecode_out[nrow(x)], x$Timecode_in[1]))
+
+    metadata <- setdiff(names(x), c("ID", "Timecode_in", "Timecode_out", "Text_content"))
+    cat("\n  Metadata:", length(metadata))
+    if(length(metadata) > 0) cat("tags:", paste0(metadata, collapse = ", "))
   }
-  return(x)
+
+  if(is(x, "MultiSubtitles")){
+    cat("MultiSubtitles object with", length(x), "Subtitles.")
+  }
 }
 
-
-#' Summary methods for subtitles
-#'
-#' @param object a \code{Subtitles} or \code{MultiSubtitles} object.
-#' @param ... further arguments passed to or from other methods.
-#'
-#' @export
-#' @rdname summary_sub
-summary.Subtitles <- function(object, ...){
-  cat("Subtitles object")
-  cat("\n  Text lines:", dim(object$subtitles)[1])
-  cat("\n  Duration:", .diff_timecodes(object$subtitles$Timecode.out[dim(object$subtitles)[1]], object$subtitles$Timecode.in[1]))
-  cat("\n  Metadata:", length(object$metadata), "tags:", paste0(names(object$metadata), collapse = ", "))
-}
-
-#' @rdname summary_sub
-#' @export
-summary.MultiSubtitles <- function(object, ...){
-  cat("MultiSubtitles object with", length(object), "Subtitles.")
-}

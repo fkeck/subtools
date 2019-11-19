@@ -6,14 +6,14 @@
 \alias{as_subtitle.character}
 \title{Convert an R object to a \code{Subtitles} object}
 \usage{
-as_subtitle(x, format = "auto", clean.tags = TRUE, metadata = list(),
-  frame.rate = NA, encoding = "UTF-8", ...)
+as_subtitle(x, format = "auto", clean.tags = TRUE,
+  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
 
 \method{as_subtitle}{default}(x, format = "auto", clean.tags = TRUE,
-  metadata = list(), frame.rate = NA, encoding = "UTF-8", ...)
+  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
 
 \method{as_subtitle}{character}(x, format = "auto", clean.tags = TRUE,
-  metadata = list(), frame.rate = NA, encoding = "UTF-8", ...)
+  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
 }
 \arguments{
 \item{x}{an R object that can be coerced into a \code{Subtitles} object}
@@ -22,7 +22,7 @@ as_subtitle(x, format = "auto", clean.tags = TRUE, metadata = list(),
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
 
-\item{clean.tags}{logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{cleanTags}}.}
+\item{clean.tags}{logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.}
 
 \item{metadata}{a named list of metadata to be attached to the subtitles.}
 

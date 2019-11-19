@@ -23,9 +23,9 @@ Combine \code{Subtitles} or/and \code{MultiSubtitles} objects.
 }
 \examples{
 f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-s1 <- read.subtitles(f1)
+s1 <- read_subtitles(f1)
 f2 <- system.file("extdata", "ex_substation.ass", package = "subtools")
-s2 <- read.subtitles(f2)
+s2 <- read_subtitles(f2)
 combineSubs(s1, s2)
 
 }
