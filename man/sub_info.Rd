@@ -12,3 +12,10 @@ sub_info(x)
 \description{
 Get basic informations for subtitle objects
 }
+\examples{
+s <- read_subtitles(
+  system.file("extdata", "ex_subrip.srt", package = "subtools")
+)
+sub_info(s)
+
+}
