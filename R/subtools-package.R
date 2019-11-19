@@ -10,6 +10,7 @@
 #' @importFrom utils read.csv
 #' @importFrom jsonlite fromJSON
 #' @importFrom tibble as_tibble
+#' @importFrom dplyr bind_rows bind_cols
 #'
 #' @name subtools
 "_PACKAGE"
