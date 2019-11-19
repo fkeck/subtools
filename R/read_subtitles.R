@@ -276,10 +276,13 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
   subtitles$Timecode_in <- .format_subtime(subtitles$Timecode_in)
   subtitles$Timecode_out <- .format_subtime(subtitles$Timecode_out)
 
-  if(nrow(metadata) == 1){
+  if (nrow(metadata) == 1){
     metadata <- tibble::as_tibble(metadata)
     metadata <- metadata[rep(1, nrow(subtitles)), ]
-    subtitles <- cbind(subtitles, metadata)
+    subtitles <- dplyr::bind_cols(subtitles, metadata)
+  } else if (nrow(metadata) == nrow(subtitles)){
+    metadata <- tibble::as_tibble(metadata)
+    subtitles <- dplyr::bind_cols(subtitles, metadata)
   }
 
   class(subtitles) <- c(class(subtitles), "Subtitles")
@@ -299,7 +302,7 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
   cat("MultiSubtitles object:\n")
   for(i in 1:length(x)){
     cat("Subtitles object [[", i, "]]\n", sep = "")
-    print.Subtitles(x[[i]], printlen = printlen)
+    print(x[[i]], printlen = printlen)
     cat("\n\n")
   }
 }
