@@ -297,13 +297,23 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
 #' @param printlen the maximum number of subtitles to print.
 #' @param ... further arguments passed to or from other methods.
 #'
+#' @examples
+#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+#' s <- read_subtitles(f)
+#'
+#' bind_subs(s, s, s, s, s, s, collapse = FALSE)
+#'
 #' @export
 print.MultiSubtitles <- function(x, printlen = 10L, ...){
-  cat("MultiSubtitles object:\n")
-  for(i in 1:length(x)){
+  cat("A MultiSubtitles object with", length(x), "elements\n")
+  toprint <- ifelse(length(x) > printlen, printlen, length(x))
+  for(i in 1:toprint){
     cat("Subtitles object [[", i, "]]\n", sep = "")
-    print(x[[i]], printlen = printlen)
+    print(x[[i]])
     cat("\n\n")
+  }
+  if(length(x) > printlen) {
+    cat("...and ", printlen - length(x), "other subtitles elements")
   }
 }
 
