@@ -1,7 +1,7 @@
 
 #' Get subtitles text
 #'
-#' This function returns the raw text content of subtitles objects as a character string.
+#' This function extracts the raw text content of subtitles objects as a character string.
 #'
 #' @param x an object of class \code{Subtitles} or \code{MultiSubtitles}.
 #' @param collapse a character string to separate the subtitles lines.
@@ -16,7 +16,7 @@
 #'
 #' @export
 #'
-rawText <- function(x, collapse = " "){
+raw_text <- function(x, collapse = " "){
   if(inherits(x, "Subtitles")){
     res <- x$Text_content
     res <- paste(res, collapse = collapse)
