@@ -10,8 +10,9 @@
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails, the frame rate is set at 24p (23.976).
-#' @param encoding the name of the encoding to be used.
-#' @param ... passed on to downstream methods
+#' @param encoding the name of the encoding to be used. Default is "\code{auto}" and
+#' uses \code{\link[readr::guess_encoding]{readr::guess_encoding()}} to detect encoding.
+#' @param ... passed on to downstream methods.
 #' @export
 #' @examples
 #' as_subtitle(
@@ -26,14 +27,14 @@
 #'   ), format = "webvtt"
 #' )
 as_subtitle <- function(x, format = "auto", clean.tags = TRUE, metadata = data.frame(),
-                        frame.rate = NA, encoding = "UTF-8", ...){
+                        frame.rate = NA, encoding = "auto", ...){
   UseMethod("as_subtitle", x)
 }
 
 #' @rdname as_subtitle
 #' @export
 as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata = data.frame(),
-                                frame.rate = NA, encoding = "UTF-8", ...){
+                                frame.rate = NA, encoding = "auto", ...){
 
   subs <- x
   i <- 1
@@ -224,15 +225,23 @@ as_subtitle.character <- as_subtitle.default
 #' read_subtitles(f)
 #'
 #'
-read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = data.frame(), frame.rate = NA, encoding = "UTF-8"){
+read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = data.frame(), frame.rate = NA, encoding = "auto"){
 
-  if(format == "auto"){
+  if(format == "auto") {
     format <- .extr_extension(file)
   }
 
-  con <- file(file, encoding = encoding)
-  subs <- readLines(con, warn = FALSE, encoding = encoding)
-  close(con)
+  if(encoding == "auto") {
+    encoding <- readr::guess_encoding(file)$encoding[1]
+  }
+
+  if(encoding == "ASCII") {
+    subs <- readLines(file)
+  } else {
+    con <- file(file, encoding = encoding)
+    subs <- readLines(con, warn = FALSE, encoding = encoding)
+    close(con)
+  }
 
   as_subtitle(
     x = subs,
