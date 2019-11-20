@@ -15,9 +15,9 @@
 #' @rdname clean
 clean_tags <- function(x, format = "srt", clean.empty = TRUE){
 
-  # if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-  #   stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
-  # }
+  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
+    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  }
 
   if(is(x, "MultiSubtitles")){
 
