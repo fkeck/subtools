@@ -25,7 +25,7 @@ Bind \code{Subtitles} or/and \code{MultiSubtitles} objects.
 f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 s1 <- read_subtitles(f1, metadata = tibble(Season = 1, Episode = 2))
 f2 <- system.file("extdata", "ex_substation.ass", package = "subtools")
-s2 <- read_subtitles(f2)
+s2 <- read_subtitles(f2, metadata = tibble(Season = 2))
 bind_subs(s1, s2)
-
+bind_subs(s1, s2, collapse = FALSE)
 }
