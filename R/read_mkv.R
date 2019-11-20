@@ -18,7 +18,7 @@
 #'
 #' @export
 #'
-mkvInfo <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
+mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 
   if(file.exists(file)){
     file <- normalizePath(file)
@@ -63,7 +63,7 @@ mkvInfo <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #' @param mkvextract.exec a character string giving the path to the \code{mkvextract} executable.
 #' @param mkvmerge.exec  character string giving the path to the \code{mkvmerge} executable.
 #'
-#' @details The function \code{\link{mkvInfo}} is a simple way to identify the ID of subtitles tracks from a MKV file.
+#' @details The function \code{\link{mkv_info}} is a simple way to identify the ID of subtitles tracks from a MKV file.
 #'
 #' Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
 #' See \code{\link{read_subtitles}} for the list of formats currently supported.
@@ -77,11 +77,11 @@ mkvInfo <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #'
 #' @export
 #'
-mkvSubExtract <- function(file, id = 2,
+mkv_subs_extract <- function(file, id = 2,
                           mkvextract.exec = "mkvextract",
                           mkvmerge.exec = "mkvmerge"){
 
-  info <- mkvInfo(file, mkvmerge.exec = mkvmerge.exec, print.info = FALSE)$tracks
+  info <- mkv_info(file, mkvmerge.exec = mkvmerge.exec, print.info = FALSE)$tracks
 
   if (file.exists(file)) {
     file <- normalizePath(file)
@@ -115,7 +115,6 @@ mkvSubExtract <- function(file, id = 2,
       if (codec.i == "S_TEXT/ASS" | codec.i == "S_ASS") ext.i <- ".ass"
       if (codec.i == "S_TEXT/WEBVTT") ext.i <- ".vtt"
 
-
       sub.file <- tempfile(fileext = ext.i)
 
       comm <- paste(mkvextract.exec, " tracks ", file, " ", id[i], ":", sub.file, sep = "")
@@ -138,6 +137,6 @@ mkvSubExtract <- function(file, id = 2,
 # file <- "/home/francois/Téléchargements/1962NOZW77517uch/Nóż w wodzie.mkv"
 # file <- "/home/francois/Téléchargements/Laurence.Anyways.2012.FRENCH.BRRip.XviD-S.V-Libertyland.tv.avi"
 #
-# mkvSubExtract(file, id = NA)
-# mkvInfo(file)
+# mkv_subs_extract(file, id = NA)
+# mkv_info(file)
 
