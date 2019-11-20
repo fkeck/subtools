@@ -300,8 +300,7 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' s <- read_subtitles(f)
-#'
-#' bind_subs(s, s, s, s, s, s, collapse = FALSE)
+#' bind_subs(s, s, collapse = FALSE)
 #'
 #' @export
 print.MultiSubtitles <- function(x, printlen = 10L, ...){
