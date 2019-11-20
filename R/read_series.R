@@ -52,7 +52,7 @@ read_subtitles_season <- function(dir, format = "auto", bind = TRUE, quietly = F
   # Reorder by episode number (if episode numbers were correctly extracted)
   enum <- .extr_enum(file.list)
   if(is.numeric(enum) & all(!is.na(enum)) & anyDuplicated(enum) == 0) {
-    res <- res[.extr_enum(file.list)]
+    res <- res[enum]
   }
 
   class(res) <- "MultiSubtitles"
@@ -61,29 +61,41 @@ read_subtitles_season <- function(dir, format = "auto", bind = TRUE, quietly = F
     res <- bind_subs(res)
   }
 
-  invisible(res)
+  return(res)
 }
 
 
 #' @rdname read_series
 #' @export
-read_subtitles_serie <- function(dir, quietly = FALSE, format = "auto", ...){
+read_subtitles_serie <- function(dir, format = "auto", bind = TRUE, quietly = FALSE, ...){
   file.list <- dir(dir, full.names = TRUE)
   n.season <- length(file.list)
 
   res <- vector(mode = "list", length = n.season)
   for(i in 1:n.season){
-    res[[i]] <- read_subtitles_season(file.list[i], quietly = TRUE, format = format, ...)
-    res[[i]] <- lapply(res[[i]], function(x){x$metadata$serie <- .extr_filename(dir); return(x)})
+    res[[i]] <- read_subtitles_season(file.list[i], bind = FALSE, quietly = TRUE, format = format, ...)
+    res[[i]] <- lapply(res[[i]], function(x){x$Serie <- .extr_filename(dir); return(x)})
   }
+
+  # Reorder by season number (if season numbers were correctly extracted)
+  snum <- .extr_snum(file.list)
+  if(is.numeric(snum) & all(!is.na(snum)) & anyDuplicated(snum) == 0) {
+    res <- res[snum]
+  }
+
   res <- unlist(res, recursive = FALSE)
 
   if(!quietly){
-    cat(paste("Read:", n.season, "seasons,", length(res), "episodes"))
+    cat(paste("Read:", n.season, "seasons,", length(res), "episodes\n"))
   }
 
   class(res) <- "MultiSubtitles"
-  invisible(res)
+
+  if(bind) {
+    res <- bind_subs(res)
+  }
+
+  return(res)
 }
 
 
@@ -110,6 +122,6 @@ read_subtitles_multiseries <- function(dir, quietly = FALSE, format = "auto", ..
 
 
 # q <- read_subtitles_season("/home/francois/Documents/multisubs/Breaking Bad/Season 1")
-# q <- read_subtitles_season("/home/francois/Documents/multisubs/Breaking Bad/Season 1")
+# q <- read_subtitles_serie("/home/francois/Documents/multisubs/Breaking Bad")
 #
 # read_subtitles("/home/francois/Documents/multisubs/Breaking Bad/Season 1/Breaking.Bad.S01E01.720p.HDTV.x264-BiA.srt")
