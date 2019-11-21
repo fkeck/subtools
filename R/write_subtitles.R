@@ -10,14 +10,14 @@
 #'
 #' @export
 #'
-write.subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
+write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
 
   if(!is(x, "Subtitles")){
     stop("x must be a 'Subtitles' object.")
   }
-  tc <- paste(x$subtitles$Timecode.in, x$subtitles$Timecode.out, sep = " --> ")
+  tc <- paste(x$Timecode_in, x$Timecode_out, sep = " --> ")
   tc <- gsub("\\.", ",", tc)
-  res <- paste(x$subtitles$ID, tc, x$subtitles$Text, sep = "\n", collapse = "\n\n")
+  res <- paste(x$ID, tc, x$Text_content, sep = "\n", collapse = "\n\n")
 
   con <- file(file, encoding = encoding)
   writeLines(res, con)
