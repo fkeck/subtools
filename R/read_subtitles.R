@@ -36,6 +36,7 @@ as_subtitle <- function(x, format = "auto", clean.tags = TRUE, metadata = data.f
 as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata = data.frame(),
                                 frame.rate = NA, encoding = "auto", ...){
 
+  # Trim empty lines at the beginning and end of the file
   subs <- x
   i <- 1
   while(subs[i] == ""){i <- i + 1}
@@ -47,10 +48,12 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
   format <- match.arg(format, choices = c("srt", "subrip",
                                           "sub", "subviewer", "microdvd",
                                           "ssa", "ass", "substation",
-                                          "vtt", "webvtt","auto"),
+                                          "vtt", "webvtt", "auto"),
                       several.ok = FALSE)
 
-  if(format == "sub"){                  #This is a very light test to solve the .sub extension
+  # .sub can be microdvd or subviewer
+  #This is a very light test to solve the .sub extension
+  if(format == "sub"){
     if(substr(subs[1], start = 1L, stop = 1L) == "{"){
       format <- "microdvd"
     } else {
@@ -60,6 +63,11 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
 
 
   if(format %in% c("srt", "subrip")){
+
+    # Get rid off multiple empty new lines
+    empty_li <- which(subs == "")
+    subs <- subs[-empty_li[c(empty_li, -1) == c(-1, empty_li + 1)]]
+
     subs.newlines <- c(0, which(subs == ""))
     subs.n.li <- subs.newlines + 1
     subs.time.li <- subs.newlines + 2
