@@ -15,6 +15,8 @@
 #' The function \code{read_subtitles_serie} reads everything recursively from a serie folder (e.g. "Serie_A").
 #' The function \code{read_subtitles_season} reads everything from a season folder (e.g. "Season_1").
 #' To read a specific episode file (e.g. "Episode_1.srt), use \code{\link{read_subtitles}}.
+#'
+#'
 #'\preformatted{
 #'Series_Collection
 #'|-- Serie_A
@@ -27,8 +29,9 @@
 #'|   |   |-- Episode_1.srt
 #'|   |   |-- Episode_2.srt}
 #'
-#' @return An object of class \code{MultiSubtitles};
-#' i.e. a list of \code{\link{Subtitles}} objects.
+#' @return If \code{bind} is set on \code{TRUE} a \code{Subtitles} object,
+#' otherwise an object of class \code{MultiSubtitles};
+#' i.e. a list of \code{Subtitles} objects.
 #' @export
 #' @rdname read_series
 read_subtitles_season <- function(dir, format = "auto", bind = TRUE, quietly = FALSE, ...){
@@ -101,13 +104,13 @@ read_subtitles_serie <- function(dir, format = "auto", bind = TRUE, quietly = FA
 
 #' @rdname read_series
 #' @export
-read_subtitles_multiseries <- function(dir, quietly = FALSE, format = "auto", ...){
+read_subtitles_multiseries <- function(dir, format = "auto", bind = TRUE, quietly = FALSE, ...){
   file.list <- dir(dir, full.names = TRUE)
   n.series <- length(file.list)
 
   res <- vector(mode = "list", length = n.series)
   for(i in 1:n.series){
-    res[[i]] <- read_subtitles_serie(file.list[i], quietly = TRUE, format = format, ...)
+    res[[i]] <- read_subtitles_serie(file.list[i], bind = FALSE, quietly = TRUE, format = format, ...)
   }
   res <- unlist(res, recursive = FALSE)
 
@@ -116,12 +119,18 @@ read_subtitles_multiseries <- function(dir, quietly = FALSE, format = "auto", ..
   }
 
   class(res) <- "MultiSubtitles"
-  invisible(res)
+
+  if(bind) {
+    res <- bind_subs(res)
+  }
+
+  return(res)
 }
 
 
 
 # q <- read_subtitles_season("/home/francois/Documents/multisubs/Breaking Bad/Season 1")
 # q <- read_subtitles_serie("/home/francois/Documents/multisubs/Breaking Bad")
+# q <- read_subtitles_multiseries("/home/francois/Documents/multisubs")
 #
-# read_subtitles("/home/francois/Documents/multisubs/Breaking Bad/Season 1/Breaking.Bad.S01E01.720p.HDTV.x264-BiA.srt")
+# read_subtitles("/home/francois/Documents/multisubs/Dead Set/Season 1/dead.set.s01e01.dvdrip.xvid-haggis.srt")
