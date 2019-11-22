@@ -1,0 +1,40 @@
+WEBVTT From: https://www.loremipsum.com
+
+NOTE
+This file for test
+STYLE
+::cue {
+  background-image: linear-gradient(to bottom, dimgray, lightgray);
+  color: green;
+}
+
+
+00:00:22.500 --> 00:00:24.100
+Lorem ipsum dolor sit amet,
+consectetur adipiscing elit.
+
+NOTE Now will come the next cue:
+
+00:00:25.500 --> 00:00:27.100
+Donec eu nisl commodo,
+elementum dui ut, gravida orci.
+
+00:00:28.700 --> 00:00:29.100
+Nulla aliquam,
+
+
+00:00:29.900 --> 00:00:31.100
+nibh cursus interdum volutpat,
+
+
+00:00:31.900 --> 00:00:33.100 line:63% position:72% align:start
+dolor lacus hendrerit tellus,
+vel faucibus justo nisi quis felis.
+
+
+00:00:33.900 --> 00:00:34.800
+Suspendisse potenti.
+
+
+
+NOTE end of file
