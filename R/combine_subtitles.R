@@ -12,14 +12,14 @@
 #'
 #' @examples
 #' f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-#' s1 <- read_subtitles(f1, metadata = tibble(Season = 1, Episode = 2))
+#' s1 <- read_subtitles(f1, metadata = tibble::tibble(Season = 1, Episode = 2))
 #' f2 <- system.file("extdata", "ex_substation.ass", package = "subtools")
-#' s2 <- read_subtitles(f2, metadata = tibble(Season = 2))
-#' bind_subs(s1, s2)
-#' bind_subs(s1, s2, collapse = FALSE)
+#' s2 <- read_subtitles(f2, metadata = tibble::tibble(Season = 2))
+#' bind_subtitles(s1, s2, sequential = F)
+#' bind_subtitles(s1, s2, collapse = FALSE)
 #' @export
 #'
-bind_subs <- function(..., collapse = TRUE, sequential = TRUE){
+bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
   input <- list(...)
   sl <- list()
     for(i in 1:length(input)){
@@ -32,16 +32,16 @@ bind_subs <- function(..., collapse = TRUE, sequential = TRUE){
 
   if(sequential){
     id.max <- 0
-    tcout.max <- "00:00:00.000"
+    tcout.max <- hms::as_hms("00:00:00.000")
     for(i in 1:length(sl)){
       sl[[i]]$ID <- as.numeric(sl[[i]]$ID) + id.max
       id.max <- max(sl[[i]]$ID)
 
       sl[[i]]$Timecode_in <- sapply(sl[[i]]$Timecode_in,
-                                              .add_timecodes,
+                                              `+`,
                                               y = tcout.max, USE.NAMES = FALSE)
       sl[[i]]$Timecode_out <- sapply(sl[[i]]$Timecode_out,
-                                               .add_timecodes,
+                                              `+`,
                                               y = tcout.max, USE.NAMES = FALSE)
       tcout.max <- max(sl[[i]]$Timecode_out)
     }
