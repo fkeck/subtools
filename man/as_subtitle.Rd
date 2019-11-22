@@ -7,13 +7,13 @@
 \title{Convert an R object to a \code{Subtitles} object}
 \usage{
 as_subtitle(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
+  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
 
 \method{as_subtitle}{default}(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
+  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
 
 \method{as_subtitle}{character}(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8", ...)
+  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
 }
 \arguments{
 \item{x}{an R object that can be coerced into a \code{Subtitles} object}
@@ -30,9 +30,10 @@ Default is \code{"auto"} which tries to detect automatically the format of the f
 If \code{NA} (default), the function tries to extract the frame.rate from the file.
 If it fails, the frame rate is set at 24p (23.976).}
 
-\item{encoding}{the name of the encoding to be used.}
+\item{encoding}{the name of the encoding to be used. Default is "\code{auto}" and
+uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 
-\item{...}{passed on to downstream methods}
+\item{...}{passed on to downstream methods.}
 }
 \description{
 Convert an R object to a \code{Subtitles} object
