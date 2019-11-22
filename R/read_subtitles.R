@@ -6,12 +6,13 @@
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
 #' @param clean.tags logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.
-#' @param metadata a named list of metadata to be attached to the subtitles.
+#' @param metadata a one-row dataframe or tibble, or any object that can be coerced
+#' into a one-row tibble by \code{link[tibble]{as_tibble}}.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 #' If \code{NA} (default), the function tries to extract the frame.rate from the file.
 #' If it fails, the frame rate is set at 24p (23.976).
 #' @param encoding the name of the encoding to be used. Default is "\code{auto}" and
-#' uses \code{\link[readr::guess_encoding]{readr::guess_encoding()}} to detect encoding.
+#' uses \code{\link[readr]{guess_encoding}} to detect encoding.
 #' @param ... passed on to downstream methods.
 #' @export
 #' @examples
@@ -66,7 +67,10 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
 
     # Get rid off multiple empty new lines
     empty_li <- which(subs == "")
-    subs <- subs[-empty_li[c(empty_li, -1) == c(-1, empty_li + 1)]]
+    to_del <- empty_li[c(empty_li, -1) == c(-1, empty_li + 1)]
+    if(length(to_del) > 0) {
+      subs <- subs[-to_del]
+    }
 
     subs.newlines <- c(0, which(subs == ""))
     subs.n.li <- subs.newlines + 1
@@ -124,10 +128,10 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
     timecode <- lapply(timecode, gsub, pattern = "[\\{\\}]", replacement = "")
     timecode.in <- sapply(timecode, function(x) x[1])
     timecode.in <- as.numeric(timecode.in) / frame.rate
-    timecode.in <- .s_to_hms(timecode.in)
+    timecode.in <- as.character(hms::hms(seconds = timecode.in))
     timecode.out <- sapply(timecode, function(x) x[2])
     timecode.out <- as.numeric(timecode.out) / frame.rate
-    timecode.out <- .s_to_hms(timecode.out)
+    timecode.out <- as.character(hms::hms(seconds = timecode.out))
 
     subs.txt <- gsub("(\\{.+\\})+", "", subs)
     subs.txt <- gsub("\\|", " ", subs.txt)
@@ -232,7 +236,7 @@ as_subtitle.character <- as_subtitle.default
 #' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 #' read_subtitles(f)
 #'
-#'
+#' @export
 read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = data.frame(), frame.rate = NA, encoding = "auto"){
 
   if(format == "auto") {
@@ -274,7 +278,8 @@ read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 #' The format must be "HH:MM:SS.mS".
 #' @param id a vector of numeric ID for subtitles.
 #' If not provided it is generated automatically from \code{timecode.in} order.
-#' @param metadata a one-row dataframe or tibble.
+#' @param metadata a one-row dataframe or tibble, or any object that can be coerced
+#' into a one-row tibble by \code{link[tibble]{as_tibble}}.
 #'
 #' @return a \code{Subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
 #' timecodes and text of the subtitles and optionally metadata in extra columns.
@@ -286,10 +291,14 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
     warning("ID missing: A numerical sequence was used instead.")
     id <- order(timecode.in)
   }
-  subtitles <- tibble::tibble(ID = id,
-                              Timecode_in = timecode.in,
-                              Timecode_out = timecode.out,
-                              Text_content = text)
+  subtitles <- tibble::tibble(ID = as.character(id),
+                              Timecode_in = as.character(timecode.in),
+                              Timecode_out = as.character(timecode.out),
+                              Text_content = as.character(text)
+                              )
+  # subtitles$Timecode_in <- sapply(subtitles$Timecode_in, .format_subtime)
+  # subtitles$Timecode_out <- sapply(subtitles$Timecode_out, .format_subtime)
+
   subtitles$Timecode_in <- .format_subtime(subtitles$Timecode_in)
   subtitles$Timecode_out <- .format_subtime(subtitles$Timecode_out)
 
@@ -302,8 +311,8 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
     subtitles <- dplyr::bind_cols(subtitles, metadata)
   }
 
-  class(subtitles) <- c(class(subtitles), "Subtitles")
-
+  class(subtitles) <- c("Subtitles", class(subtitles))
+  .validate_subtitles(subtitles)
   return(subtitles)
 }
 
@@ -317,7 +326,7 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' s <- read_subtitles(f)
-#' bind_subs(s, s, collapse = FALSE)
+#' bind_subtitles(s, s, collapse = FALSE)
 #'
 #' @export
 print.MultiSubtitles <- function(x, printlen = 10L, ...){
@@ -343,15 +352,15 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 #' s <- read_subtitles(
 #'   system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' )
-#' sub_info(s)
+#' get_subtitles_info(s)
 #'
 #' @export
-sub_info <- function(x){
+get_subtitles_info <- function(x){
 
   if(is(x, "Subtitles")){
     cat("Subtitles object")
     cat("\n  Text lines:", nrow(x))
-    cat("\n  Duration:", .diff_timecodes(x$Timecode_out[nrow(x)], x$Timecode_in[1]))
+    cat("\n  Duration:", as.character(hms::as_hms(x$Timecode_out[nrow(x)] - x$Timecode_in[1])))
 
     metadata <- setdiff(names(x), c("ID", "Timecode_in", "Timecode_out", "Text_content"))
     cat("\n  Metadata:", length(metadata))
