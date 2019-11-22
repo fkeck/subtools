@@ -11,17 +11,19 @@
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' s <- read_subtitles(f)
-#' rawText(s)
-#' cat(rawText(s, collapse = "\n"))
+#' get_raw_text(s)
+#' cat(get_raw_text(s, collapse = "\n"))
 #'
 #' @export
 #'
-raw_text <- function(x, collapse = " "){
+get_raw_text <- function(x, collapse = " "){
   if(inherits(x, "Subtitles")){
+    .validate_subtitles(x)
     res <- x$Text_content
     res <- paste(res, collapse = collapse)
   }
   if(inherits(x, "MultiSubtitles")){
+    lapply(x, .validate_subtitles)
     res <- lapply(x, function(x) x$Text_content)
     res <- do.call("c", res)
     res <- paste(res, collapse = collapse)
