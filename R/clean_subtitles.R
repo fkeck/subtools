@@ -25,7 +25,7 @@ clean_tags <- function(x, format = "srt", clean.empty = TRUE){
     class(x) <- "MultiSubtitles"
 
   } else {
-
+    .validate_subtitles(x)
     format <- match.arg(format,
                         choices = c("srt", "subrip",
                                     "sub", "subviewer", "microdvd",
@@ -64,6 +64,7 @@ clean_captions <- function(x, clean.empty = TRUE){
     class(x) <- "MultiSubtitles"
 
   } else {
+    .validate_subtitles(x)
 
     x$Text_content <- gsub("\\( .+? \\)", "", x$Text_content)
 
@@ -89,6 +90,7 @@ clean_patterns <- function(x, pattern, clean.empty = TRUE){
     class(x) <- "MultiSubtitles"
 
   } else {
+    .validate_subtitles(x)
 
     x$Text_content <- gsub(pattern, "", x$Text_content)
 
@@ -97,74 +99,6 @@ clean_patterns <- function(x, pattern, clean.empty = TRUE){
     }
   }
   return(x)
-}
-
-
-#' Reorganize subtitles as sentences
-#'
-#' This function reorganizes a \code{Subtitles} object
-#' in order that each subtitle line is a complete sentence.
-#'
-#' @param x a \code{Subtitles} object.
-#'
-#' @return A \code{Subtitles} object.
-#'
-#' @examples
-#' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
-#' s <- read_subtitles(f)
-#' sentencify(s)
-#'
-#' @export
-#'
-sentencify <- function(x){
-  ended <- grep("[\\.\\?!]\"$|[\\.\\?!]$", x$Text_content)
-  f <- as.factor(findInterval(1:length(x$Text_content)-1, ended))
-  new.txt <- split(x$Text_content, f)
-  new.txt <- sapply(new.txt, paste, collapse = " ", USE.NAMES = FALSE)
-
-  new.tcin <- split(x$Timecode_in, f)
-  new.tcin <- sapply(new.tcin, min, USE.NAMES = FALSE)
-
-  new.tcout <- split(x$Timecode_out, f)
-  new.tcout <- sapply(new.tcout, max, USE.NAMES = FALSE)
-
-  new.txt <- strsplit(new.txt, split = "(?<=[\\.\\?!]|--) (?=[-A-Z])", perl = TRUE)
-  new.txt.length <- sapply(new.txt, length)
-
-  fun <- function(tcin, tcout, n){
-    d <- .diff_timecodes(tcin, tcout)
-    d <- .div_timecode(d, n)
-    if(n == 1){
-      r1 <- tcin
-      r2 <- .add_timecodes(tcin, d)
-    } else {
-      r1 <- r2 <- rep(NA, n)
-      for(i in 1:n){
-        if(i == 1){
-          r1[i] <- tcin
-          r2[i] <- .add_timecodes(tcin, d)
-        } else {
-          r1[i] <- .add_timecodes(r1[i-1], d)
-          r2[i] <- .add_timecodes(r1[i], d)
-        }
-      }
-      r1 <- unlist(lapply(r1, .add_timecodes, y = "00:00:00.010"))
-      r2 <- unlist(lapply(r2, .diff_timecodes, y = "00:00:00.010"))
-    }
-    return(list(r1, r2))
-  }
-
-  tc <- mapply(function(tcin, tcout, n) fun(tcin, tcout, n),
-               tcin = new.tcin, tcout = new.tcout, n = new.txt.length,
-               SIMPLIFY = FALSE)
-  new.tcin <- unlist(lapply(tc, function(x) x[[1]]))
-  new.tcout <- unlist(lapply(tc, function(x) x[[2]]))
-  new.txt <- unlist(new.txt)
-  new.id <- seq_len(length(new.txt))
-  res <- Subtitles(text = new.txt, timecode.in = new.tcin,
-                   timecode.out = new.tcout, id = new.id,
-                   metadata = x$metadata) # PROBLEM WITH METADATA THEY MUST BE REDISTRIBUTED ALONG
-  return(res)
 }
 
 
