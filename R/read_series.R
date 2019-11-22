@@ -8,6 +8,7 @@
 #' @param quietly a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.
 #' @param format a character string specifying the format of the subtitles
 #' (default is "\code{auto}", see \code{\link{read_subtitles}} for details).
+#' @param bind a logical. If \code{TRUE} (default), subtitles are binded with \code{\link{bind_subtitles}}
 #' @param ... further arguments to be passed to \code{\link{read_subtitles}}.
 #'
 #' @details These functions read subtitles files at different levels from a 3-levels directory (see the tree below).
@@ -61,7 +62,7 @@ read_subtitles_season <- function(dir, format = "auto", bind = TRUE, quietly = F
   class(res) <- "MultiSubtitles"
 
   if(bind) {
-    res <- bind_subs(res)
+    res <- bind_subtitles(res)
   }
 
   return(res)
@@ -95,7 +96,7 @@ read_subtitles_serie <- function(dir, format = "auto", bind = TRUE, quietly = FA
   class(res) <- "MultiSubtitles"
 
   if(bind) {
-    res <- bind_subs(res)
+    res <- bind_subtitles(res)
   }
 
   return(res)
@@ -121,16 +122,9 @@ read_subtitles_multiseries <- function(dir, format = "auto", bind = TRUE, quietl
   class(res) <- "MultiSubtitles"
 
   if(bind) {
-    res <- bind_subs(res)
+    res <- bind_subtitles(res)
   }
 
   return(res)
 }
 
-
-
-# q <- read_subtitles_season("/home/francois/Documents/multisubs/Breaking Bad/Season 1")
-# q <- read_subtitles_serie("/home/francois/Documents/multisubs/Breaking Bad")
-# q <- read_subtitles_multiseries("/home/francois/Documents/multisubs")
-#
-# read_subtitles("/home/francois/Documents/multisubs/Dead Set/Season 1/dead.set.s01e01.dvdrip.xvid-haggis.srt")
