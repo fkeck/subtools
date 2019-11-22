@@ -16,12 +16,15 @@ License: GPL-3
 LazyData: TRUE
 Encoding: UTF-8
 Imports:
-    tm,
     methods,
     utils,
     jsonlite,
     tibble,
-    dplyr
+    dplyr,
+    readr,
+    hms,
+    tidytext,
+    rlang
 Suggests:
     testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
