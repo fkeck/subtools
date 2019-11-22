@@ -18,7 +18,7 @@
 #'
 #' @export
 #'
-mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
+get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 
   if(file.exists(file)){
     file <- normalizePath(file)
@@ -63,7 +63,7 @@ mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #' @param mkvextract.exec a character string giving the path to the \code{mkvextract} executable.
 #' @param mkvmerge.exec  character string giving the path to the \code{mkvmerge} executable.
 #'
-#' @details The function \code{\link{mkv_info}} is a simple way to identify the ID of subtitles tracks from a MKV file.
+#' @details The function \code{\link{get_mkv_info}} is a simple way to identify the ID of subtitles tracks from a MKV file.
 #'
 #' Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
 #' See \code{\link{read_subtitles}} for the list of formats currently supported.
@@ -77,11 +77,11 @@ mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #'
 #' @export
 #'
-mkv_subs_extract <- function(file, id = 2,
-                          mkvextract.exec = "mkvextract",
-                          mkvmerge.exec = "mkvmerge"){
+read_subtitles_mkv <- function(file, id = 2,
+                               mkvextract.exec = "mkvextract",
+                               mkvmerge.exec = "mkvmerge"){
 
-  info <- mkv_info(file, mkvmerge.exec = mkvmerge.exec, print.info = FALSE)$tracks
+  info <- get_mkv_info(file, mkvmerge.exec = mkvmerge.exec, print.info = FALSE)$tracks
 
   if (file.exists(file)) {
     file <- normalizePath(file)
@@ -132,11 +132,3 @@ mkv_subs_extract <- function(file, id = 2,
   return(sub.list)
 
 }
-
-
-# file <- "/home/francois/Téléchargements/1962NOZW77517uch/Nóż w wodzie.mkv"
-# file <- "/home/francois/Téléchargements/Laurence.Anyways.2012.FRENCH.BRRip.XviD-S.V-Libertyland.tv.avi"
-#
-# mkv_subs_extract(file, id = NA)
-# mkv_info(file)
-
