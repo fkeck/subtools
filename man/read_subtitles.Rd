@@ -5,7 +5,7 @@
 \title{Read subtitles}
 \usage{
 read_subtitles(file, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "UTF-8")
+  metadata = data.frame(), frame.rate = NA, encoding = "auto")
 }
 \arguments{
 \item{file}{the name of the file which the subtitles are to be read from.
@@ -23,7 +23,8 @@ Default is \code{"auto"} which tries to detect automatically the format of the f
 If \code{NA} (default), the function tries to extract the frame.rate from the file.
 If it fails, the frame rate is set at 24p (23.976).}
 
-\item{encoding}{the name of the encoding to be used.}
+\item{encoding}{the name of the encoding to be used. Default is "\code{auto}" and
+uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 }
 \value{
 An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
@@ -40,6 +41,5 @@ The support of WebVTT is basic and experimental.
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 read_subtitles(f)
-
 
 }

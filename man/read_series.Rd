@@ -6,25 +6,31 @@
 \alias{read_subtitles_multiseries}
 \title{Read series subtitles}
 \usage{
-read_subtitles_season(dir, quietly = FALSE, format = "auto", ...)
+read_subtitles_season(dir, format = "auto", bind = TRUE,
+  quietly = FALSE, ...)
 
-read_subtitles_serie(dir, quietly = FALSE, format = "auto", ...)
+read_subtitles_serie(dir, format = "auto", bind = TRUE,
+  quietly = FALSE, ...)
 
-read_subtitles_multiseries(dir, quietly = FALSE, format = "auto", ...)
+read_subtitles_multiseries(dir, format = "auto", bind = TRUE,
+  quietly = FALSE, ...)
 }
 \arguments{
 \item{dir}{the name of the directory which the subtitles are to be read from (see Details).}
 
-\item{quietly}{a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.}
-
 \item{format}{a character string specifying the format of the subtitles
 (default is "\code{auto}", see \code{\link{read_subtitles}} for details).}
+
+\item{bind}{a logical. If \code{TRUE} (default), subtitles are binded with \code{\link{bind_subtitles}}}
+
+\item{quietly}{a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.}
 
 \item{...}{further arguments to be passed to \code{\link{read_subtitles}}.}
 }
 \value{
-An object of class \code{MultiSubtitles};
-i.e. a list of \code{\link{Subtitles}} objects.
+If \code{bind} is set on \code{TRUE} a \code{Subtitles} object,
+otherwise an object of class \code{MultiSubtitles};
+i.e. a list of \code{Subtitles} objects.
 }
 \description{
 These functions read one or several subtitles files organized in directories.
@@ -36,6 +42,8 @@ The function \code{read_subtitles_multiseries} reads everything recursively from
 The function \code{read_subtitles_serie} reads everything recursively from a serie folder (e.g. "Serie_A").
 The function \code{read_subtitles_season} reads everything from a season folder (e.g. "Season_1").
 To read a specific episode file (e.g. "Episode_1.srt), use \code{\link{read_subtitles}}.
+
+
 \preformatted{
 Series_Collection
 |-- Serie_A

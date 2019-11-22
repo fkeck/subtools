@@ -19,6 +19,6 @@ Print method for MultiSubtitles
 \examples{
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 s <- read_subtitles(f)
-bind_subs(s, s, collapse = FALSE)
+bind_subtitles(s, s, collapse = FALSE)
 
 }
