@@ -25,6 +25,7 @@ test_that(".extr_snum season number extraction", {
   expect_equal(.extr_snum("MySerie.S05.txt"), 5)
   expect_equal(.extr_snum("MySerie_S5_.txt"), 5)
   expect_equal(.extr_snum("MySerie.Season_5.txt"), 5)
+  expect_equal(.extr_snum("MySerie.5x09.txt"), 5)
 })
 
 test_that(".extr_enum season number extraction", {
@@ -33,5 +34,6 @@ test_that(".extr_enum season number extraction", {
   expect_equal(.extr_enum("MySerie.E09.txt"), 9)
   expect_equal(.extr_enum("MySerie_E9_.txt"), 9)
   expect_equal(.extr_enum("MySerie.Episode_9.txt"), 9)
+  expect_equal(.extr_enum("MySerie.5x09.txt"), 9)
 })
 

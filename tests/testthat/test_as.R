@@ -13,7 +13,7 @@ test_that("as coercion works", {
   ) -> st
 
   expect_equal(
-    st[["subtitles"]][["Text"]][[1]],
+    st[["Text_content"]],
     ">> FEMALE SPEAKER: Don't stay up too late."
   )
 
