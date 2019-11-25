@@ -18,7 +18,8 @@ The format must be "HH:MM:SS.mS".}
 \item{id}{a vector of numeric ID for subtitles.
 If not provided it is generated automatically from \code{timecode.in} order.}
 
-\item{metadata}{a one-row dataframe or tibble.}
+\item{metadata}{a one-row dataframe or tibble, or any object that can be coerced
+into a one-row tibble by \code{link[tibble]{as_tibble}}.}
 }
 \value{
 a \code{Subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,

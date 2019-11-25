@@ -24,7 +24,8 @@ Default is \code{"auto"} which tries to detect automatically the format of the f
 
 \item{clean.tags}{logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.}
 
-\item{metadata}{a named list of metadata to be attached to the subtitles.}
+\item{metadata}{a one-row dataframe or tibble, or any object that can be coerced
+into a one-row tibble by \code{link[tibble]{as_tibble}}.}
 
 \item{frame.rate}{a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.
 If \code{NA} (default), the function tries to extract the frame.rate from the file.
