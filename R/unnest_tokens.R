@@ -34,26 +34,29 @@ unnest_tokens.Subtitles <- function(tbl, output, input, token = "words",
 
   if(time.remapping) {
 
-    tbl$.INTERNAL_unnest_tokens.Subtitles_IDX <- seq_len(nrow(tbl))
+    tbl_IDX <- seq_len(nrow(tbl))
+    tbl_DFT <- tbl$Timecode_out - tbl$Timecode_in
 
+    tbl$.INTERNAL_unnest_tokens.Subtitles_IDX <- tbl_IDX
     res <- tidytext::unnest_tokens(tbl = tbl, output = !!quo_output,
-                                  input = !!quo_input, token = token,
-                                  format = format, to_lower = to_lower,
-                                  drop = FALSE, collapse = collapse, ...)
+                                   input = !!quo_input, token = token,
+                                   format = format, to_lower = to_lower,
+                                   drop = FALSE, collapse = collapse, ...)
 
-    res_internal <- res
+    expand_tbl <- match(res$.INTERNAL_unnest_tokens.Subtitles_IDX, tbl_IDX)
 
-    res_internal <- dplyr::group_by(res_internal, .data$.INTERNAL_unnest_tokens.Subtitles_IDX)
-    res_internal <- dplyr::mutate(res_internal,
-      nchar = nchar(as_label(quo_output)),
-      char_in = c(0, cumsum(nchar)[-length(as_label(quo_output))]),
-      char_out = cumsum(nchar),
-      diff_w = (.data$Timecode_out - .data$Timecode_in) / sum(nchar),
-      recalc_timecode_out = hms::as_hms(round(.data$Timecode_in + .data$char_out * .data$diff_w, digits = 4)),
-      recalc_timecode_in = hms::as_hms(round(.data$Timecode_in + .data$char_in * .data$diff_w + 0.001, digits = 4))
-    )
-    res$Timecode_in <- res_internal$recalc_timecode_in
-    res$Timecode_out <- res_internal$recalc_timecode_out
+    res_nchar <- nchar(res[[as_label(quo_output)]])
+    res_char_tot <- unlist(tapply(res_nchar, res$.INTERNAL_unnest_tokens.Subtitles_IDX,
+                                  function(x) rep(sum(x), length(x))), use.names = FALSE)
+    res_char_in <- unlist(tapply(res_nchar, res$.INTERNAL_unnest_tokens.Subtitles_IDX,
+                                 function(x) c(0, cumsum(x)[-length(x)])), use.names = FALSE)
+    res_char_out <- unlist(tapply(res_nchar, res$.INTERNAL_unnest_tokens.Subtitles_IDX,
+                                  function(x) cumsum(x)), use.names = FALSE)
+
+    time_char <- tbl_DFT[expand_tbl] / res_char_tot
+    res$Timecode_out <- hms::as_hms(as.numeric(round(res$Timecode_in + res_char_out * time_char, digits = 4)))
+    res$Timecode_in <- hms::as_hms(as.numeric(round(res$Timecode_in + res_char_in * time_char + 0.001, digits = 4)))
+
     res$.INTERNAL_unnest_tokens.Subtitles_IDX <- NULL
 
     if(drop) {
@@ -62,9 +65,9 @@ unnest_tokens.Subtitles <- function(tbl, output, input, token = "words",
 
   } else {
     res <- tidytext::unnest_tokens(tbl = tbl, output = !!quo_output,
-                                    input = !!quo_input, token = token,
-                                    format = format, to_lower = to_lower,
-                                    drop = drop, collapse = collapse, ...)
+                                   input = !!quo_input, token = token,
+                                   format = format, to_lower = to_lower,
+                                   drop = drop, collapse = collapse, ...)
   }
 
   class(res) <- c("Subtitles", class(res))
