@@ -40,18 +40,29 @@ library(tidytext)
 
 The main objective of subtools is to allow the importation of subtitle files directly into R. This task can be easily performed with the function `read_subtitles()`:
 
-```{r}
 
-(oss_file <- system.file("extdata", "ex_oss117.srt", package = "subtools"))
-(rushmore_file <- system.file("extdata", "ex_rushmore.srt", package = "subtools"))
-(bb_file <- system.file("extdata", "ex_breakingbad.srt", package = "subtools"))
+```{r, include = FALSE}
+oss_file <- system.file("extdata", "ex_oss117.srt", package = "subtools")
+rushmore_file <- system.file("extdata", "ex_rushmore.srt", package = "subtools")
+bb_file <- system.file("extdata", "ex_breakingbad.srt", package = "subtools")
 
 oss_sub <- read_subtitles(oss_file)
 rushmore_sub <- read_subtitles(rushmore_file)
 bb_sub <- read_subtitles(bb_file)
+```
 
+```{r, eval=FALSE}
+oss_sub <- read_subtitles("ex_OSS_117.srt")
+rushmore_sub <- read_subtitles("ex_Rushmore.srt")
+bb_sub <- read_subtitles("ex_Breaking_Bad.srt")
+```
+
+
+```{r}
 oss_sub
+
 rushmore_sub
+
 bb_sub
 ```
 
@@ -68,6 +79,7 @@ Often, the workflow begins with a cleaning step to get rid of irrelevant informa
 
 ```{r}
 bb_sub
+
 bb_sub_clean <- clean_captions(bb_sub)
 bb_sub_clean
 ```
@@ -87,6 +99,7 @@ Some functions under certain conditions can also return a list of subtitle objec
 ```{r}
 multi_sub <- bind_subtitles(oss_sub, bb_sub_clean, collapse = FALSE, sequential = FALSE)
 multi_sub
+
 bind_subtitles(multi_sub)
 ```
 
@@ -99,6 +112,7 @@ The tidy text format as defined by Julia Silge and David Robinson is a table wit
 rushmore_sub
 
 unnest_tokens(rushmore_sub, output = Text_content, input = Text_content, drop = FALSE)
+
 unnest_tokens(bb_sub_clean, output = Text_content, input = Text_content, drop = FALSE, token = "sentences")
 ```
 

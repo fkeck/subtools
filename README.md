@@ -38,18 +38,12 @@ files directly into R. This task can be easily performed with the
 function `read_subtitles()`:
 
 ``` r
+oss_sub <- read_subtitles("ex_OSS_117.srt")
+rushmore_sub <- read_subtitles("ex_Rushmore.srt")
+bb_sub <- read_subtitles("ex_Breaking_Bad.srt")
+```
 
-(oss_file <- system.file("extdata", "ex_oss117.srt", package = "subtools"))
-#> [1] "/home/francois/R/x86_64-pc-linux-gnu-library/3.5/subtools/extdata/ex_oss117.srt"
-(rushmore_file <- system.file("extdata", "ex_rushmore.srt", package = "subtools"))
-#> [1] "/home/francois/R/x86_64-pc-linux-gnu-library/3.5/subtools/extdata/ex_rushmore.srt"
-(bb_file <- system.file("extdata", "ex_breakingbad.srt", package = "subtools"))
-#> [1] "/home/francois/R/x86_64-pc-linux-gnu-library/3.5/subtools/extdata/ex_breakingbad.srt"
-
-oss_sub <- read_subtitles(oss_file)
-rushmore_sub <- read_subtitles(rushmore_file)
-bb_sub <- read_subtitles(bb_file)
-
+``` r
 oss_sub
 #> # A tibble: 3 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -57,6 +51,7 @@ oss_sub
 #> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasio…
 #> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.  
 #> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
+
 rushmore_sub
 #> # A tibble: 4 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -65,6 +60,7 @@ rushmore_sub
 #> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie …
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
 #> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
+
 bb_sub
 #> # A tibble: 5 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -112,6 +108,7 @@ bb_sub
 #> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN DISTANCE]              
 #> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
 #> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+
 bb_sub_clean <- clean_captions(bb_sub)
 bb_sub_clean
 #> # A tibble: 4 x 4
@@ -177,6 +174,7 @@ multi_sub
 #> 2 6     01'15.993"  01'18.661"   Shit.                                     
 #> 3 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
 #> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+
 bind_subtitles(multi_sub)
 #> # A tibble: 7 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -229,6 +227,7 @@ unnest_tokens(rushmore_sub, output = Text_content, input = Text_content, drop = 
 #>  9 180   20'43.8771" 20'44.1991"  where       
 #> 10 180   20'44.2001" 20'44.8451"  scientists  
 #> # … with 39 more rows
+
 unnest_tokens(bb_sub_clean, output = Text_content, input = Text_content, drop = FALSE, token = "sentences")
 #> # A tibble: 8 x 4
 #>   ID    Timecode_in Timecode_out Text_content        
