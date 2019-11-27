@@ -42,9 +42,11 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
       sl[[i]]$Timecode_in <- sapply(sl[[i]]$Timecode_in,
                                               `+`,
                                               y = tcout.max, USE.NAMES = FALSE)
+      sl[[i]]$Timecode_in <- hms::as_hms(sl[[i]]$Timecode_in)
       sl[[i]]$Timecode_out <- sapply(sl[[i]]$Timecode_out,
                                               `+`,
                                               y = tcout.max, USE.NAMES = FALSE)
+      sl[[i]]$Timecode_out <- hms::as_hms(sl[[i]]$Timecode_out)
       tcout.max <- max(sl[[i]]$Timecode_out)
     }
   }
