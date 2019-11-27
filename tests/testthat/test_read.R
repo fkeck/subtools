@@ -3,7 +3,7 @@ context("Reading subtitles files")
 
 f_srt <- system.file("extdata", "test_lorem_subrip.srt", package = "subtools")
 test_that("Reading SubRip format", {
-  expect_is(read_subtitles(f_srt), "Subtitles")
+  expect_is(read_subtitles(f_srt), "subtitles")
   expect_is(read_subtitles(f_srt), "data.frame")
   expect_is(read_subtitles(f_srt), "tbl_df")
   expect_is(read_subtitles(f_srt), "tbl")
@@ -14,7 +14,7 @@ test_that("Reading SubRip format", {
 
 f_subv <- system.file("extdata", "test_lorem_subviewer.sub", package = "subtools")
 test_that("Reading SubViewer format", {
-  expect_is(read_subtitles(f_subv), "Subtitles")
+  expect_is(read_subtitles(f_subv), "subtitles")
   expect_is(read_subtitles(f_subv), "data.frame")
   expect_is(read_subtitles(f_subv), "tbl_df")
   expect_is(read_subtitles(f_subv), "tbl")
@@ -25,7 +25,7 @@ test_that("Reading SubViewer format", {
 
 f_subm <- system.file("extdata", "test_lorem_microdvd.sub", package = "subtools")
 test_that("Reading MicroDVD format", {
-  expect_is(read_subtitles(f_subm), "Subtitles")
+  expect_is(read_subtitles(f_subm), "subtitles")
   expect_is(read_subtitles(f_subm), "data.frame")
   expect_is(read_subtitles(f_subm), "tbl_df")
   expect_is(read_subtitles(f_subm), "tbl")
@@ -36,7 +36,7 @@ test_that("Reading MicroDVD format", {
 
 f_ass <- system.file("extdata", "test_lorem_substation.ass", package = "subtools")
 test_that("Reading SubStation Alpha format", {
-  expect_is(read_subtitles(f_ass), "Subtitles")
+  expect_is(read_subtitles(f_ass), "subtitles")
   expect_is(read_subtitles(f_ass), "data.frame")
   expect_is(read_subtitles(f_ass), "tbl_df")
   expect_is(read_subtitles(f_ass), "tbl")
@@ -47,7 +47,7 @@ test_that("Reading SubStation Alpha format", {
 
 f_vtt <- system.file("extdata", "test_lorem_webvtt.vtt", package = "subtools")
 test_that("Reading WebVTT format", {
-  expect_is(read_subtitles(f_vtt), "Subtitles")
+  expect_is(read_subtitles(f_vtt), "subtitles")
   expect_is(read_subtitles(f_vtt), "data.frame")
   expect_is(read_subtitles(f_vtt), "tbl_df")
   expect_is(read_subtitles(f_vtt), "tbl")

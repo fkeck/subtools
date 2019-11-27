@@ -7,7 +7,7 @@
 get_subtitles_info(x)
 }
 \arguments{
-\item{x}{a \code{Subtitles} or \code{MultiSubtitles} object.}
+\item{x}{a \code{subtitles} or \code{multisubtitles} object.}
 }
 \description{
 Get basic informations for subtitle objects

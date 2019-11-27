@@ -19,9 +19,9 @@ If \code{NA} (default), the default subtitle tracks will be extracted}
 \item{mkvmerge.exec}{character string giving the path to the \code{mkvmerge} executable.}
 }
 \value{
-An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
-If several tracks are requested (via \code{id}), an object of class \code{MultiSubtitles};
-i.e. a list of \code{\link{Subtitles}} objects.
+An object of class \code{subtitles} (see \code{\link{subtitles}}).
+If several tracks are requested (via \code{id}), an object of class \code{multisubtitles};
+i.e. a list of \code{\link{subtitles}} objects.
 }
 \description{
 This function uses \code{mkvextract} to extract subtitles from an MKV file.

@@ -1,14 +1,14 @@
 #' Bind subtitles
 #'
-#' Bind \code{Subtitles} or/and \code{MultiSubtitles} objects.
+#' Bind \code{subtitles} or/and \code{multisubtitles} objects.
 #'
-#' @param ... \code{Subtitles} or \code{MultiSubtitles} objects to be binded.
-#' @param collapse logical. If \code{TRUE}, subtitles are combined in a single \code{Subtitles} object.
+#' @param ... \code{subtitles} or \code{multisubtitles} objects to be binded.
+#' @param collapse logical. If \code{TRUE}, subtitles are combined in a single \code{subtitles} object.
 #' @param sequential logical. If \code{TRUE} (default) timecodes
 #' are recalculated to follow concatenation.
 #'
-#' @return A \code{Subtitles} object if \code{collapse = TRUE} (default).
-#' A \code{MultiSubtitles} object if \code{collapse = FALSE}.
+#' @return A \code{subtitles} object if \code{collapse = TRUE} (default).
+#' A \code{multisubtitles} object if \code{collapse = FALSE}.
 #'
 #' @examples
 #' f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
@@ -23,7 +23,7 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
   input <- list(...)
   sl <- list()
     for(i in 1:length(input)){
-    if(is(input[[i]], "MultiSubtitles")){
+    if(is(input[[i]], "multisubtitles")){
       sl <- append(sl, unlist(input[i], recursive = FALSE))
     } else {
       sl <- append(sl, input[i])
@@ -53,14 +53,14 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
 
   if(collapse){
     sl <- do.call(dplyr::bind_rows, lapply(sl, function(x) x))
-    res <- Subtitles(text = sl$Text_content,
+    res <- subtitles(text = sl$Text_content,
                      timecode.in = sl$Timecode_in,
                      timecode.out = sl$Timecode_out,
                      id = sl$ID,
                      metadata = extract_metadata(sl))
   } else {
     res <- sl
-    class(res) <- "MultiSubtitles"
+    class(res) <- "multisubtitles"
   }
 
   return(res)

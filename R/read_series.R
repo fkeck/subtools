@@ -32,9 +32,9 @@
 #'|   |   |-- Episode_1.srt
 #'|   |   |-- Episode_2.srt}
 #'
-#' @return If \code{bind} is set on \code{TRUE} a \code{Subtitles} object,
-#' otherwise an object of class \code{MultiSubtitles};
-#' i.e. a list of \code{Subtitles} objects.
+#' @return If \code{bind} is set on \code{TRUE} a \code{subtitles} object,
+#' otherwise an object of class \code{multisubtitles};
+#' i.e. a list of \code{subtitles} objects.
 #' @export
 #' @rdname read_series
 read_subtitles_season <- function(dir, format = "auto", bind = TRUE, detect.meta = TRUE, quietly = FALSE, ...){
@@ -64,7 +64,7 @@ read_subtitles_season <- function(dir, format = "auto", bind = TRUE, detect.meta
     }
   }
 
-  class(res) <- "MultiSubtitles"
+  class(res) <- "multisubtitles"
 
   if(bind) {
     res <- bind_subtitles(res)
@@ -102,7 +102,7 @@ read_subtitles_serie <- function(dir, format = "auto", bind = TRUE, detect.meta 
     cat(paste("Read:", n.season, "seasons,", length(res), "episodes\n"))
   }
 
-  class(res) <- "MultiSubtitles"
+  class(res) <- "multisubtitles"
 
   if(bind) {
     res <- bind_subtitles(res)
@@ -128,7 +128,7 @@ read_subtitles_multiseries <- function(dir, format = "auto", bind = TRUE, detect
     cat(paste("Read:", n.series, "series,", length(res), "episodes"))
   }
 
-  class(res) <- "MultiSubtitles"
+  class(res) <- "multisubtitles"
 
   if(bind) {
     res <- bind_subtitles(res)

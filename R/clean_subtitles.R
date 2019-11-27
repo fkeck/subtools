@@ -5,24 +5,24 @@
 #' \code{clean_captions} cleans close captions, i.e all text enclosed in parentheses or squared brackets.
 #' \code{clean_patterns} provides a more general and flexible cleaning based on regular expressions.
 #'
-#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
-#' @param format the original format of the \code{Subtitles} objects.
+#' @param x a \code{subtitles} or \code{multisubtitles} object.
+#' @param format the original format of the \code{subtitles} objects.
 #' @param pattern a character string containing a regular expression to be matched and cleaned.
 #' @param clean.empty logical. Should empty remaining lines ("") deleted after cleaning.
 #'
-#' @return A \code{Subtitles} or \code{MultiSubtitles} object.
+#' @return A \code{subtitles} or \code{multisubtitles} object.
 #' @export
 #' @rdname clean
 clean_tags <- function(x, format = "srt", clean.empty = TRUE){
 
-  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  if(!(is(x, "subtitles")|is(x, "multisubtitles"))){
+    stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 
-  if(is(x, "MultiSubtitles")){
+  if(is(x, "multisubtitles")){
 
     x <- lapply(x, clean_tags, format = format, clean.empty = clean.empty)
-    class(x) <- "MultiSubtitles"
+    class(x) <- "multisubtitles"
 
   } else {
     .validate_subtitles(x)
@@ -54,14 +54,14 @@ clean_tags <- function(x, format = "srt", clean.empty = TRUE){
 #' @export
 clean_captions <- function(x, clean.empty = TRUE){
 
-  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  if(!(is(x, "subtitles")|is(x, "multisubtitles"))){
+    stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 
-  if(is(x, "MultiSubtitles")){
+  if(is(x, "multisubtitles")){
 
     x <- lapply(x, clean_captions, clean.empty = clean.empty)
-    class(x) <- "MultiSubtitles"
+    class(x) <- "multisubtitles"
 
   } else {
     .validate_subtitles(x)
@@ -81,14 +81,14 @@ clean_captions <- function(x, clean.empty = TRUE){
 #' @export
 clean_patterns <- function(x, pattern, clean.empty = TRUE){
 
-  if(!(is(x, "Subtitles")|is(x, "MultiSubtitles"))){
-    stop("x must be a 'Subtitles' or a 'MultiSubtitles' object.")
+  if(!(is(x, "subtitles")|is(x, "multisubtitles"))){
+    stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 
-  if(is(x, "MultiSubtitles")){
+  if(is(x, "multisubtitles")){
 
     x <- lapply(x, clean_patterns, pattern = pattern, clean.empty = clean.empty)
-    class(x) <- "MultiSubtitles"
+    class(x) <- "multisubtitles"
 
   } else {
     .validate_subtitles(x)

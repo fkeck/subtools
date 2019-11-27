@@ -7,7 +7,7 @@
 get_raw_text(x, collapse = " ")
 }
 \arguments{
-\item{x}{an object of class \code{Subtitles} or \code{MultiSubtitles}.}
+\item{x}{an object of class \code{subtitles} or \code{multisubtitles}.}
 
 \item{collapse}{a character string to separate the subtitles lines.}
 }

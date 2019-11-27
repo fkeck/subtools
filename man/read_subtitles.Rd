@@ -28,7 +28,7 @@ If it fails, the frame rate is set at 24p (23.976).}
 uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 }
 \value{
-An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
+An object of class \code{subtitles} (see \code{\link{subtitles}}).
 }
 \description{
 Reads subtitles from a file.

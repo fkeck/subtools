@@ -4,7 +4,7 @@
 \alias{as_subtitle}
 \alias{as_subtitle.default}
 \alias{as_subtitle.character}
-\title{Convert an R object to a \code{Subtitles} object}
+\title{Convert an R object to a \code{subtitles} object}
 \usage{
 as_subtitle(x, format = "auto", clean.tags = TRUE,
   metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
@@ -16,7 +16,7 @@ as_subtitle(x, format = "auto", clean.tags = TRUE,
   metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
 }
 \arguments{
-\item{x}{an R object that can be coerced into a \code{Subtitles} object}
+\item{x}{an R object that can be coerced into a \code{subtitles} object}
 
 \item{format}{a character string specifying the format of the subtitles.
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
@@ -37,7 +37,7 @@ uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 \item{...}{passed on to downstream methods.}
 }
 \description{
-Convert an R object to a \code{Subtitles} object
+Convert an R object to a \code{subtitles} object
 }
 \examples{
 as_subtitle(

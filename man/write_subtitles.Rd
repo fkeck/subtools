@@ -7,7 +7,7 @@
 write_subtitles(x, file, format = "srt", encoding = "UTF-8")
 }
 \arguments{
-\item{x}{an object of class \code{Subtitles}.}
+\item{x}{an object of class \code{subtitles}.}
 
 \item{file}{a character string naming a file for writing.}
 
@@ -17,5 +17,5 @@ Not used (only SubRip format is currently implemented).}
 \item{encoding}{the name of the encoding to be used.}
 }
 \description{
-This function writes a \code{Subtitles} object in a file.
+This function writes a \code{subtitles} object in a file.
 }

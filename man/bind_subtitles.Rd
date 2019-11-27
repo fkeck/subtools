@@ -7,19 +7,19 @@
 bind_subtitles(..., collapse = TRUE, sequential = TRUE)
 }
 \arguments{
-\item{...}{\code{Subtitles} or \code{MultiSubtitles} objects to be binded.}
+\item{...}{\code{subtitles} or \code{multisubtitles} objects to be binded.}
 
-\item{collapse}{logical. If \code{TRUE}, subtitles are combined in a single \code{Subtitles} object.}
+\item{collapse}{logical. If \code{TRUE}, subtitles are combined in a single \code{subtitles} object.}
 
 \item{sequential}{logical. If \code{TRUE} (default) timecodes
 are recalculated to follow concatenation.}
 }
 \value{
-A \code{Subtitles} object if \code{collapse = TRUE} (default).
-A \code{MultiSubtitles} object if \code{collapse = FALSE}.
+A \code{subtitles} object if \code{collapse = TRUE} (default).
+A \code{multisubtitles} object if \code{collapse = FALSE}.
 }
 \description{
-Bind \code{Subtitles} or/and \code{MultiSubtitles} objects.
+Bind \code{subtitles} or/and \code{multisubtitles} objects.
 }
 \examples{
 f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")

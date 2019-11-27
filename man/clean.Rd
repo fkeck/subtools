@@ -13,19 +13,19 @@ clean_captions(x, clean.empty = TRUE)
 clean_patterns(x, pattern, clean.empty = TRUE)
 }
 \arguments{
-\item{x}{a \code{Subtitles} or \code{MultiSubtitles} object.}
+\item{x}{a \code{subtitles} or \code{multisubtitles} object.}
 
-\item{format}{the original format of the \code{Subtitles} objects.}
+\item{format}{the original format of the \code{subtitles} objects.}
 
 \item{clean.empty}{logical. Should empty remaining lines ("") deleted after cleaning.}
 
 \item{pattern}{a character string containing a regular expression to be matched and cleaned.}
 }
 \value{
-A \code{Subtitles} or \code{MultiSubtitles} object.
+A \code{subtitles} or \code{multisubtitles} object.
 }
 \description{
 Functions to clean subtitles. \code{clean_tags} cleans formatting tags.
-\code{clean_captions} cleans close captions.
+\code{clean_captions} cleans close captions, i.e all text enclosed in parentheses or squared brackets.
 \code{clean_patterns} provides a more general and flexible cleaning based on regular expressions.
 }

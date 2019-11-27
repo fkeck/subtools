@@ -7,13 +7,13 @@
 \title{Read series subtitles}
 \usage{
 read_subtitles_season(dir, format = "auto", bind = TRUE,
-  quietly = FALSE, ...)
+  detect.meta = TRUE, quietly = FALSE, ...)
 
 read_subtitles_serie(dir, format = "auto", bind = TRUE,
-  quietly = FALSE, ...)
+  detect.meta = TRUE, quietly = FALSE, ...)
 
 read_subtitles_multiseries(dir, format = "auto", bind = TRUE,
-  quietly = FALSE, ...)
+  detect.meta = TRUE, quietly = FALSE, ...)
 }
 \arguments{
 \item{dir}{the name of the directory which the subtitles are to be read from (see Details).}
@@ -23,14 +23,17 @@ read_subtitles_multiseries(dir, format = "auto", bind = TRUE,
 
 \item{bind}{a logical. If \code{TRUE} (default), subtitles are binded with \code{\link{bind_subtitles}}}
 
+\item{detect.meta}{a logical. If \code{TRUE} (default), the function tries to automatically detect
+metadata (Serie, Season and Episode) from file names. This will overide user metadata with the same name.}
+
 \item{quietly}{a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.}
 
 \item{...}{further arguments to be passed to \code{\link{read_subtitles}}.}
 }
 \value{
-If \code{bind} is set on \code{TRUE} a \code{Subtitles} object,
-otherwise an object of class \code{MultiSubtitles};
-i.e. a list of \code{Subtitles} objects.
+If \code{bind} is set on \code{TRUE} a \code{subtitles} object,
+otherwise an object of class \code{multisubtitles};
+i.e. a list of \code{subtitles} objects.
 }
 \description{
 These functions read one or several subtitles files organized in directories.

@@ -36,7 +36,7 @@ get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
   # A short summary to be returned in the console
   mkv.info.sub <- mkv.info$tracks[mkv.info$tracks$type == "subtitles", ]
   if (nrow(mkv.info.sub) < 1L) {
-    warning("Subtitles tracks not found")
+    warning("subtitles tracks not found")
   } else {
     mkv.info.sub <- cbind(mkv.info.sub[, "id"],
                           mkv.info.sub$properties[, "language"],
@@ -68,9 +68,9 @@ get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #' Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
 #' See \code{\link{read_subtitles}} for the list of formats currently supported.
 #'
-#' @return An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
-#' If several tracks are requested (via \code{id}), an object of class \code{MultiSubtitles};
-#' i.e. a list of \code{\link{Subtitles}} objects.
+#' @return An object of class \code{subtitles} (see \code{\link{subtitles}}).
+#' If several tracks are requested (via \code{id}), an object of class \code{multisubtitles};
+#' i.e. a list of \code{\link{subtitles}} objects.
 #'
 #' @references
 #' \url{https://mkvtoolnix.download/downloads.html}
@@ -124,7 +124,7 @@ read_subtitles_mkv <- function(file, id = 2,
   }
 
   if(length(sub.list) > 1){
-    class(sub.list) <- "MultiSubtitles"
+    class(sub.list) <- "multisubtitles"
   } else {
     sub.list <- sub.list[[1]]
   }

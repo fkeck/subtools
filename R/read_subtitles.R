@@ -1,7 +1,7 @@
-#' Convert an R object to a `Subtitles` object
+#' Convert an R object to a `subtitles` object
 #'
 #' @md
-#' @param x an R object that can be coerced into a `Subtitles` object
+#' @param x an R object that can be coerced into a `subtitles` object
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
@@ -200,7 +200,7 @@ as_subtitle.default <- function(x, format = "auto", clean.tags = TRUE, metadata 
     timecode.out <- sapply(subs.time, function(x) x[2])
   }
 
-  res <- Subtitles(text = subs.txt, timecode.in = timecode.in,
+  res <- subtitles(text = subs.txt, timecode.in = timecode.in,
                    timecode.out = timecode.out, id = subs.n,
                    metadata = metadata)
 
@@ -227,7 +227,7 @@ as_subtitle.character <- as_subtitle.default
 #' @details The support of WebVTT is basic and experimental.
 #'
 #' @return
-#' An object of class \code{Subtitles} (see \code{\link{Subtitles}}).
+#' An object of class \code{subtitles} (see \code{\link{subtitles}}).
 #'
 #' @examples
 #'
@@ -267,9 +267,9 @@ read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 }
 
 
-#' Create a \code{Subtitles} object
+#' Create a \code{subtitles} object
 #'
-#' A \code{Subtitles} is a special form of \code{tibble}.
+#' A \code{subtitles} is a special form of \code{tibble}.
 #'
 #' @param text a character vector of subtitles text content.
 #' @param timecode.in a character vector giving the time that the subtitles appear on the screen.
@@ -281,12 +281,12 @@ read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 #' @param metadata a one-row dataframe or tibble, or any object that can be coerced
 #' into a one-row tibble by \code{link[tibble]{as_tibble}}.
 #'
-#' @return a \code{Subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
+#' @return a \code{subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
 #' timecodes and text of the subtitles and optionally metadata in extra columns.
 #'
 #' @export
 #'
-Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame()){
+subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame()){
   if(missing(id)){
     warning("ID missing: A numerical sequence was used instead.")
     id <- order(timecode.in)
@@ -312,15 +312,15 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
     subtitles <- dplyr::bind_cols(subtitles, metadata)
   }
 
-  class(subtitles) <- c("Subtitles", class(subtitles))
+  class(subtitles) <- c("subtitles", class(subtitles))
   .validate_subtitles(subtitles)
   return(subtitles)
 }
 
 
-#' Print method for MultiSubtitles
+#' Print method for multisubtitles
 #'
-#' @param x a \code{MultiSubtitles} object.
+#' @param x a \code{multisubtitles} object.
 #' @param printlen the maximum number of subtitles to print.
 #' @param ... further arguments passed to or from other methods.
 #'
@@ -330,11 +330,11 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
 #' bind_subtitles(s, s, collapse = FALSE)
 #'
 #' @export
-print.MultiSubtitles <- function(x, printlen = 10L, ...){
-  cat("A MultiSubtitles object with", length(x), "elements\n")
+print.multisubtitles <- function(x, printlen = 10L, ...){
+  cat("A multisubtitles object with", length(x), "elements\n")
   toprint <- ifelse(length(x) > printlen, printlen, length(x))
   for(i in 1:toprint){
-    cat("Subtitles object [[", i, "]]\n", sep = "")
+    cat("subtitles object [[", i, "]]\n", sep = "")
     print(x[[i]])
     cat("\n\n")
   }
@@ -347,7 +347,7 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 
 #' Get basic informations for subtitle objects
 #'
-#' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
+#' @param x a \code{subtitles} or \code{multisubtitles} object.
 #'
 #' @examples
 #' s <- read_subtitles(
@@ -358,8 +358,8 @@ print.MultiSubtitles <- function(x, printlen = 10L, ...){
 #' @export
 get_subtitles_info <- function(x){
 
-  if(is(x, "Subtitles")){
-    cat("Subtitles object")
+  if(is(x, "subtitles")){
+    cat("subtitles object")
     cat("\n  Text lines:", nrow(x))
     cat("\n  Duration:", as.character(hms::as_hms(x$Timecode_out[nrow(x)] - x$Timecode_in[1])))
 
@@ -368,8 +368,8 @@ get_subtitles_info <- function(x){
     if(length(metadata) > 0) cat("tags:", paste0(metadata, collapse = ", "))
   }
 
-  if(is(x, "MultiSubtitles")){
-    cat("MultiSubtitles object with", length(x), "Subtitles.")
+  if(is(x, "multisubtitles")){
+    cat("multisubtitles object with", length(x), "subtitles.")
   }
 }
 
