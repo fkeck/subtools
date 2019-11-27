@@ -23,8 +23,23 @@ unnest_tokens.subtitles <- function(tbl, output, input, token = "words",
                                     format = c("text", "man", "latex", "html", "xml"),
                                     time.remapping = TRUE, to_lower = TRUE, drop = TRUE,
                                     collapse = NULL, ...){
-  quo_output <- dplyr::enquo(output)
-  quo_input <- dplyr::enquo(input)
+  if(missing(input)){
+    quo_input <- "Text_content"
+  } else {
+    quo_input <- dplyr::enquo(input)
+  }
+
+  if(missing(output)){
+    quo_output <- "Text_content"
+    quo_output_lab <- "Text_content"
+  } else {
+    quo_output <- dplyr::enquo(output)
+    quo_output_lab <- as_label(quo_output)
+  }
+
+  if(missing(input) & missing(output)){
+    drop <- FALSE
+  }
 
   .validate_subtitles(tbl)
 
@@ -45,7 +60,7 @@ unnest_tokens.subtitles <- function(tbl, output, input, token = "words",
 
     expand_tbl <- match(res$.INTERNAL_unnest_tokens.subtitles_IDX, tbl_IDX)
 
-    res_nchar <- nchar(res[[as_label(quo_output)]])
+    res_nchar <- nchar(res[[quo_output_lab]])
     res_char_tot <- unlist(tapply(res_nchar, res$.INTERNAL_unnest_tokens.subtitles_IDX,
                                   function(x) rep(sum(x), length(x))), use.names = FALSE)
     res_char_in <- unlist(tapply(res_nchar, res$.INTERNAL_unnest_tokens.subtitles_IDX,
