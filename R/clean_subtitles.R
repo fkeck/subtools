@@ -2,7 +2,7 @@
 #' Clean subtitles
 #'
 #' Functions to clean subtitles. \code{clean_tags} cleans formatting tags.
-#' \code{clean_captions} cleans close captions.
+#' \code{clean_captions} cleans close captions, i.e all text enclosed in parentheses or squared brackets.
 #' \code{clean_patterns} provides a more general and flexible cleaning based on regular expressions.
 #'
 #' @param x a \code{Subtitles} or \code{MultiSubtitles} object.
@@ -66,7 +66,8 @@ clean_captions <- function(x, clean.empty = TRUE){
   } else {
     .validate_subtitles(x)
 
-    x$Text_content <- gsub("\\( .+? \\)", "", x$Text_content)
+    x$Text_content <- gsub("\\(.+?\\)", "", x$Text_content)
+    x$Text_content <- gsub("\\[.+?\\]", "", x$Text_content)
 
     if(clean.empty){
       x <- x[x$Text_content != "", ]
