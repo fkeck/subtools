@@ -296,6 +296,7 @@ Subtitles <- function(text, timecode.in, timecode.out, id, metadata = data.frame
                               Timecode_out = as.character(timecode.out),
                               Text_content = as.character(text)
                               )
+  subtitles <- tibble::remove_rownames(subtitles)
   # subtitles$Timecode_in <- sapply(subtitles$Timecode_in, .format_subtime)
   # subtitles$Timecode_out <- sapply(subtitles$Timecode_out, .format_subtime)
 
