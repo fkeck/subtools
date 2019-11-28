@@ -14,19 +14,23 @@
 #'
 #' @examples
 #' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
-#' s <- read_subtitles(f)
+#' s <- read_subtitles(f, metadata = data.frame(test = "Test"))
 #'
 #' require(tidytext)
-#' unnest_tokens(s, Word, Text_content)
+#' unnest_tokens(s)
+#' unnest_tokens(s, Word, Text_content, drop = FALSE)
 #' unnest_tokens(s, Word, Text_content, token = "lines")
+#'
 unnest_tokens.subtitles <- function(tbl, output, input, token = "words",
                                     format = c("text", "man", "latex", "html", "xml"),
                                     time.remapping = TRUE, to_lower = TRUE, drop = TRUE,
                                     collapse = NULL, ...){
   if(missing(input)){
     quo_input <- "Text_content"
+    quo_input_lab <- "Text_content"
   } else {
     quo_input <- dplyr::enquo(input)
+    quo_input_lab <- as_label(quo_input)
   }
 
   if(missing(output)){
@@ -84,6 +88,15 @@ unnest_tokens.subtitles <- function(tbl, output, input, token = "words",
                                    format = format, to_lower = to_lower,
                                    drop = drop, collapse = collapse, ...)
   }
+
+  cn <- colnames(res)
+  if((!drop) & (quo_input_lab != quo_output_lab)) {
+    cn_head <- c("ID", "Timecode_in", "Timecode_out", quo_input_lab, quo_output_lab)
+  } else {
+    cn_head <- c("ID", "Timecode_in", "Timecode_out", quo_output_lab)
+  }
+  cn_meta <- setdiff(cn , cn_head)
+  res <- res[, c(cn_head, cn_meta)]
 
   class(res) <- c("subtitles", class(res))
   return(res)
