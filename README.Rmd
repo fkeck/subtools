@@ -47,14 +47,13 @@ rushmore_file <- system.file("extdata", "ex_rushmore.srt", package = "subtools")
 bb_file <- system.file("extdata", "ex_breakingbad.srt", package = "subtools")
 
 rushmore_sub <- read_subtitles(rushmore_file)
-bb_sub <- read_subtitles(bb_file)
 oss_sub <- read_subtitles(oss_file)
+bb_sub <- read_subtitles(bb_file, metadata = data.frame(Name = "Breaking Bad", Season = 1, Episode = 1))
 
 ```
 
 ```{r, eval=FALSE}
 rushmore_sub <- read_subtitles("ex_Rushmore.srt")
-bb_sub <- read_subtitles("ex_Breaking_Bad.srt")
 oss_sub <- read_subtitles("ex_OSS_117.srt")
 
 ```
@@ -63,12 +62,22 @@ oss_sub <- read_subtitles("ex_OSS_117.srt")
 ```{r}
 rushmore_sub
 
-bb_sub
-
 oss_sub
 ```
 
 The function `read_subtitles()` returns an object of class `subtitles`. This is a simple `tibble` with at least four columns ("`ID`", "`Timecode_in`", "`Timecode_out`" and "`Text_content`").
+
+The metadata are handled by adding extra-columns which can be used during the analysis. You can add metadata by adding columns manually (e.g. using `mutate()`). You can also provide a 1-row data.frame of metadata to the function `read_subtitles()`.
+
+```{r, eval=FALSE}
+bb_meta <- data.frame(Name = "Breaking Bad", Season = 1, Episode = 1)
+bb_sub <- read_subtitles("ex_Breaking_Bad.srt", metadata = bb_meta)
+```
+
+```{r}
+bb_sub
+```
+
 
 ##### Series
 

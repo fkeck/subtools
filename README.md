@@ -38,7 +38,6 @@ function `read_subtitles()`:
 
 ``` r
 rushmore_sub <- read_subtitles("ex_Rushmore.srt")
-bb_sub <- read_subtitles("ex_Breaking_Bad.srt")
 oss_sub <- read_subtitles("ex_OSS_117.srt")
 ```
 
@@ -52,16 +51,6 @@ rushmore_sub
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
 #> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
 
-bb_sub
-#> # A tibble: 5 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!                       
-#> 2 6     01'15.993"  01'18.661"   Shit.                                     
-#> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN DISTANCE]              
-#> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
-#> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
-
 oss_sub
 #> # A tibble: 3 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -74,6 +63,28 @@ oss_sub
 The function `read_subtitles()` returns an object of class `subtitles`.
 This is a simple `tibble` with at least four columns (“`ID`”,
 “`Timecode_in`”, “`Timecode_out`” and “`Text_content`”).
+
+The metadata are handled by adding extra-columns which can be used
+during the analysis. You can add metadata by adding columns manually
+(e.g. using `mutate()`). You can also provide a 1-row data.frame of
+metadata to the function `read_subtitles()`.
+
+``` r
+bb_meta <- data.frame(Name = "Breaking Bad", Season = 1, Episode = 1)
+bb_sub <- read_subtitles("ex_Breaking_Bad.srt", metadata = bb_meta)
+```
+
+``` r
+bb_sub
+#> # A tibble: 5 x 7
+#>   ID    Timecode_in Timecode_out Text_content         Name   Season Episode
+#>   <chr> <time>      <time>       <chr>                <fct>   <dbl>   <dbl>
+#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!  Break…      1       1
+#> 2 6     01'15.993"  01'18.661"   Shit.                Break…      1       1
+#> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN … Break…      1       1
+#> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God. Break…      1       1
+#> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my … Break…      1       1
+```
 
 ##### Series
 
@@ -103,24 +114,24 @@ to clean subtitles based on regex pattern matching.
 
 ``` r
 bb_sub
-#> # A tibble: 5 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!                       
-#> 2 6     01'15.993"  01'18.661"   Shit.                                     
-#> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN DISTANCE]              
-#> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
-#> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+#> # A tibble: 5 x 7
+#>   ID    Timecode_in Timecode_out Text_content         Name   Season Episode
+#>   <chr> <time>      <time>       <chr>                <fct>   <dbl>   <dbl>
+#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!  Break…      1       1
+#> 2 6     01'15.993"  01'18.661"   Shit.                Break…      1       1
+#> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN … Break…      1       1
+#> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God. Break…      1       1
+#> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my … Break…      1       1
 
 bb_sub_clean <- clean_captions(bb_sub)
 bb_sub_clean
-#> # A tibble: 4 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!                       
-#> 2 6     01'15.993"  01'18.661"   Shit.                                     
-#> 3 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
-#> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+#> # A tibble: 4 x 7
+#>   ID    Timecode_in Timecode_out Text_content         Name   Season Episode
+#>   <chr> <time>      <time>       <chr>                <fct>   <dbl>   <dbl>
+#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!  Break…      1       1
+#> 2 6     01'15.993"  01'18.661"   Shit.                Break…      1       1
+#> 3 8     01'24.918"  01'27.378"   Oh, God. Oh, my God. Break…      1       1
+#> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my … Break…      1       1
 ```
 
 ### Binding subtitles
@@ -134,20 +145,20 @@ to `FALSE`).
 
 ``` r
 bind_subtitles(rushmore_sub, oss_sub, bb_sub_clean)
-#> # A tibble: 11 x 4
-#>    ID    Timecode_in Timecode_out Text_content                             
-#>    <chr> <time>      <time>       <chr>                                    
-#>  1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first c…
-#>  2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie…
-#>  3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Sting…
-#>  4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking t…
-#>  5 447   41'24.737"  41'29.197"   Si vous voulez. Ça sera surtout l'occasi…
-#>  6 448   41'32.117"  41'34.067"   Et non pas le gratin de pommes de terre. 
-#>  7 449   41'37.357"  41'39.467"   Parce que ça ressemble à carotte, cairot…
-#>  8 454   42'48.703"  42'52.247"   Oh, my God. Christ!                      
-#>  9 455   42'55.460"  42'58.128"   Shit.                                    
-#> 10 457   43'04.385"  43'06.845"   Oh, God. Oh, my God.                     
-#> 11 458   43'07.013"  43'10.307"   Oh, my God. Oh, my God. Think, think, th…
+#> # A tibble: 11 x 7
+#>    ID    Timecode_in Timecode_out Text_content         Name  Season Episode
+#>    <chr> <time>      <time>       <chr>                <fct>  <dbl>   <dbl>
+#>  1 180   20'40.969"  20'48.269"   Rushmore deserves a… <NA>      NA      NA
+#>  2 181   20'48.269"  20'50.870"   - I don't know. Wha… <NA>      NA      NA
+#>  3 182   20'50.946"  20'57.370"   - What kind of fish… <NA>      NA      NA
+#>  4 183   20'58.051"  21'01.770"   - Piranhas? Really?… <NA>      NA      NA
+#>  5 447   41'24.737"  41'29.197"   Si vous voulez. Ça … <NA>      NA      NA
+#>  6 448   41'32.117"  41'34.067"   Et non pas le grati… <NA>      NA      NA
+#>  7 449   41'37.357"  41'39.467"   Parce que ça ressem… <NA>      NA      NA
+#>  8 454   42'48.703"  42'52.247"   Oh, my God. Christ!  Brea…      1       1
+#>  9 455   42'55.460"  42'58.128"   Shit.                Brea…      1       1
+#> 10 457   43'04.385"  43'06.845"   Oh, God. Oh, my God. Brea…      1       1
+#> 11 458   43'07.013"  43'10.307"   Oh, my God. Oh, my … Brea…      1       1
 ```
 
 Some functions under certain conditions can also return a list of
@@ -171,26 +182,26 @@ multi_sub
 #> 
 #> 
 #> subtitles object [[2]]
-#> # A tibble: 4 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!                       
-#> 2 6     01'15.993"  01'18.661"   Shit.                                     
-#> 3 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
-#> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+#> # A tibble: 4 x 7
+#>   ID    Timecode_in Timecode_out Text_content         Name   Season Episode
+#>   <chr> <time>      <time>       <chr>                <fct>   <dbl>   <dbl>
+#> 1 5     01'09.236"  01'12.780"   Oh, my God. Christ!  Break…      1       1
+#> 2 6     01'15.993"  01'18.661"   Shit.                Break…      1       1
+#> 3 8     01'24.918"  01'27.378"   Oh, God. Oh, my God. Break…      1       1
+#> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my … Break…      1       1
 
 bind_subtitles(multi_sub)
-#> # A tibble: 8 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first cl…
-#> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie …
-#> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
-#> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
-#> 5 188   22'11.006"  22'14.550"   Oh, my God. Christ!                       
-#> 6 189   22'17.763"  22'20.431"   Shit.                                     
-#> 7 191   22'26.688"  22'29.148"   Oh, God. Oh, my God.                      
-#> 8 192   22'29.316"  22'32.610"   Oh, my God. Oh, my God. Think, think, thi…
+#> # A tibble: 8 x 7
+#>   ID    Timecode_in Timecode_out Text_content          Name  Season Episode
+#>   <chr> <time>      <time>       <chr>                 <fct>  <dbl>   <dbl>
+#> 1 180   20'40.969"  20'48.269"   Rushmore deserves an… <NA>      NA      NA
+#> 2 181   20'48.269"  20'50.870"   - I don't know. What… <NA>      NA      NA
+#> 3 182   20'50.946"  20'57.370"   - What kind of fish?… <NA>      NA      NA
+#> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? … <NA>      NA      NA
+#> 5 188   22'11.006"  22'14.550"   Oh, my God. Christ!   Brea…      1       1
+#> 6 189   22'17.763"  22'20.431"   Shit.                 Brea…      1       1
+#> 7 191   22'26.688"  22'29.148"   Oh, God. Oh, my God.  Brea…      1       1
+#> 8 192   22'29.316"  22'32.610"   Oh, my God. Oh, my G… Brea…      1       1
 ```
 
 ### Tidying subtitles
@@ -234,17 +245,17 @@ unnest_tokens(rushmore_sub)
 #> # … with 39 more rows
 
 unnest_tokens(bb_sub_clean, token = "sentences")
-#> # A tibble: 8 x 4
-#>   ID    Timecode_in Timecode_out Text_content        
-#>   <chr> <time>      <time>       <chr>               
-#> 1 5     01'09.2370" 01'11.4018"  oh, my god.         
-#> 2 5     01'11.4028" 01'12.7800"  christ!             
-#> 3 6     01'15.9940" 01'18.6610"  shit.               
-#> 4 8     01'24.9190" 01'25.9538"  oh, god.            
-#> 5 8     01'25.9548" 01'27.3780"  oh, my god.         
-#> 6 9     01'27.5470" 01'28.4087"  oh, my god.         
-#> 7 9     01'28.4097" 01'29.2714"  oh, my god.         
-#> 8 9     01'29.2724" 01'30.8400"  think, think, think.
+#> # A tibble: 8 x 7
+#>   ID    Timecode_in Timecode_out Name       Season Episode Text_content    
+#>   <chr> <time>      <time>       <fct>       <dbl>   <dbl> <chr>           
+#> 1 5     01'09.2370" 01'11.4018"  Breaking …      1       1 oh, my god.     
+#> 2 5     01'11.4028" 01'12.7800"  Breaking …      1       1 christ!         
+#> 3 6     01'15.9940" 01'18.6610"  Breaking …      1       1 shit.           
+#> 4 8     01'24.9190" 01'25.9538"  Breaking …      1       1 oh, god.        
+#> 5 8     01'25.9548" 01'27.3780"  Breaking …      1       1 oh, my god.     
+#> 6 9     01'27.5470" 01'28.4087"  Breaking …      1       1 oh, my god.     
+#> 7 9     01'28.4097" 01'29.2714"  Breaking …      1       1 oh, my god.     
+#> 8 9     01'29.2724" 01'30.8400"  Breaking …      1       1 think, think, t…
 ```
 
 Note that unlike the `data.frame` method, the `input` and `output`
