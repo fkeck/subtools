@@ -276,7 +276,7 @@ read_subtitles <- function(file, format = "auto", clean.tags = TRUE, metadata = 
 #' The format must be "HH:MM:SS.mS".
 #' @param timecode.out a character vector giving the time that the subtitles disappear.
 #' The format must be "HH:MM:SS.mS".
-#' @param id a vector of numeric ID for subtitles.
+#' @param id a vector of IDs for subtitles.
 #' If not provided it is generated automatically from \code{timecode.in} order.
 #' @param metadata a one-row dataframe or tibble, or any object that can be coerced
 #' into a one-row tibble by \code{link[tibble]{as_tibble}}.

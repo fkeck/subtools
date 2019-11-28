@@ -33,11 +33,8 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
   lapply(sl, .validate_subtitles)
 
   if(sequential){
-    id.max <- 0
     tcout.max <- hms::as_hms("00:00:00.000")
     for(i in 1:length(sl)){
-      sl[[i]]$ID <- as.numeric(sl[[i]]$ID) + id.max
-      id.max <- max(sl[[i]]$ID)
 
       sl[[i]]$Timecode_in <- sapply(sl[[i]]$Timecode_in,
                                               `+`,
