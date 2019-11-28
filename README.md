@@ -152,13 +152,13 @@ bind_subtitles(rushmore_sub, oss_sub, bb_sub_clean)
 #>  2 181   20'48.269"  20'50.870"   - I don't know. Wha… <NA>      NA      NA
 #>  3 182   20'50.946"  20'57.370"   - What kind of fish… <NA>      NA      NA
 #>  4 183   20'58.051"  21'01.770"   - Piranhas? Really?… <NA>      NA      NA
-#>  5 447   41'24.737"  41'29.197"   Si vous voulez. Ça … <NA>      NA      NA
-#>  6 448   41'32.117"  41'34.067"   Et non pas le grati… <NA>      NA      NA
-#>  7 449   41'37.357"  41'39.467"   Parce que ça ressem… <NA>      NA      NA
-#>  8 454   42'48.703"  42'52.247"   Oh, my God. Christ!  Brea…      1       1
-#>  9 455   42'55.460"  42'58.128"   Shit.                Brea…      1       1
-#> 10 457   43'04.385"  43'06.845"   Oh, God. Oh, my God. Brea…      1       1
-#> 11 458   43'07.013"  43'10.307"   Oh, my God. Oh, my … Brea…      1       1
+#>  5 264   41'24.737"  41'29.197"   Si vous voulez. Ça … <NA>      NA      NA
+#>  6 265   41'32.117"  41'34.067"   Et non pas le grati… <NA>      NA      NA
+#>  7 266   41'37.357"  41'39.467"   Parce que ça ressem… <NA>      NA      NA
+#>  8 5     42'48.703"  42'52.247"   Oh, my God. Christ!  Brea…      1       1
+#>  9 6     42'55.460"  42'58.128"   Shit.                Brea…      1       1
+#> 10 8     43'04.385"  43'06.845"   Oh, God. Oh, my God. Brea…      1       1
+#> 11 9     43'07.013"  43'10.307"   Oh, my God. Oh, my … Brea…      1       1
 ```
 
 Some functions under certain conditions can also return a list of
@@ -198,10 +198,10 @@ bind_subtitles(multi_sub)
 #> 2 181   20'48.269"  20'50.870"   - I don't know. What… <NA>      NA      NA
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish?… <NA>      NA      NA
 #> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? … <NA>      NA      NA
-#> 5 188   22'11.006"  22'14.550"   Oh, my God. Christ!   Brea…      1       1
-#> 6 189   22'17.763"  22'20.431"   Shit.                 Brea…      1       1
-#> 7 191   22'26.688"  22'29.148"   Oh, God. Oh, my God.  Brea…      1       1
-#> 8 192   22'29.316"  22'32.610"   Oh, my God. Oh, my G… Brea…      1       1
+#> 5 5     22'11.006"  22'14.550"   Oh, my God. Christ!   Brea…      1       1
+#> 6 6     22'17.763"  22'20.431"   Shit.                 Brea…      1       1
+#> 7 8     22'26.688"  22'29.148"   Oh, God. Oh, my God.  Brea…      1       1
+#> 8 9     22'29.316"  22'32.610"   Oh, my God. Oh, my G… Brea…      1       1
 ```
 
 ### Tidying subtitles
@@ -246,16 +246,16 @@ unnest_tokens(rushmore_sub)
 
 unnest_tokens(bb_sub_clean, token = "sentences")
 #> # A tibble: 8 x 7
-#>   ID    Timecode_in Timecode_out Name       Season Episode Text_content    
-#>   <chr> <time>      <time>       <fct>       <dbl>   <dbl> <chr>           
-#> 1 5     01'09.2370" 01'11.4018"  Breaking …      1       1 oh, my god.     
-#> 2 5     01'11.4028" 01'12.7800"  Breaking …      1       1 christ!         
-#> 3 6     01'15.9940" 01'18.6610"  Breaking …      1       1 shit.           
-#> 4 8     01'24.9190" 01'25.9538"  Breaking …      1       1 oh, god.        
-#> 5 8     01'25.9548" 01'27.3780"  Breaking …      1       1 oh, my god.     
-#> 6 9     01'27.5470" 01'28.4087"  Breaking …      1       1 oh, my god.     
-#> 7 9     01'28.4097" 01'29.2714"  Breaking …      1       1 oh, my god.     
-#> 8 9     01'29.2724" 01'30.8400"  Breaking …      1       1 think, think, t…
+#>   ID    Timecode_in Timecode_out Text_content      Name      Season Episode
+#>   <chr> <time>      <time>       <chr>             <fct>      <dbl>   <dbl>
+#> 1 5     01'09.2370" 01'11.4018"  oh, my god.       Breaking…      1       1
+#> 2 5     01'11.4028" 01'12.7800"  christ!           Breaking…      1       1
+#> 3 6     01'15.9940" 01'18.6610"  shit.             Breaking…      1       1
+#> 4 8     01'24.9190" 01'25.9538"  oh, god.          Breaking…      1       1
+#> 5 8     01'25.9548" 01'27.3780"  oh, my god.       Breaking…      1       1
+#> 6 9     01'27.5470" 01'28.4087"  oh, my god.       Breaking…      1       1
+#> 7 9     01'28.4097" 01'29.2714"  oh, my god.       Breaking…      1       1
+#> 8 9     01'29.2724" 01'30.8400"  think, think, th… Breaking…      1       1
 ```
 
 Note that unlike the `data.frame` method, the `input` and `output`
