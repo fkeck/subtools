@@ -5,3 +5,6 @@
   subtitle and coerce it into a subtitle object. Refactored `read.subtitles()`
   to use the `as_subtitles` generic.
   
+# subtools 1.0
+
+* Complete change of the API

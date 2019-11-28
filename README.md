@@ -10,9 +10,8 @@ Status](https://travis-ci.org/fkeck/subtools.svg?branch=master)](https://travis-
 
 ### Read, write and manipulate subtitles in R
 
-Hi\! Welcome on the readme of `subtools`. Here, you will find some basic
-informations to get started with subtools. For more details, you can
-check the package documentation.
+Hi\! Here, you will find some basic informations to get started with
+`subtools`. For more details, you can check the package documentation.
 
 Subtools is a R package to read, write and manipulate subtitles in R.
 This then allows the full range of tools offered by the R ecosystem to
@@ -33,25 +32,17 @@ library(tidytext)
 
 ### Reading subtitles
 
-The main objective of subtools is to allow the importation of subtitle
-files directly into R. This task can be easily performed with the
+The main goal of subtools is to provide a seamless way to import
+subtitle files directly into R. This task can be performed with the
 function `read_subtitles()`:
 
 ``` r
-oss_sub <- read_subtitles("ex_OSS_117.srt")
 rushmore_sub <- read_subtitles("ex_Rushmore.srt")
 bb_sub <- read_subtitles("ex_Breaking_Bad.srt")
+oss_sub <- read_subtitles("ex_OSS_117.srt")
 ```
 
 ``` r
-oss_sub
-#> # A tibble: 3 x 4
-#>   ID    Timecode_in Timecode_out Text_content                              
-#>   <chr> <time>      <time>       <chr>                                     
-#> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasio…
-#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.  
-#> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
-
 rushmore_sub
 #> # A tibble: 4 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
@@ -70,11 +61,21 @@ bb_sub
 #> 3 7     01'18.829"  01'21.205"   [SIRENS WAILING IN DISTANCE]              
 #> 4 8     01'24.918"  01'27.378"   Oh, God. Oh, my God.                      
 #> 5 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
+
+oss_sub
+#> # A tibble: 3 x 4
+#>   ID    Timecode_in Timecode_out Text_content                              
+#>   <chr> <time>      <time>       <chr>                                     
+#> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasio…
+#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.  
+#> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
 ```
 
 The function `read_subtitles()` returns an object of class `subtitles`.
 This is a simple `tibble` with at least four columns (“`ID`”,
 “`Timecode_in`”, “`Timecode_out`” and “`Text_content`”).
+
+##### Series
 
 If you want to analyze subtitles of series with different seasons and
 episodes, you will have to import many files at once. The
@@ -82,6 +83,8 @@ episodes, you will have to import many files at once. The
 `read_subtitles_multiseries()` functions can make your life much easier,
 by making it possible to automatically import files and extract metadata
 from a structured directory. You can check the manual for more details.
+
+##### MKV
 
 Finally if you have a collection of movies in .mkv format, you can
 extract the subtitle tracks of MKV files with `read_subtitles_mkv()`.
@@ -130,17 +133,17 @@ follow concatenation order (this can be disabled by setting `sequential`
 to `FALSE`).
 
 ``` r
-bind_subtitles(oss_sub, rushmore_sub, bb_sub_clean)
+bind_subtitles(rushmore_sub, oss_sub, bb_sub_clean)
 #> # A tibble: 11 x 4
 #>    ID    Timecode_in Timecode_out Text_content                             
 #>    <chr> <time>      <time>       <chr>                                    
-#>  1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasi…
-#>  2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre. 
-#>  3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairot…
-#>  4 446   41'18.666"  41'25.966"   Rushmore deserves an aquarium. A first c…
-#>  5 447   41'25.966"  41'28.567"   - I don't know. What do you think, Ernie…
-#>  6 448   41'28.643"  41'35.067"   - What kind of fish? - Barracudas. Sting…
-#>  7 449   41'35.748"  41'39.467"   - Piranhas? Really? - Yes, I'm talking t…
+#>  1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first c…
+#>  2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie…
+#>  3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Sting…
+#>  4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking t…
+#>  5 447   41'24.737"  41'29.197"   Si vous voulez. Ça sera surtout l'occasi…
+#>  6 448   41'32.117"  41'34.067"   Et non pas le gratin de pommes de terre. 
+#>  7 449   41'37.357"  41'39.467"   Parce que ça ressemble à carotte, cairot…
 #>  8 454   42'48.703"  42'52.247"   Oh, my God. Christ!                      
 #>  9 455   42'55.460"  42'58.128"   Shit.                                    
 #> 10 457   43'04.385"  43'06.845"   Oh, God. Oh, my God.                     
@@ -154,19 +157,20 @@ into a new subtitle object, i.e. something similar to `do.call(rbind,
 x)`.
 
 ``` r
-multi_sub <- bind_subtitles(oss_sub, bb_sub_clean, collapse = FALSE, sequential = FALSE)
+multi_sub <- bind_subtitles(rushmore_sub, bb_sub_clean, collapse = FALSE, sequential = FALSE)
 multi_sub
-#> A MultiSubtitles object with 2 elements
-#> Subtitles object [[1]]
-#> # A tibble: 3 x 4
+#> A multisubtitles object with 2 elements
+#> subtitles object [[1]]
+#> # A tibble: 4 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
 #>   <chr> <time>      <time>       <chr>                                     
-#> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasio…
-#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.  
-#> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
+#> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first cl…
+#> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie …
+#> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
+#> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
 #> 
 #> 
-#> Subtitles object [[2]]
+#> subtitles object [[2]]
 #> # A tibble: 4 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
 #>   <chr> <time>      <time>       <chr>                                     
@@ -176,31 +180,32 @@ multi_sub
 #> 4 9     01'27.546"  01'30.840"   Oh, my God. Oh, my God. Think, think, thi…
 
 bind_subtitles(multi_sub)
-#> # A tibble: 7 x 4
+#> # A tibble: 8 x 4
 #>   ID    Timecode_in Timecode_out Text_content                              
 #>   <chr> <time>      <time>       <chr>                                     
-#> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasio…
-#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.  
-#> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
-#> 4 271   21'46.933"  21'50.477"   Oh, my God. Christ!                       
-#> 5 272   21'53.690"  21'56.358"   Shit.                                     
-#> 6 274   22'02.615"  22'05.075"   Oh, God. Oh, my God.                      
-#> 7 275   22'05.243"  22'08.537"   Oh, my God. Oh, my God. Think, think, thi…
+#> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first cl…
+#> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie …
+#> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
+#> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
+#> 5 188   22'11.006"  22'14.550"   Oh, my God. Christ!                       
+#> 6 189   22'17.763"  22'20.431"   Shit.                                     
+#> 7 191   22'26.688"  22'29.148"   Oh, God. Oh, my God.                      
+#> 8 192   22'29.316"  22'32.610"   Oh, my God. Oh, my God. Think, think, thi…
 ```
 
 ### Tidying subtitles
 
-The tidy text format as defined by Julia Silge and David Robinson is a
-table with one-token-per-row, a token being a meaningful unit of text,
-such as a word or a sentence. The objects returned by
-`read_subtitles*()` are in some ways already tidy (each row being a
-subtitle block associated with a timecode). However, this unit is not
-always the most relevant for data analysis. To perform tokenization, the
-`tidytext` package provides the generic function `unnest_tokens()`. The
-package `subtools` adds a new method to `unnest_tokens()` to handle
-subtitles objects. The main difference with the `data.frame` method is
-the possibility to perform timecode remapping according to the
-tokenisation process.
+The [tidy text format](https://www.tidytextmining.com/tidytext.html) as
+defined by Julia Silge and David Robinson is a table with
+one-token-per-row, a token being a meaningful unit of text, such as a
+word or a sentence. The objects returned by `read_subtitles*()` are in
+some ways already tidy (each row being a subtitle block associated with
+a timecode). However, this unit is not always the most relevant for data
+analysis. To perform tokenization, the `tidytext` package provides the
+generic function `unnest_tokens()`. The package `subtools` adds a new
+method to `unnest_tokens()` to handle subtitles objects. The main
+difference with the `data.frame` method is the possibility to perform
+timecode remapping according to the tokenisation process.
 
 ``` r
 rushmore_sub
@@ -212,7 +217,7 @@ rushmore_sub
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingr…
 #> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to…
 
-unnest_tokens(rushmore_sub, output = Text_content, input = Text_content, drop = FALSE)
+unnest_tokens(rushmore_sub)
 #> # A tibble: 49 x 4
 #>    ID    Timecode_in Timecode_out Text_content
 #>    <chr> <time>      <time>       <chr>       
@@ -228,7 +233,7 @@ unnest_tokens(rushmore_sub, output = Text_content, input = Text_content, drop = 
 #> 10 180   20'44.2001" 20'44.8451"  scientists  
 #> # … with 39 more rows
 
-unnest_tokens(bb_sub_clean, output = Text_content, input = Text_content, drop = FALSE, token = "sentences")
+unnest_tokens(bb_sub_clean, token = "sentences")
 #> # A tibble: 8 x 4
 #>   ID    Timecode_in Timecode_out Text_content        
 #>   <chr> <time>      <time>       <chr>               
@@ -242,9 +247,21 @@ unnest_tokens(bb_sub_clean, output = Text_content, input = Text_content, drop = 
 #> 8 9     01'29.2724" 01'30.8400"  think, think, think.
 ```
 
+Note that unlike the `data.frame` method, the `input` and `output`
+arguments are optional. This is because here the `Text_content` column
+can be assumed to be the column of interest.
+
+Once your data are ready, you can analyze them. I recommend you to have
+a look at [Text Mining with R: A Tidy
+Approach](https://www.tidytextmining.com/) by Julia Silge and David
+Robinson. This is a great place to get started with text mining in R.
+
 ### Applications
 
-A list of cool projects using subtools.
+A list of cool projects using `subtools`.
+
+Note that these project used the branch 0.x of `subtools`. The API is
+totally different in `subtools 1.0`.
 
 [*You beautiful, naïve, sophisticated newborn
 series*](http://www.masalmon.eu/2017/11/05/newborn-serie/) by
