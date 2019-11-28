@@ -58,9 +58,11 @@ is the possibility to perform timecode remapping according to the split of the i
 }
 \examples{
 f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
-s <- read_subtitles(f)
+s <- read_subtitles(f, metadata = data.frame(test = "Test"))
 
 require(tidytext)
-unnest_tokens(s, Word, Text_content)
+unnest_tokens(s)
+unnest_tokens(s, Word, Text_content, drop = FALSE)
 unnest_tokens(s, Word, Text_content, token = "lines")
+
 }

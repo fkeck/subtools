@@ -15,7 +15,7 @@ The format must be "HH:MM:SS.mS".}
 \item{timecode.out}{a character vector giving the time that the subtitles disappear.
 The format must be "HH:MM:SS.mS".}
 
-\item{id}{a vector of numeric ID for subtitles.
+\item{id}{a vector of IDs for subtitles.
 If not provided it is generated automatically from \code{timecode.in} order.}
 
 \item{metadata}{a one-row dataframe or tibble, or any object that can be coerced
