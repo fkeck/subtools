@@ -279,8 +279,8 @@ series*](http://www.masalmon.eu/2017/11/05/newborn-serie/) by
 [ma\_salmon](https://twitter.com/ma_salmon)
 
 [*A tidy text analysis of Rick and
-Morty*](http://tamaszilagyi.com/blog/a-tidy-text-analysis-of-rick-and-morty/)
-by [tudosgar](https://twitter.com/tudosgar)
+Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/) by
+[tudosgar](https://twitter.com/tudosgar)
 
 *Rick and Morty and Tidy Data Principles*
 ([part 1](http://pacha.hk/2017-10-13_rick_and_morty_tidy_data.html))
