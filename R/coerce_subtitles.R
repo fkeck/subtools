@@ -1,4 +1,3 @@
-
 #' Get subtitles text
 #'
 #' This function extracts the raw text content of subtitles objects as a character string.
@@ -16,13 +15,13 @@
 #'
 #' @export
 #'
-get_raw_text <- function(x, collapse = " "){
-  if(inherits(x, "subtitles")){
+get_raw_text <- function(x, collapse = " ") {
+  if (inherits(x, "subtitles")) {
     .validate_subtitles(x)
     res <- x$Text_content
     res <- paste(res, collapse = collapse)
   }
-  if(inherits(x, "multisubtitles")){
+  if (inherits(x, "multisubtitles")) {
     lapply(x, .validate_subtitles)
     res <- lapply(x, function(x) x$Text_content)
     res <- do.call("c", res)
@@ -30,5 +29,3 @@ get_raw_text <- function(x, collapse = " "){
   }
   return(res)
 }
-
-

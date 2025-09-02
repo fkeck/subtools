@@ -145,7 +145,7 @@ Note that these project used the branch 0.x of `subtools`. The API is totally di
 by [ma_salmon](https://twitter.com/ma_salmon)
 
 [*A tidy text analysis of Rick and Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/)
-by [tudosgar](https://twitter.com/tudosgar) 
+by [tudosgar](https://twitter.com/tudosgar)
 
 *Rick and Morty and Tidy Data Principles*
 ([part 1](http://pacha.hk/2017-10-13_rick_and_morty_tidy_data.html))
@@ -155,10 +155,3 @@ by [pachamaltese](https://twitter.com/pachamaltese)
 
 [*Term Frequencies by Season*](https://twitter.com/tdawry/status/919055698427809792)
 by [tdawry](https://twitter.com/tdawry)
-
-
-
-
-
-
-

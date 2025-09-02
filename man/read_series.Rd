@@ -6,14 +6,32 @@
 \alias{read_subtitles_multiseries}
 \title{Read series subtitles}
 \usage{
-read_subtitles_season(dir, format = "auto", bind = TRUE,
-  detect.meta = TRUE, quietly = FALSE, ...)
+read_subtitles_season(
+  dir,
+  format = "auto",
+  bind = TRUE,
+  detect.meta = TRUE,
+  quietly = FALSE,
+  ...
+)
 
-read_subtitles_serie(dir, format = "auto", bind = TRUE,
-  detect.meta = TRUE, quietly = FALSE, ...)
+read_subtitles_serie(
+  dir,
+  format = "auto",
+  bind = TRUE,
+  detect.meta = TRUE,
+  quietly = FALSE,
+  ...
+)
 
-read_subtitles_multiseries(dir, format = "auto", bind = TRUE,
-  detect.meta = TRUE, quietly = FALSE, ...)
+read_subtitles_multiseries(
+  dir,
+  format = "auto",
+  bind = TRUE,
+  detect.meta = TRUE,
+  quietly = FALSE,
+  ...
+)
 }
 \arguments{
 \item{dir}{the name of the directory which the subtitles are to be read from (see Details).}

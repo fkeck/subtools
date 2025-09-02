@@ -21,6 +21,6 @@ This function extracts the raw text content of subtitles objects as a character 
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 s <- read_subtitles(f)
 get_raw_text(s)
-cat(get_raw_text(s, collapse = "\\n"))
+cat(get_raw_text(s, collapse = "\n"))
 
 }

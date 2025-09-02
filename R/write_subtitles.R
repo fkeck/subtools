@@ -10,9 +10,8 @@
 #'
 #' @export
 #'
-write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
-
-  if(!is(x, "subtitles")){
+write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8") {
+  if (!is(x, "subtitles")) {
     stop("x must be a 'subtitles' object.")
   }
   tc <- paste(x$Timecode_in, x$Timecode_out, sep = " --> ")
@@ -22,5 +21,4 @@ write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
   con <- file(file, encoding = encoding)
   writeLines(res, con)
   close(con)
-
 }

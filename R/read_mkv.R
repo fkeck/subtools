@@ -1,5 +1,3 @@
-
-
 #' Get informations about subtitles embedded in MKV files
 #'
 #' This function uses \code{mkvmerge} to extract tracks data from an MKV file.
@@ -18,9 +16,8 @@
 #'
 #' @export
 #'
-get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
-
-  if(file.exists(file)){
+get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE) {
+  if (file.exists(file)) {
     file <- normalizePath(file)
     file <- gsub(" ", "\\ ", file, fixed = TRUE)
   } else {
@@ -31,19 +28,25 @@ get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
   mkv.info <- system(comm, intern = TRUE)
   mkv.info <- jsonlite::fromJSON(mkv.info)
 
-
-
   # A short summary to be returned in the console
   mkv.info.sub <- mkv.info$tracks[mkv.info$tracks$type == "subtitles", ]
   if (nrow(mkv.info.sub) < 1L) {
     warning("subtitles tracks not found")
   } else {
-    mkv.info.sub <- cbind(mkv.info.sub[, "id"],
-                          mkv.info.sub$properties[, "language"],
-                          mkv.info.sub[, "codec"],
-                          mkv.info.sub$properties[, c("codec_id", "default_track")])
-    names(mkv.info.sub) <- c("ID", "Language", "Codec", "Codec ID", "Default track")
-    if(print.info) print(mkv.info.sub)
+    mkv.info.sub <- cbind(
+      mkv.info.sub[, "id"],
+      mkv.info.sub$properties[, "language"],
+      mkv.info.sub[, "codec"],
+      mkv.info.sub$properties[, c("codec_id", "default_track")]
+    )
+    names(mkv.info.sub) <- c(
+      "ID",
+      "Language",
+      "Codec",
+      "Codec ID",
+      "Default track"
+    )
+    if (print.info) print(mkv.info.sub)
   }
   # Return invisibly the complete data
   invisible(mkv.info)
@@ -77,11 +80,17 @@ get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE){
 #'
 #' @export
 #'
-read_subtitles_mkv <- function(file, id = 2,
-                               mkvextract.exec = "mkvextract",
-                               mkvmerge.exec = "mkvmerge"){
-
-  info <- get_mkv_info(file, mkvmerge.exec = mkvmerge.exec, print.info = FALSE)$tracks
+read_subtitles_mkv <- function(
+  file,
+  id = 2,
+  mkvextract.exec = "mkvextract",
+  mkvmerge.exec = "mkvmerge"
+) {
+  info <- get_mkv_info(
+    file,
+    mkvmerge.exec = mkvmerge.exec,
+    print.info = FALSE
+  )$tracks
 
   if (file.exists(file)) {
     file <- normalizePath(file)
@@ -92,43 +101,71 @@ read_subtitles_mkv <- function(file, id = 2,
 
   sub.list <- list()
 
-  if(length(id) == 1){
+  if (length(id) == 1) {
     if (is.na(id)) {
       id <- info$id[info$type == "subtitles" & info$properties$default_track]
     }
   }
 
-  for (i in seq_along(id)){
-
+  for (i in seq_along(id)) {
     codec.i <- info$properties$codec_id[info$id == id[i]]
 
-    if (!codec.i %in% c("S_TEXT/UTF8", "S_TEXT/ASCII",
-                        "S_TEXT/SSA", "S_SSA", "S_TEXT/ASS", "S_ASS",
-                        "S_TEXT/WEBVTT")) {
-      warning("Subtitle codec ", codec.i, " is not supported by subtools yet. Tracks ID:", id[i], " skipped.")
+    if (
+      !codec.i %in%
+        c(
+          "S_TEXT/UTF8",
+          "S_TEXT/ASCII",
+          "S_TEXT/SSA",
+          "S_SSA",
+          "S_TEXT/ASS",
+          "S_ASS",
+          "S_TEXT/WEBVTT"
+        )
+    ) {
+      warning(
+        "Subtitle codec ",
+        codec.i,
+        " is not supported by subtools yet. Tracks ID:",
+        id[i],
+        " skipped."
+      )
       sub.list <- sub.list[-i]
-
     } else {
-
-      if (codec.i == "S_TEXT/UTF8" | codec.i == "S_TEXT/ASCII") ext.i <- ".srt"
-      if (codec.i == "S_TEXT/SSA" | codec.i == "S_SSA") ext.i <- ".ssa"
-      if (codec.i == "S_TEXT/ASS" | codec.i == "S_ASS") ext.i <- ".ass"
-      if (codec.i == "S_TEXT/WEBVTT") ext.i <- ".vtt"
+      if (codec.i == "S_TEXT/UTF8" | codec.i == "S_TEXT/ASCII") {
+        ext.i <- ".srt"
+      }
+      if (codec.i == "S_TEXT/SSA" | codec.i == "S_SSA") {
+        ext.i <- ".ssa"
+      }
+      if (codec.i == "S_TEXT/ASS" | codec.i == "S_ASS") {
+        ext.i <- ".ass"
+      }
+      if (codec.i == "S_TEXT/WEBVTT") {
+        ext.i <- ".vtt"
+      }
 
       sub.file <- tempfile(fileext = ext.i)
 
-      comm <- paste(mkvextract.exec, " tracks ", file, " ", id[i], ":", sub.file, sep = "")
+      comm <- paste(
+        mkvextract.exec,
+        " tracks ",
+        file,
+        " ",
+        id[i],
+        ":",
+        sub.file,
+        sep = ""
+      )
       system(comm, ignore.stdout = TRUE)
       sub.list[[i]] <- read_subtitles(sub.file)
     }
   }
 
-  if(length(sub.list) > 1){
+  if (length(sub.list) > 1) {
     class(sub.list) <- "multisubtitles"
   } else {
     sub.list <- sub.list[[1]]
   }
 
   return(sub.list)
-
 }

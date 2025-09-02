@@ -4,10 +4,18 @@
 \alias{unnest_tokens.subtitles}
 \title{Split a column into tokens}
 \usage{
-\method{unnest_tokens}{subtitles}(tbl, output, input, token = "words",
+unnest_tokens.subtitles(
+  tbl,
+  output,
+  input,
+  token = "words",
   format = c("text", "man", "latex", "html", "xml"),
-  time.remapping = TRUE, to_lower = TRUE, drop = TRUE,
-  collapse = NULL, ...)
+  time.remapping = TRUE,
+  to_lower = TRUE,
+  drop = TRUE,
+  collapse = NULL,
+  ...
+)
 }
 \arguments{
 \item{tbl}{A data frame}
@@ -16,38 +24,43 @@
 
 \item{input}{Input column that gets split as string or symbol.
 
-  The output/input arguments are passed by expression and support
-  \link[rlang]{quasiquotation}; you can unquote strings and symbols.}
+The output/input arguments are passed by expression and support
+\link[rlang:topic-inject]{quasiquotation}; you can unquote strings and symbols.}
 
 \item{token}{Unit for tokenizing, or a custom tokenizing function. Built-in
 options are "words" (default), "characters", "character_shingles", "ngrams",
-"skip_ngrams", "sentences", "lines", "paragraphs", "regex", "tweets"
-(tokenization by word that preserves usernames, hashtags, and URLS ), and
+"skip_ngrams", "sentences", "lines", "paragraphs", "regex", and
 "ptb" (Penn Treebank). If a function, should take a character vector and
 return a list of character vectors of the same length.}
 
-\item{format}{Either "text", "man", "latex", "html", or "xml". If not text,
-this uses the hunspell tokenizer, and can tokenize only by "word"}
+\item{format}{Either "text", "man", "latex", "html", or "xml". When the
+format is "text", this function uses the tokenizers package. If not "text",
+this uses the hunspell tokenizer, and can tokenize only by "word".}
 
 \item{time.remapping}{a logical. If \code{TRUE} (default), subtitle timecodes are recalculated
 to take into account the split of the input column.}
 
-\item{to_lower}{Whether to convert tokens to lowercase. If tokens include
-URLS (such as with \code{token = "tweets"}), such converted URLs may no
-longer be correct.}
+\item{to_lower}{Whether to convert tokens to lowercase.}
 
 \item{drop}{Whether original input column should get dropped. Ignored
 if the original input and new output column have the same name.}
 
-\item{collapse}{Whether to combine text with newlines first in case tokens
-(such as sentences or paragraphs) span multiple lines. If NULL, collapses
-when token method is "ngrams", "skip_ngrams", "sentences", "lines",
-"paragraphs", or "regex".}
+\item{collapse}{A character vector of variables to collapse text across,
+or \code{NULL}.
 
-\item{...}{Extra arguments passed on to \link[tokenizers]{tokenizers}, such
-as \code{strip_punct} for "words" and "tweets", \code{n} and \code{k} for
-"ngrams" and "skip_ngrams", \code{strip_url} for "tweets", and
-\code{pattern} for "regex".}
+For tokens like n-grams or sentences, text can be collapsed across rows
+within variables specified by \code{collapse} before tokenization. At tidytext
+0.2.7, the default behavior for \code{collapse = NULL} changed to be more
+consistent. The new behavior is that text is \emph{not} collapsed for \code{NULL}.
+
+Grouping data specifies variables to collapse across in the same way as
+\code{collapse} but you \strong{cannot} use both the \code{collapse} argument and
+grouped data. Collapsing applies mostly to \code{token} options of "ngrams",
+"skip_ngrams", "sentences", "lines", "paragraphs", or "regex".}
+
+\item{...}{Extra arguments passed on to \link[tokenizers:tokenizers]{tokenizers}, such
+as \code{strip_punct} for "words", \code{n} and \code{k} for "ngrams" and "skip_ngrams",
+and \code{pattern} for "regex".}
 }
 \value{
 A tibble.
