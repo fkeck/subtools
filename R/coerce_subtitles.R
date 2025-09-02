@@ -5,7 +5,7 @@
 #' @param x an object of class \code{subtitles} or \code{multisubtitles}.
 #' @param collapse a character string to separate the subtitles lines.
 #'
-#' @return A character string.
+#' @returns A character string.
 #'
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")

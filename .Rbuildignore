@@ -1,5 +1,3 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-tests.R
-^\.travis\.yml$
 ^README\.Rmd$

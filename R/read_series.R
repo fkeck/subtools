@@ -31,7 +31,7 @@
 #'|   |   |-- Episode_1.srt
 #'|   |   |-- Episode_2.srt}
 #'
-#' @return If \code{bind} is set on \code{TRUE} a \code{subtitles} object,
+#' @returns If \code{bind} is set on \code{TRUE} a \code{subtitles} object,
 #' otherwise an object of class \code{multisubtitles};
 #' i.e. a list of \code{subtitles} objects.
 #' @export

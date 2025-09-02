@@ -7,7 +7,7 @@
 #' @param mkvmerge.exec a character string giving the path to the \code{mkvmerge} executable.
 #' @param print.info print basic informations about subtitle tracks. Default is \code{TRUE}.
 #'
-#' @return A list with complete data about the MKV is invisibly returned.
+#' @returns A list with complete data about the MKV is invisibly returned.
 #' If the MKV has at least 1 subtitles track and \code{print.info} is \code{TRUE}, basic informations are printed.
 #' Otherwise it returns a warning.
 #'
@@ -71,7 +71,7 @@ get_mkv_info <- function(file, mkvmerge.exec = "mkvmerge", print.info = TRUE) {
 #' Not all the subtitle formats supported by \code{mkvextract} can be read by \code{subtools}.
 #' See \code{\link{read_subtitles}} for the list of formats currently supported.
 #'
-#' @return An object of class \code{subtitles} (see \code{\link{subtitles}}).
+#' @returns An object of class \code{subtitles} (see \code{\link{subtitles}}).
 #' If several tracks are requested (via \code{id}), an object of class \code{multisubtitles};
 #' i.e. a list of \code{\link{subtitles}} objects.
 #'
@@ -101,10 +101,8 @@ read_subtitles_mkv <- function(
 
   sub.list <- list()
 
-  if (length(id) == 1) {
-    if (is.na(id)) {
-      id <- info$id[info$type == "subtitles" & info$properties$default_track]
-    }
+  if (length(id) == 1 && is.na(id)) {
+    id <- info$id[info$type == "subtitles" & info$properties$default_track]
   }
 
   for (i in seq_along(id)) {

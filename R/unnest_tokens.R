@@ -7,7 +7,7 @@
 #' @param time.remapping a logical. If \code{TRUE} (default), subtitle timecodes are recalculated
 #' to take into account the split of the input column.
 #'
-#' @return A tibble.
+#' @returns A tibble.
 #' @export
 #'
 #' @examples
@@ -31,7 +31,7 @@ unnest_tokens.subtitles <- function(
   collapse = NULL,
   ...
 ) {
-  if (missing(input)) {
+  if (isTRUE(missing(input))) {
     quo_input <- "Text_content"
     quo_input_lab <- "Text_content"
   } else {
@@ -39,7 +39,7 @@ unnest_tokens.subtitles <- function(
     quo_input_lab <- as_label(quo_input)
   }
 
-  if (missing(output)) {
+  if (isTRUE(missing(output))) {
     quo_output <- "Text_content"
     quo_output_lab <- "Text_content"
   } else {
@@ -47,7 +47,7 @@ unnest_tokens.subtitles <- function(
     quo_output_lab <- as_label(quo_output)
   }
 
-  if (missing(input) & missing(output)) {
+  if (isTRUE(missing(input)) && isTRUE(missing(output))) {
     drop <- FALSE
   }
 
@@ -57,7 +57,7 @@ unnest_tokens.subtitles <- function(
   # is not exported by tidytext
   class(tbl) <- c("tbl_df", "tbl", "data.frame")
 
-  if (time.remapping) {
+  if (isTRUE(time.remapping)) {
     tbl_IDX <- seq_len(nrow(tbl))
     tbl_DFT <- tbl$Timecode_out - tbl$Timecode_in
 
@@ -126,7 +126,7 @@ unnest_tokens.subtitles <- function(
   }
 
   cn <- colnames(res)
-  if ((!drop) & (quo_input_lab != quo_output_lab)) {
+  if ((!drop) && (quo_input_lab != quo_output_lab)) {
     cn_head <- c(
       "ID",
       "Timecode_in",

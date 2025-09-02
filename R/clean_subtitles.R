@@ -9,11 +9,11 @@
 #' @param pattern a character string containing a regular expression to be matched and cleaned.
 #' @param clean.empty logical. Should empty remaining lines ("") deleted after cleaning.
 #'
-#' @return A \code{subtitles} or \code{multisubtitles} object.
+#' @returns A \code{subtitles} or \code{multisubtitles} object.
 #' @export
 #' @rdname clean
 clean_tags <- function(x, format = "srt", clean.empty = TRUE) {
-  if (!(is(x, "subtitles") | is(x, "multisubtitles"))) {
+  if (!(is(x, "subtitles") || is(x, "multisubtitles"))) {
     stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 
@@ -59,7 +59,7 @@ clean_tags <- function(x, format = "srt", clean.empty = TRUE) {
 #' @rdname clean
 #' @export
 clean_captions <- function(x, clean.empty = TRUE) {
-  if (!(is(x, "subtitles") | is(x, "multisubtitles"))) {
+  if (!(is(x, "subtitles") || is(x, "multisubtitles"))) {
     stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 
@@ -83,7 +83,7 @@ clean_captions <- function(x, clean.empty = TRUE) {
 #' @rdname clean
 #' @export
 clean_patterns <- function(x, pattern, clean.empty = TRUE) {
-  if (!(is(x, "subtitles") | is(x, "multisubtitles"))) {
+  if (!(is(x, "subtitles") || is(x, "multisubtitles"))) {
     stop("x must be a 'subtitles' or a 'multisubtitles' object.")
   }
 

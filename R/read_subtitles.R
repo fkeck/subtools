@@ -285,7 +285,7 @@ as_subtitle.character <- as_subtitle.default
 #'
 #' @details The support of WebVTT is basic and experimental.
 #'
-#' @return
+#' @returns
 #' An object of class \code{subtitles} (see \code{\link{subtitles}}).
 #'
 #' @examples
@@ -345,7 +345,7 @@ read_subtitles <- function(
 #' @param metadata a one-row dataframe or tibble, or any object that can be coerced
 #' into a one-row tibble by \code{link[tibble]{as_tibble}}.
 #'
-#' @return a \code{subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
+#' @returns a \code{subtitles} object i.e. a \code{tibble} with at least 4 columns containing IDs,
 #' timecodes and text of the subtitles and optionally metadata in extra columns.
 #'
 #' @export

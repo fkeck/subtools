@@ -7,7 +7,7 @@
 #' @param sequential logical. If \code{TRUE} (default) timecodes
 #' are recalculated to follow concatenation.
 #'
-#' @return A \code{subtitles} object if \code{collapse = TRUE} (default).
+#' @returns A \code{subtitles} object if \code{collapse = TRUE} (default).
 #' A \code{multisubtitles} object if \code{collapse = FALSE}.
 #'
 #' @examples
@@ -32,7 +32,7 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
 
   lapply(sl, .validate_subtitles)
 
-  if (sequential) {
+  if (isTRUE(sequential)) {
     tcout.max <- hms::as_hms("00:00:00.000")
     for (i in 1:length(sl)) {
       sl[[i]]$Timecode_in <- sapply(
@@ -53,7 +53,7 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
     }
   }
 
-  if (collapse) {
+  if (isTRUE(collapse)) {
     sl <- do.call(dplyr::bind_rows, lapply(sl, function(x) x))
     res <- subtitles(
       text = sl$Text_content,
