@@ -3,3 +3,5 @@ subtools.Rproj
 .Rhistory
 .RData
 tests.R
+
+*.html

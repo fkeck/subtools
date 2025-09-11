@@ -16,7 +16,8 @@ knitr::opts_chunk$set(
 <img src="man/figures/subtools.png" width="120" align="right" />
 
 # subtools
-[![Build Status](https://travis-ci.org/fkeck/subtools.svg?branch=master)](https://travis-ci.org/fkeck/subtools)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![R-CMD-check](https://github.com/albansagouis/subtools/workflows/R-CMD-check/badge.svg)](https://github.com/albansagouis/subtools/actions/)
 
 ### Read, write and manipulate subtitles in R
 
@@ -26,13 +27,12 @@ Subtools is a R package to read, write and manipulate subtitles in R. This then 
 
 ### Install
 To install the package from Github you can use devtools:
-
-    devtools::install_github("fkeck/subtools")
-
+```{r, eval = FALSE}
+devtools::install_github("fkeck/subtools")
+```
 
 ```{r}
 library(subtools)
-library(tidytext)
 ```
 
 
@@ -141,17 +141,11 @@ A list of cool projects using `subtools`.
 
 Note that these project used the branch 0.x of `subtools`. The API is totally different in `subtools 1.0`.
 
-[*You beautiful, naïve, sophisticated newborn series*](http://www.masalmon.eu/2017/11/05/newborn-serie/)
+[*You beautiful, naïve, sophisticated newborn series*](https://www.masalmon.eu/2017/11/05/newborn-serie/)
 by [ma_salmon](https://twitter.com/ma_salmon)
 
 [*A tidy text analysis of Rick and Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/)
 by [tudosgar](https://twitter.com/tudosgar)
-
-*Rick and Morty and Tidy Data Principles*
-([part 1](http://pacha.hk/2017-10-13_rick_and_morty_tidy_data.html))
-([part 2](http://pacha.hk/2017-10-22_rick_and_morty_tidy_data_2.html))
-([part 3](http://pacha.hk/2017-11-06_rick_and_morty_tidy_data_3.html))
-by [pachamaltese](https://twitter.com/pachamaltese)
 
 [*Term Frequencies by Season*](https://twitter.com/tdawry/status/919055698427809792)
 by [tdawry](https://twitter.com/tdawry)

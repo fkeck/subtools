@@ -10,8 +10,11 @@ A collection of functions to read, write and manipulate video subtitles.
 Supported formats include "srt", "subrip", "sub", "subviewer", "microdvd",
 "ssa", "ass", "substation", "vtt", and "webvtt".
 }
+\details{
+`r lifecycle::badge("stable")`
+}
 \author{
-\strong{Maintainer}: Francois Keck \email{francois.keck@gmail.com}
+\strong{Maintainer}: Francois Keck \email{francois.keck@gmail.com} (\href{https://orcid.org/0000-0002-3323-4167}{ORCID})
 
 Other contributors:
 \itemize{

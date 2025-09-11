@@ -14,6 +14,8 @@
 #' @importFrom hms hms
 #' @importFrom tidytext unnest_tokens
 #' @importFrom rlang .data as_label
+#' @details
+#' `r lifecycle::badge("stable")`
 #'
 #' @name subtools
 "_PACKAGE"
