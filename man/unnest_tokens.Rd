@@ -2,15 +2,41 @@
 % Please edit documentation in R/unnest_tokens.R
 \name{unnest_tokens.subtitles}
 \alias{unnest_tokens.subtitles}
+\alias{unnest_tokens}
+\alias{unnest_tokens.default}
 \title{Split a column into tokens}
 \usage{
-unnest_tokens.subtitles(
+\method{unnest_tokens}{subtitles}(
   tbl,
   output,
   input,
   token = "words",
   format = c("text", "man", "latex", "html", "xml"),
-  time.remapping = TRUE,
+  to_lower = TRUE,
+  drop = TRUE,
+  collapse = NULL,
+  ...,
+  time.remapping = TRUE
+)
+
+unnest_tokens(
+  tbl,
+  output,
+  input,
+  token = "words",
+  format = c("text", "man", "latex", "html", "xml"),
+  to_lower = TRUE,
+  drop = TRUE,
+  collapse = NULL,
+  ...
+)
+
+\method{unnest_tokens}{default}(
+  tbl,
+  output,
+  input,
+  token = "words",
+  format = c("text", "man", "latex", "html", "xml"),
   to_lower = TRUE,
   drop = TRUE,
   collapse = NULL,
@@ -37,9 +63,6 @@ return a list of character vectors of the same length.}
 format is "text", this function uses the tokenizers package. If not "text",
 this uses the hunspell tokenizer, and can tokenize only by "word".}
 
-\item{time.remapping}{a logical. If \code{TRUE} (default), subtitle timecodes are recalculated
-to take into account the split of the input column.}
-
 \item{to_lower}{Whether to convert tokens to lowercase.}
 
 \item{drop}{Whether original input column should get dropped. Ignored
@@ -61,6 +84,9 @@ grouped data. Collapsing applies mostly to \code{token} options of "ngrams",
 \item{...}{Extra arguments passed on to \link[tokenizers:tokenizers]{tokenizers}, such
 as \code{strip_punct} for "words", \code{n} and \code{k} for "ngrams" and "skip_ngrams",
 and \code{pattern} for "regex".}
+
+\item{time.remapping}{a logical. If \code{TRUE} (default), subtitle timecodes are recalculated
+to take into account the split of the input column.}
 }
 \value{
 A tibble.
@@ -68,12 +94,18 @@ A tibble.
 \description{
 This function extends unnest_tokens to subtitles objects. The main difference with the data.frame method
 is the possibility to perform timecode remapping according to the split of the input column.
+
+This wrapper turns the function \code{tidytext::unnest_tokens} into an S3 generic.
+The default method (\code{unnest_tokens.default}) delegates to the original implementation.
+See "?unnest_tokens.subtitles" for the \code{subtools} specific documentation.
+
+It simply calls the original `tidytext::unnest_tokens`.
 }
 \examples{
 f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 s <- read_subtitles(f, metadata = data.frame(test = "Test"))
 
-require(tidytext)
+#require(tidytext)
 unnest_tokens(s)
 unnest_tokens(s, Word, Text_content, drop = FALSE)
 unnest_tokens(s, Word, Text_content, token = "lines")
