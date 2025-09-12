@@ -51,7 +51,7 @@ unnest_tokens.subtitles <- function(
     drop <- FALSE
   }
 
-  .validate_subtitles(tbl)
+  .assert_subtitles(tbl)
 
   # We drop the subtitles class because unnest_tokens.data.frame
   # is not exported by tidytext

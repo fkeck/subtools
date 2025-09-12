@@ -17,12 +17,12 @@
 #'
 get_raw_text <- function(x, collapse = " ") {
   if (inherits(x, "subtitles")) {
-    .validate_subtitles(x)
+    .assert_subtitles(x)
     res <- x$Text_content
     res <- paste(res, collapse = collapse)
   }
   if (inherits(x, "multisubtitles")) {
-    lapply(x, .validate_subtitles)
+    lapply(x, .assert_subtitles)
     res <- lapply(x, function(x) x$Text_content)
     res <- do.call("c", res)
     res <- paste(res, collapse = collapse)

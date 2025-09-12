@@ -1,34 +1,36 @@
-# .validate_subtitles
-# .validate_metadata
+# .assert_subtitles
+# .extract_metadata
 
 # Sanity check for subtitles objects
-.validate_subtitles <- function(x) {
+.assert_subtitles <- function(x) {
   if (!is(x, "subtitles")) {
-    stop("A subtitles object must inherit from subtitles.")
+    stop("A subtitles object must inherit from class \"subtitles\".")
   }
   if (!is(x, "data.frame")) {
-    stop("A subtitles object must inherit from data.frame.")
+    stop("A subtitles object must inherit from class \"data.frame\".")
   }
 
   if (!"ID" %in% colnames(x)) {
     stop("A subtitles object must have an 'ID' column.")
   }
   if (!"Timecode_in" %in% colnames(x)) {
-    stop("A subtitles object must have an 'Timecode_in' column.")
+    stop("A subtitles object must have a 'Timecode_in' column.")
   }
   if (!"Timecode_out" %in% colnames(x)) {
-    stop("A subtitles object must have an 'Timecode_out' column.")
+    stop("A subtitles object must have a 'Timecode_out' column.")
   }
   if (!"Text_content" %in% colnames(x)) {
-    stop("A subtitles object must have an 'Text_content' column.")
+    stop("A subtitles object must have a 'Text_content' column.")
   }
 
   if (!is(x$Timecode_in, "hms")) {
-    stop("The 'Timecode_in' column of a Subtitle object must inherit from hms.")
+    stop(
+      "The 'Timecode_in' column of a Subtitle object must inherit from class \"hms\"."
+    )
   }
   if (!is(x$Timecode_out, "hms")) {
     stop(
-      "The 'Timecode_out' column of a Subtitle object must inherit from hms."
+      "The 'Timecode_out' column of a Subtitle object must inherit from class \"hms\"."
     )
   }
 }

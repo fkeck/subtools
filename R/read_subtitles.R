@@ -384,7 +384,7 @@ subtitles <- function(
   }
 
   class(subtitles) <- c("subtitles", class(subtitles))
-  .validate_subtitles(subtitles)
+  .assert_subtitles(subtitles)
   return(subtitles)
 }
 

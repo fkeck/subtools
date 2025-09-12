@@ -21,7 +21,7 @@ clean_tags <- function(x, format = "srt", clean.empty = TRUE) {
     x <- lapply(x, clean_tags, format = format, clean.empty = clean.empty)
     class(x) <- "multisubtitles"
   } else {
-    .validate_subtitles(x)
+    .assert_subtitles(x)
     format <- match.arg(
       format,
       choices = c(
@@ -67,7 +67,7 @@ clean_captions <- function(x, clean.empty = TRUE) {
     x <- lapply(x, clean_captions, clean.empty = clean.empty)
     class(x) <- "multisubtitles"
   } else {
-    .validate_subtitles(x)
+    .assert_subtitles(x)
 
     x$Text_content <- gsub("\\(.+?\\)", "", x$Text_content)
     x$Text_content <- gsub("\\[.+?\\]", "", x$Text_content)
@@ -91,7 +91,7 @@ clean_patterns <- function(x, pattern, clean.empty = TRUE) {
     x <- lapply(x, clean_patterns, pattern = pattern, clean.empty = clean.empty)
     class(x) <- "multisubtitles"
   } else {
-    .validate_subtitles(x)
+    .assert_subtitles(x)
 
     x$Text_content <- gsub(pattern, "", x$Text_content)
 

@@ -30,7 +30,7 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
     }
   }
 
-  lapply(sl, .validate_subtitles)
+  lapply(sl, .assert_subtitles)
 
   if (isTRUE(sequential)) {
     tcout.max <- hms::as_hms("00:00:00.000")
