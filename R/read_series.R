@@ -64,7 +64,7 @@ read_subtitles_season <- function(
   # Reorder by episode number (if episode numbers were correctly extracted)
   if (detect.meta) {
     enum <- .extr_enum(file.list)
-    if (is.numeric(enum) & all(!is.na(enum)) & anyDuplicated(enum) == 0) {
+    if (is.numeric(enum) && !anyNA(enum) && anyDuplicated(enum) == 0) {
       res <- res[enum]
     }
   }
@@ -113,7 +113,7 @@ read_subtitles_serie <- function(
   # Reorder by season number (if season numbers were correctly extracted)
   if (detect.meta) {
     snum <- .extr_snum(file.list)
-    if (is.numeric(snum) & all(!is.na(snum)) & anyDuplicated(snum) == 0) {
+    if (is.numeric(snum) && !anyNA(snum) && anyDuplicated(snum) == 0) {
       res <- res[snum]
     }
   }

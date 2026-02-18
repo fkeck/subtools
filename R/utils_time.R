@@ -11,9 +11,9 @@
     SIMPLIFY = FALSE
   )
 
-  x.h <- sapply(x, function(x) as.numeric(x[1]))
-  x.m <- sapply(x, function(x) as.numeric(x[2]))
-  x.s <- sapply(x, function(x) as.numeric(x[3]))
+  x.h <- sapply(x, function(x) as.numeric(x[[1]]))
+  x.m <- sapply(x, function(x) as.numeric(x[[2]]))
+  x.s <- sapply(x, function(x) as.numeric(x[[3]]))
 
   res <- hms::hms(seconds = x.s, minutes = x.m, hours = x.h)
   return(res)
