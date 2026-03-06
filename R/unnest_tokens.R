@@ -32,7 +32,7 @@ unnest_tokens.subtitles <- function(
   time.remapping = TRUE
 ) {
   if (isTRUE(missing(input))) {
-    quo_input <- "Text_content"
+    quo_input <- rlang::sym("Text_content")
     quo_input_lab <- "Text_content"
   } else {
     quo_input <- dplyr::enquo(input)
@@ -40,7 +40,7 @@ unnest_tokens.subtitles <- function(
   }
 
   if (isTRUE(missing(output))) {
-    quo_output <- "Text_content"
+    quo_output <- rlang::sym("Text_content")
     quo_output_lab <- "Text_content"
   } else {
     quo_output <- dplyr::enquo(output)
