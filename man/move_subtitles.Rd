@@ -3,12 +3,12 @@
 \name{move_subtitles}
 \alias{move_subtitles}
 \title{Move subtitles
-Move subtitles forward or backward \code{subtitles}.}
+Move subtitles forward or backward in \code{subtitles}.}
 \usage{
 move_subtitles(x, lag)
 }
 \arguments{
-\item{x}{\code{subtitles} or \code{multisubtitles} objects to be delayed.}
+\item{x}{\code{subtitles} or \code{multisubtitles} objects to be moved.}
 
 \item{lag}{\code{numeric.} Number of seconds the subtitles should be moved,
 forward if positive and backward if negative.}
@@ -18,7 +18,7 @@ A \code{subtitles} or \code{multisubtitles} object.
 }
 \description{
 Move subtitles
-Move subtitles forward or backward \code{subtitles}.
+Move subtitles forward or backward in \code{subtitles}.
 }
 \examples{
   f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")

@@ -1,12 +1,11 @@
 #' Move subtitles
-#' Move subtitles forward or backward \code{subtitles}.
+#' Move subtitles forward or backward in \code{subtitles}.
 #'
-#' @param x \code{subtitles} or \code{multisubtitles} objects to be delayed.
+#' @param x \code{subtitles} or \code{multisubtitles} objects to be moved.
 #' @param lag \code{numeric.} Number of seconds the subtitles should be moved,
 #'   forward if positive and backward if negative.
 #'
 #' @returns A \code{subtitles} or \code{multisubtitles} object.
-#' @importFrom dplyr mutate
 #' @importFrom hms as_hms
 #' @examples
 #'   f1 <- system.file("extdata", "ex_subrip.srt", package = "subtools")
@@ -15,16 +14,20 @@
 #' @export
 #'
 move_subtitles <- function(x, lag) {
-    .assert_subtitles(x)
-    if (
-        (length(lag) != 1L && length(lag) != nrow(x)) ||
-            !is.element(class(lag), c("numeric", "integer"))
-    ) {
+    if (!(is(x, "subtitles") || is(x, "multisubtitles"))) {
+        stop("x must be a 'subtitles' or a 'multisubtitles' object.")
+    }
+    if (!is.numeric(lag) || (length(lag) != 1L && length(lag) != nrow(x))) {
         stop("lag must be a vector of numbers of length 1 or equal to nrow(x)")
     }
 
-    x$Timecode_in <- as_hms(x$Timecode_in + lag)
-    x$Timecode_out <- as_hms(x$Timecode_out + lag)
+    if (is(x, "multisubtitles")) {
+        x <- lapply(x, move_subtitles, lag = lag)
+        class(x) <- "multisubtitles"
+    } else {
+        x$Timecode_in <- as_hms(x$Timecode_in + lag)
+        x$Timecode_out <- as_hms(x$Timecode_out + lag)
+    }
 
     return(x)
 }
