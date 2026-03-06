@@ -44,6 +44,7 @@ read_subtitles_season <- function(
   quietly = FALSE,
   ...
 ) {
+  stopifnot("dir not found" = dir.exists(dir))
   file.list <- list.files(dir, full.names = TRUE)
   file.list <- file.list[grep(".srt$|.sub$|.ssa$|.ass$|.vtt$", file.list)]
   n.sub <- length(file.list)
@@ -89,6 +90,7 @@ read_subtitles_serie <- function(
   quietly = FALSE,
   ...
 ) {
+  stopifnot("dir not found" = dir.exists(dir))
   file.list <- dir(dir, full.names = TRUE)
   n.season <- length(file.list)
 
@@ -143,6 +145,7 @@ read_subtitles_multiseries <- function(
   quietly = FALSE,
   ...
 ) {
+  stopifnot("dir not found" = dir.exists(dir))
   file.list <- dir(dir, full.names = TRUE)
   n.series <- length(file.list)
 

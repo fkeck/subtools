@@ -304,6 +304,7 @@ read_subtitles <- function(
   frame.rate = NA,
   encoding = "auto"
 ) {
+  stopifnot("file not found" = file.exists(file))
   if (format == "auto") {
     format <- .extr_extension(file)
   }

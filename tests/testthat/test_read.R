@@ -89,3 +89,39 @@ test_that("All example files produce same object", {
 })
 # microdvd is not tested because it is hard to find timecode (frames)
 # that exactly match the others (time)
+
+
+test_that("read_subtitles errors on non-existent file", {
+  expect_error(
+    read_subtitles("non_existent_file.srt"),
+    "file not found"
+  )
+})
+
+test_that("read_subtitles_season errors on non-existent dir", {
+  expect_error(
+    read_subtitles_season("non_existent_dir"),
+    "dir not found"
+  )
+})
+
+test_that("read_subtitles_serie errors on non-existent dir", {
+  expect_error(
+    read_subtitles_serie("non_existent_dir"),
+    "dir not found"
+  )
+})
+
+test_that("read_subtitles_multiseries errors on non-existent dir", {
+  expect_error(
+    read_subtitles_multiseries("non_existent_dir"),
+    "dir not found"
+  )
+})
+
+test_that("read_subtitles_mkv errors on non-existent file", {
+  expect_error(
+    read_subtitles_mkv("non_existent_file.mkv"),
+    "file not found"
+  )
+})

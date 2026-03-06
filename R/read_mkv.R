@@ -86,18 +86,15 @@ read_subtitles_mkv <- function(
   mkvextract.exec = "mkvextract",
   mkvmerge.exec = "mkvmerge"
 ) {
+  stopifnot("file not found" = file.exists(file))
   info <- get_mkv_info(
     file,
     mkvmerge.exec = mkvmerge.exec,
     print.info = FALSE
   )$tracks
 
-  if (file.exists(file)) {
-    file <- normalizePath(file)
-    file <- gsub(" ", "\\ ", file, fixed = TRUE)
-  } else {
-    stop("Invalid input: file must be a valid file path.")
-  }
+  file <- normalizePath(file)
+  file <- gsub(" ", "\\ ", file, fixed = TRUE)
 
   sub.list <- list()
 
