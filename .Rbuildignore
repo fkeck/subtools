@@ -3,3 +3,6 @@
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^.*\.html$
+^doc$
+^Meta$
+^synced_episode.srt/

@@ -30,7 +30,11 @@ Imports:
     tidytext,
     rlang
 Suggests:
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown,
+    ggplot2
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 RoxygenNote: 7.3.3

@@ -1,0 +1,455 @@
+---
+title: "Subtitle Text Analysis with subtools"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Subtitle Text Analysis with subtools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(subtools)
+```
+
+## Overview
+
+`subtools` reads and manipulates video subtitle files from a variety of formats
+(SubRip `.srt`, WebVTT `.vtt`, SubStation Alpha `.ass`/`.ssa`, SubViewer `.sub`,
+MicroDVD `.sub`) and exposes them as tidy tibbles ready for text analysis.
+
+This vignette walks through:
+
+1. Reading subtitle files
+2. Exploring and cleaning subtitle objects
+3. Combining subtitles from multiple files
+4. Adjusting timecodes
+5. Tokenising and analysing text with `tidytext`
+6. Analysing dialogue across a TV series
+
+---
+
+## 1. Reading subtitles
+
+### From a file
+
+`read_subtitles()` is the main entry point. It auto-detects the file format from
+the extension and returns a `subtitles` object — a `tibble` with four core
+columns: `ID`, `Timecode_in`, `Timecode_out`, and `Text_content`.
+
+```{r read-srt}
+f_srt <- system.file("extdata", "ex_subrip.srt", package = "subtools")
+subs <- read_subtitles(file = f_srt)
+subs
+```
+
+The same call works for every supported format. Use `format = "auto"` (default)
+or supply the format explicitly.
+
+```{r read-vtt}
+f_vtt <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
+read_subtitles(file = f_vtt, format = "webvtt")
+```
+
+```{r read-ass}
+f_ass <- system.file("extdata", "ex_substation.ass", package = "subtools")
+read_subtitles(file = f_ass, format = "substation")
+```
+
+### Attaching metadata at read time
+
+Any descriptive information — season, episode, source, language — can be
+attached as a one-row tibble via the `metadata` argument. The values are
+repeated for every subtitle line, keeping the tidy structure intact.
+
+```{r metadata}
+subs_meta <- read_subtitles(
+  file = f_srt,
+  metadata = tibble::tibble(Season = 1L, Episode = 3L, Language = "en")
+)
+subs_meta
+```
+
+Metadata columns travel with the object through all `subtools` operations.
+
+### From a character vector
+
+`as_subtitle()` parses an in-memory character vector, which is useful when the
+subtitle text is already loaded or generated programmatically.
+
+```{r as-subtitle}
+raw <- c(
+  "1",
+  "00:00:01,000 --> 00:00:03,500",
+  "Hello, world.",
+  "",
+  "2",
+  "00:00:04,000 --> 00:00:06,000",
+  "This is subtools."
+)
+as_subtitle(x = raw, format = "srt")
+```
+
+---
+
+## 2. Exploring the subtitles object
+
+### Quick summary
+
+`get_subtitles_info()` prints a compact summary: line count, overall duration,
+and attached metadata fields.
+
+```{r info}
+s <- read_subtitles(
+  file = system.file("extdata", "ex_subrip.srt", package = "subtools")
+)
+get_subtitles_info(x = s)
+```
+
+### Raw text extraction
+
+`get_raw_text()` collapses all subtitle lines into a single character string,
+useful when passing the whole transcript to external Natural Language Processing tools.
+
+```{r raw-text}
+transcript <- get_raw_text(x = s)
+transcript
+
+# One line per subtitle, separated by newlines
+cat(get_raw_text(x = s, collapse = "\n"))
+```
+
+### Accessing individual columns
+
+Because a `subtitles` object is a tibble, all `dplyr` verbs work directly:
+
+```{r dplyr}
+library(dplyr)
+
+# Lines spoken after the first 30 seconds
+s |>
+  filter(Timecode_in > hms::as_hms("00:00:30"))
+
+# Duration of each subtitle cue (in seconds)
+s |>
+  mutate(duration_s = as.numeric(Timecode_out - Timecode_in)) |>
+  select(ID, Text_content, duration_s)
+```
+
+---
+
+## 3. Cleaning subtitles
+
+Subtitle files frequently contain formatting tags, closed-caption descriptions,
+and other non-speech artefacts that should be removed before text analysis.
+
+### Remove formatting tags
+
+`clean_tags()` strips HTML-style tags (used in SRT and WebVTT) and curly-brace
+override blocks (used in SubStation Alpha).
+
+```{r clean-tags}
+tagged <- as_subtitle(
+  x = c(
+    "1",
+    "00:00:01,000 --> 00:00:03,000",
+    "<i>This is <b>important</b>.</i>",
+    "",
+    "2",
+    "00:00:04,000 --> 00:00:06,000",
+    "<font color=\"red\">Warning!</font>"
+  ),
+  format = "srt",
+  clean.tags = FALSE   # keep tags so we can demonstrate cleaning
+)
+tagged$Text_content
+
+clean_tags(x = tagged)$Text_content
+```
+
+### Remove closed captions
+
+`clean_captions()` removes text enclosed in parentheses or square brackets —
+typically sound descriptions and speaker identifiers used in accessibility
+captions.
+
+```{r clean-captions}
+bb <- read_subtitles(
+  file = system.file("extdata", "ex_breakingbad.srt", package = "subtools"),
+  clean.tags = FALSE
+)
+bb$Text_content
+
+clean_captions(x = bb)$Text_content
+```
+
+### Remove arbitrary patterns
+
+`clean_patterns()` accepts any regular expression, giving full flexibility for
+project-specific cleaning.
+
+```{r clean-patterns}
+# Remove speaker labels such as "WALTER:" or "JESSE:"
+s_labeled <- as_subtitle(
+  x = c(
+    "1", "00:00:01,000 --> 00:00:03,000", "WALTER: We need to cook.",
+    "",
+    "2", "00:00:04,000 --> 00:00:06,000", "JESSE: Yeah, Mr. White!"
+  ),
+  format = "srt", clean.tags = FALSE
+)
+
+clean_patterns(x = s_labeled, pattern = "^[A-Z]+: ")$Text_content
+```
+
+### Chaining cleaning steps
+
+Because each cleaning function returns a `subtitles` object, steps can be piped:
+
+```{r clean-chain}
+s_clean <- read_subtitles(file = f_srt, clean.tags = FALSE) |>
+  clean_tags() |>
+  clean_captions() |>
+  clean_patterns(pattern = "^-\\s*")   # remove leading dialogue dashes
+
+s_clean$Text_content
+```
+
+---
+
+## 4. Combining subtitles
+
+### Collapsing multiple objects into one
+
+`bind_subtitles()` merges any number of `subtitles` (or `multisubtitles`)
+objects. With `collapse = TRUE` (default), timecodes are shifted so that each
+file follows the previous one sequentially.
+
+```{r bind-collapse}
+s1 <- read_subtitles(
+  file = system.file("extdata", "ex_subrip.srt", package = "subtools"),
+  metadata = tibble::tibble(Episode = 1L)
+)
+s2 <- read_subtitles(
+  file = system.file("extdata", "ex_rushmore.srt", package = "subtools"),
+  metadata = tibble::tibble(Episode = 2L)
+)
+
+combined <- bind_subtitles(s1, s2)
+nrow(combined)
+range(combined$Timecode_in)
+```
+
+### Keeping a list structure
+
+Set `collapse = FALSE` to get a `multisubtitles` object — a named list of
+`subtitles` — when you want to process episodes independently before merging.
+
+```{r bind-list}
+multi <- bind_subtitles(s1, s2, collapse = FALSE)
+class(multi)
+print(multi)
+```
+
+`get_subtitles_info()` also works on `multisubtitles`:
+
+```{r info-multi}
+get_subtitles_info(x = multi)
+```
+
+---
+
+## 5. Reading an entire series
+
+For TV series organised in a standard directory tree, `subtools` provides
+convenience readers that handle the hierarchy automatically and extract
+Season/Episode metadata from folder and file names.
+
+```
+Series_Collection/
+|-- BreakingBad/
+|   |-- Season_01/
+|   |   |-- S01E01.srt
+|   |   |-- S01E02.srt
+|   |-- Season_02/
+|       |-- S02E01.srt
+```
+
+```{r read-series-demo, eval=FALSE}
+# Read a single season
+season1 <- read_subtitles_season(dir = "BreakingBad/Season_01/")
+
+# Read an entire series (all seasons)
+bb_all <- read_subtitles_serie(dir = "BreakingBad/")
+
+# Read multiple series at once
+collection <- read_subtitles_multiseries(dir = "Series_Collection/")
+```
+
+Each function returns a single collapsed `subtitles` object by default
+(`bind = TRUE`), with `Serie`, `Season`, and `Episode` columns populated from
+the directory structure. Pass `bind = FALSE` to get a `multisubtitles` list
+instead.
+
+---
+
+## 6. Adjusting timecodes
+
+`move_subtitles()` shifts all timecodes by a fixed number of seconds. Positive
+values shift forward; negative values shift backward. This is useful when the
+subtitle file is out of sync with the video.
+
+```{r move}
+subs_shifted <- move_subtitles(x = subs, lag = 2.5)
+
+# Compare first cue before and after
+subs$Timecode_in[1]
+subs_shifted$Timecode_in[1]
+```
+
+`move_subtitles()` also works on `multisubtitles`:
+
+```{r move-multi}
+multi_shifted <- move_subtitles(x = multi, lag = -1.0)
+multi_shifted[[1]]$Timecode_in[1]
+```
+
+---
+
+## 7. Writing subtitles back to disk
+
+`write_subtitles()` serialises a `subtitles` object to a SubRip `.srt` file.
+
+```{r write, eval=FALSE}
+write_subtitles(x = subs_shifted, file = "synced_episode.srt")
+```
+
+---
+
+## 8. Text analysis with tidytext
+
+### Tokenising into words
+
+`unnest_tokens()` extends `tidytext::unnest_tokens()` with subtitle-aware
+timecode remapping: each token inherits a proportional slice of the original
+cue's time window, enabling timeline-based analyses.
+
+```{r unnest-words}
+words <- unnest_tokens(tbl = subs)
+words
+```
+
+The `Timecode_in` / `Timecode_out` columns now reflect the estimated position
+of each word within its cue.
+
+### Tokenising into sentences or n-grams
+
+```{r unnest-ngrams}
+# Bigrams
+bigrams <- unnest_tokens(tbl = subs, output = Word, input = Text_content,
+                         token = "ngrams", n = 2)
+bigrams$Word
+```
+
+### Word frequency
+
+```{r word-freq}
+library(dplyr)
+
+words |>
+  count(Text_content, sort = TRUE) |>
+  head(10)
+```
+
+---
+
+## 9. Advanced: cross-episode analysis
+
+The metadata columns added at read time make it straightforward to compare
+episodes or seasons. The example below simulates a two-episode corpus and
+computes per-episode word counts — a pattern that scales directly to a full
+series loaded with `read_subtitles_serie()`.
+
+```{r cross-episode}
+ep1 <- read_subtitles(
+  file = system.file("extdata", "ex_breakingbad.srt", package = "subtools"),
+  metadata = tibble::tibble(Episode = 1L)
+)
+ep2 <- read_subtitles(
+  file = system.file("extdata", "ex_rushmore.srt", package = "subtools"),
+  metadata = tibble::tibble(Episode = 2L)
+)
+ep3 <- read_subtitles(
+  file = system.file("extdata", "ex_webvtt.vtt", package = "subtools"),
+  metadata = tibble::tibble(Episode = 3L)
+)
+
+corpus <- bind_subtitles(ep1, ep2, ep3)
+
+token_counts <- unnest_tokens(corpus) |>
+  count(Episode, Text_content, sort = TRUE)
+
+token_counts |>
+  slice_max(n, n = 5, by = Episode)
+```
+
+### TF-IDF across episodes
+
+TF-IDF highlights words that are distinctive to each episode compared with the
+rest of the corpus.
+
+```{r tfidf}
+token_counts |>
+  tidytext::bind_tf_idf(Text_content, Episode, n) |>
+  arrange(Episode, desc(tf_idf)) |>
+  slice_max(tf_idf, n = 5, by = Episode)
+```
+
+### Dialogue timeline
+
+Because timecodes are preserved through `unnest_tokens()`, words can be plotted
+along a timeline, e.g. to visualise how vocabulary density evolves across a
+film.
+
+```{r timeline, fig.width = 7, fig.height = 3}
+words_ep1 <- unnest_tokens(tbl = ep1) |>
+  mutate(minute = as.numeric(Timecode_in) / 60)
+
+if (requireNamespace("ggplot2", quietly = TRUE)) {
+  library(ggplot2)
+  ggplot(words_ep1, aes(x = minute)) +
+    geom_histogram(binwidth = 0.5, fill = "steelblue", colour = "white") +
+    labs(
+      title = "Word density over time",
+      x     = "Time (minutes)",
+      y     = "Word count"
+    ) +
+    theme_minimal()
+}
+```
+
+---
+
+## Summary
+
+| Task | Function |
+|------|----------|
+| Read a subtitle file | `read_subtitles()` |
+| Parse in-memory text | `as_subtitle()` |
+| Read a full season/series | `read_subtitles_season()` / `read_subtitles_serie()` / `read_subtitles_multiseries()` |
+| Print a summary | `get_subtitles_info()` |
+| Extract plain text | `get_raw_text()` |
+| Remove HTML/ASS tags | `clean_tags()` |
+| Remove closed captions | `clean_captions()` |
+| Remove custom patterns | `clean_patterns()` |
+| Merge subtitle objects | `bind_subtitles()` |
+| Shift timecodes | `move_subtitles()` |
+| Write to `.srt` | `write_subtitles()` |
+| Tokenise (words, n-grams, …) | `unnest_tokens()` |

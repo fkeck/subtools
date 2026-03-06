@@ -5,3 +5,6 @@ subtools.Rproj
 tests.R
 
 *.html
+/doc/
+/Meta/
+synced_episode.srt
