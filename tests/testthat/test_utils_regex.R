@@ -1,6 +1,3 @@
-library(subtools)
-context("Regexes")
-
 test_that(".extr_filename file name extraction", {
   expect_equal(.extr_filename("abcd.txt"), "abcd.txt")
   expect_equal(.extr_filename("ab.cd.txt"), "ab.cd.txt")
@@ -36,4 +33,3 @@ test_that(".extr_enum season number extraction", {
   expect_equal(.extr_enum("MySerie.Episode_9.txt"), 9)
   expect_equal(.extr_enum("MySerie.5x09.txt"), 9)
 })
-

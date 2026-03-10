@@ -4,8 +4,12 @@
 \alias{read_subtitles_mkv}
 \title{Extract subtitles embedded in MKV files}
 \usage{
-read_subtitles_mkv(file, id = 2, mkvextract.exec = "mkvextract",
-  mkvmerge.exec = "mkvmerge")
+read_subtitles_mkv(
+  file,
+  id = 2,
+  mkvextract.exec = "mkvextract",
+  mkvmerge.exec = "mkvmerge"
+)
 }
 \arguments{
 \item{file}{a character string giving the path to the MKV file.}

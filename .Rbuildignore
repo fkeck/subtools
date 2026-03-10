@@ -1,5 +1,8 @@
+^\.github/
 ^.*\.Rproj$
 ^\.Rproj\.user$
-tests.R
-^\.travis\.yml$
 ^README\.Rmd$
+^.*\.html$
+^doc$
+^Meta$
+^synced_episode.srt/

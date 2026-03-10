@@ -10,10 +10,13 @@
 #'
 #' @export
 #'
-write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
-
-  if(!is(x, "subtitles")){
+write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8") {
+  if (!is(x, "subtitles")) {
     stop("x must be a 'subtitles' object.")
+  }
+  dir <- dirname(file)
+  if (!file.exists(dir) || file.access(dir, mode = 2) != 0) {
+    stop("'file' must be in a writable location.")
   }
   tc <- paste(x$Timecode_in, x$Timecode_out, sep = " --> ")
   tc <- gsub("\\.", ",", tc)
@@ -22,5 +25,4 @@ write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8"){
   con <- file(file, encoding = encoding)
   writeLines(res, con)
   close(con)
-
 }

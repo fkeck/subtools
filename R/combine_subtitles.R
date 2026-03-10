@@ -7,7 +7,7 @@
 #' @param sequential logical. If \code{TRUE} (default) timecodes
 #' are recalculated to follow concatenation.
 #'
-#' @return A \code{subtitles} object if \code{collapse = TRUE} (default).
+#' @returns A \code{subtitles} object if \code{collapse = TRUE} (default).
 #' A \code{multisubtitles} object if \code{collapse = FALSE}.
 #'
 #' @examples
@@ -19,42 +19,49 @@
 #' bind_subtitles(s1, s2, collapse = FALSE)
 #' @export
 #'
-bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
+bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
   input <- list(...)
   sl <- list()
-    for(i in 1:length(input)){
-    if(is(input[[i]], "multisubtitles")){
+  for (i in 1:length(input)) {
+    if (is(input[[i]], "multisubtitles")) {
       sl <- append(sl, unlist(input[i], recursive = FALSE))
     } else {
       sl <- append(sl, input[i])
     }
   }
 
-  lapply(sl, .validate_subtitles)
+  lapply(sl, .assert_subtitles)
 
-  if(sequential){
+  if (isTRUE(sequential)) {
     tcout.max <- hms::as_hms("00:00:00.000")
-    for(i in 1:length(sl)){
-
-      sl[[i]]$Timecode_in <- sapply(sl[[i]]$Timecode_in,
-                                              `+`,
-                                              y = tcout.max, USE.NAMES = FALSE)
+    for (i in 1:length(sl)) {
+      sl[[i]]$Timecode_in <- sapply(
+        sl[[i]]$Timecode_in,
+        `+`,
+        y = tcout.max,
+        USE.NAMES = FALSE
+      )
       sl[[i]]$Timecode_in <- hms::as_hms(sl[[i]]$Timecode_in)
-      sl[[i]]$Timecode_out <- sapply(sl[[i]]$Timecode_out,
-                                              `+`,
-                                              y = tcout.max, USE.NAMES = FALSE)
+      sl[[i]]$Timecode_out <- sapply(
+        sl[[i]]$Timecode_out,
+        `+`,
+        y = tcout.max,
+        USE.NAMES = FALSE
+      )
       sl[[i]]$Timecode_out <- hms::as_hms(sl[[i]]$Timecode_out)
       tcout.max <- max(sl[[i]]$Timecode_out)
     }
   }
 
-  if(collapse){
+  if (isTRUE(collapse)) {
     sl <- do.call(dplyr::bind_rows, lapply(sl, function(x) x))
-    res <- subtitles(text = sl$Text_content,
-                     timecode.in = sl$Timecode_in,
-                     timecode.out = sl$Timecode_out,
-                     id = sl$ID,
-                     metadata = extract_metadata(sl))
+    res <- subtitles(
+      text = sl$Text_content,
+      timecode.in = sl$Timecode_in,
+      timecode.out = sl$Timecode_out,
+      id = sl$ID,
+      metadata = extract_metadata(sl)
+    )
   } else {
     res <- sl
     class(res) <- "multisubtitles"
@@ -62,4 +69,3 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE){
 
   return(res)
 }
-

@@ -4,8 +4,14 @@
 \alias{read_subtitles}
 \title{Read subtitles}
 \usage{
-read_subtitles(file, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "auto")
+read_subtitles(
+  file,
+  format = "auto",
+  clean.tags = TRUE,
+  metadata = data.frame(),
+  frame.rate = NA,
+  encoding = "auto"
+)
 }
 \arguments{
 \item{file}{the name of the file which the subtitles are to be read from.

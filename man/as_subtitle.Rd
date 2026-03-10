@@ -6,14 +6,35 @@
 \alias{as_subtitle.character}
 \title{Convert an R object to a \code{subtitles} object}
 \usage{
-as_subtitle(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
+as_subtitle(
+  x,
+  format = "auto",
+  clean.tags = TRUE,
+  metadata = data.frame(),
+  frame.rate = NA,
+  encoding = "auto",
+  ...
+)
 
-\method{as_subtitle}{default}(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
+\method{as_subtitle}{default}(
+  x,
+  format = "auto",
+  clean.tags = TRUE,
+  metadata = data.frame(),
+  frame.rate = NA,
+  encoding = "auto",
+  ...
+)
 
-\method{as_subtitle}{character}(x, format = "auto", clean.tags = TRUE,
-  metadata = data.frame(), frame.rate = NA, encoding = "auto", ...)
+\method{as_subtitle}{character}(
+  x,
+  format = "auto",
+  clean.tags = TRUE,
+  metadata = data.frame(),
+  frame.rate = NA,
+  encoding = "auto",
+  ...
+)
 }
 \arguments{
 \item{x}{an R object that can be coerced into a \code{subtitles} object}

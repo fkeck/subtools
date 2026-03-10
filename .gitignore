@@ -3,3 +3,8 @@ subtools.Rproj
 .Rhistory
 .RData
 tests.R
+
+*.html
+/doc/
+/Meta/
+synced_episode.srt

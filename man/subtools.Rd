@@ -2,20 +2,24 @@
 % Please edit documentation in R/subtools-package.R
 \docType{package}
 \name{subtools}
-\alias{subtools}
 \alias{subtools-package}
+\alias{subtools}
 \title{Read and Manipulate Video Subtitles}
 \description{
 A collection of functions to read, write and manipulate video subtitles.
 Supported formats include "srt", "subrip", "sub", "subviewer", "microdvd",
 "ssa", "ass", "substation", "vtt", and "webvtt".
 }
+\details{
+`r lifecycle::badge("stable")`
+}
 \author{
-\strong{Maintainer}: Francois Keck \email{francois.keck@gmail.com}
+\strong{Maintainer}: Francois Keck \email{francois.keck@gmail.com} (\href{https://orcid.org/0000-0002-3323-4167}{ORCID})
 
 Other contributors:
 \itemize{
-  \item Bob Rudis \email{bob@rud.is} (0000-0001-5670-2640) [contributor]
+  \item Bob Rudis \email{bob@rud.is} (\href{https://orcid.org/0000-0001-5670-2640}{ORCID}) [contributor]
+  \item Alban Sagouis \email{sagouis@pm.me} (\href{https://orcid.org/0000-0002-3827-1063}{ORCID}) [contributor]
 }
 
 }
