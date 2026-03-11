@@ -54,3 +54,39 @@ test_that("non‑hms timecode columns raise an error", {
     regexp = "The 'Timecode_out' column of a Subtitle object must inherit from class \"hms\"."
   )
 })
+
+test_that("subtitles with 'subtitles' class but not data.frame triggers error", {
+  x <- structure(list(), class = "subtitles")
+  expect_error(
+    .assert_subtitles(x),
+    regexp = "must inherit from class \"data.frame\""
+  )
+})
+
+# ── extract_metadata ──────────────────────────────────────────────────────────
+
+test_that("extract_metadata returns an empty tibble when no extra columns", {
+  s <- make_valid_subtitles()
+  # remove the extra 'test' column added by make_valid_subtitles
+  s$test <- NULL
+  meta <- extract_metadata(s)
+  expect_equal(ncol(meta), 0L)
+})
+
+test_that("extract_metadata returns only non-core columns", {
+  s <- make_valid_subtitles() # has a 'test' column
+  meta <- extract_metadata(s)
+  expect_true("test" %in% colnames(meta))
+  expect_false("ID" %in% colnames(meta))
+  expect_false("Timecode_in" %in% colnames(meta))
+  expect_false("Timecode_out" %in% colnames(meta))
+  expect_false("Text_content" %in% colnames(meta))
+})
+
+test_that("extract_metadata preserves multiple metadata columns", {
+  s <- make_valid_subtitles()
+  s$Season <- 1L
+  s$Episode <- 2L
+  meta <- extract_metadata(s)
+  expect_true(all(c("test", "Season", "Episode") %in% colnames(meta)))
+})

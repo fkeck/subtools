@@ -11,6 +11,8 @@ knitr::opts_chunk$set(
   fig.path = "inst/figures/README-",
   out.width = "100%"
 )
+library(covr)
+coverage <- round(percent_coverage(package_coverage()), 0)
 ```
 
 <img src="inst/figures/subtools.png" width="120" align="right" />
@@ -18,6 +20,7 @@ knitr::opts_chunk$set(
 # subtools
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check.yaml](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
+[![Code Coverage: `r coverage`%](https://img.shields.io/badge/code_coverage-`r coverage`%25-green)](#code-coverage)
 
 ### Read, write and manipulate subtitles in R
 
@@ -153,3 +156,10 @@ by [tudosgar](https://twitter.com/tudosgar)
 
 [*Term Frequencies by Season*](https://twitter.com/tdawry/status/919055698427809792)
 by [tdawry](https://twitter.com/tdawry)
+
+
+### Code Coverage
+
+```{r codecov, echo=FALSE}
+covr::package_coverage()
+```
