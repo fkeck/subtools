@@ -1,8 +1,9 @@
-# subtools 1.02
+# subtools 1.1.0
 ## New feature
 
  * move_subtitles function moves all subtitles forward or backward by a
    specified time
+ * A vignette presenting the package main functions
 
 # subtools 1.0
 

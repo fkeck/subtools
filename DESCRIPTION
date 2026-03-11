@@ -1,8 +1,8 @@
 Package: subtools
 Type: Package
 Title: Read and Manipulate Video Subtitles
-Version: 1.0.2
-Date: 2025-09-01
+Version: 1.1.0
+Date: 2026-03-11
 Authors@R: c(
       person("Francois", "Keck", email = "francois.keck@gmail.com",
              role =  c("aut", "cre", "cph"),
