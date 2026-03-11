@@ -2,7 +2,7 @@
 #'
 #' Bind \code{subtitles} or/and \code{multisubtitles} objects.
 #'
-#' @param ... \code{subtitles} or \code{multisubtitles} objects to be binded.
+#' @param ... \code{subtitles} or \code{multisubtitles} objects to be bound.
 #' @param collapse logical. If \code{TRUE}, subtitles are combined in a single \code{subtitles} object.
 #' @param sequential logical. If \code{TRUE} (default) timecodes
 #' are recalculated to follow concatenation.

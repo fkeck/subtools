@@ -5,7 +5,7 @@
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 #' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
-#' @param clean.tags logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.
+#' @param clean.tags logical. If \code{"TRUE"} (default), formatting tags are deleted from subtitles using \code{\link{clean_tags}}.
 #' @param metadata a one-row dataframe or tibble, or any object that can be coerced
 #' into a one-row tibble by \code{link[tibble]{as_tibble}}.
 #' @param frame.rate a numeric value giving the frame rate in frames per second. Only relevant for MicroDVD format.

@@ -21,7 +21,7 @@ If it does not contain an absolute path, the file name is relative to the curren
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
 Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
 
-\item{clean.tags}{logical. If \code{"TRUE"} (default), formating tags are deleted from subtitles using \code{\link{clean_tags}}.}
+\item{clean.tags}{logical. If \code{"TRUE"} (default), formatting tags are deleted from subtitles using \code{\link{clean_tags}}.}
 
 \item{metadata}{a one-row dataframe or tibble, or any object that can be coerced
 into a one-row tibble by \code{link[tibble]{as_tibble}}.}
