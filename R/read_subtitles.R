@@ -14,6 +14,7 @@
 #' @param encoding the name of the encoding to be used. Default is "\code{auto}" and
 #' uses \code{\link[readr]{guess_encoding}} to detect encoding.
 #' @param ... passed on to downstream methods.
+#' @importFrom utils read.csv
 #' @export
 #' @examples
 #' as_subtitle(

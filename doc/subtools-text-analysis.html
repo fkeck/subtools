@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<meta name="date" content="2026-03-11" />
+
+<title>Subtitle Text Analysis with subtools</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Subtitle Text Analysis with subtools</h1>
+<h4 class="date">2026-03-11</h4>
+
+
+
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p><code>subtools</code> reads and manipulates video subtitle files from
+a variety of formats (SubRip <code>.srt</code>, WebVTT
+<code>.vtt</code>, SubStation Alpha <code>.ass</code>/<code>.ssa</code>,
+SubViewer <code>.sub</code>, MicroDVD <code>.sub</code>) and exposes
+them as tidy tibbles ready for text analysis.</p>
+<p>This vignette walks through:</p>
+<ol style="list-style-type: decimal">
+<li>Reading subtitle files</li>
+<li>Exploring and cleaning subtitle objects</li>
+<li>Combining subtitles from multiple files</li>
+<li>Adjusting timecodes</li>
+<li>Tokenising and analysing text with <code>tidytext</code></li>
+<li>Analysing dialogue across a TV series</li>
+</ol>
+<hr />
+</div>
+<div id="reading-subtitles" class="section level2">
+<h2>1. Reading subtitles</h2>
+<div id="from-a-file" class="section level3">
+<h3>From a file</h3>
+<p><code>read_subtitles()</code> is the main entry point. It
+auto-detects the file format from the extension and returns a
+<code>subtitles</code> object — a <code>tibble</code> with four core
+columns: <code>ID</code>, <code>Timecode_in</code>,
+<code>Timecode_out</code>, and <code>Text_content</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>f_srt <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_subrip.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>subs <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(<span class="at">file =</span> f_srt)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>subs</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 4</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content                                   </span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                          </span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; 1 1     00&#39;22.5&quot;    00&#39;24.1&quot;     Lorem ipsum dolor sit amet, consectetur adipis…</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; 2 2     00&#39;25.5&quot;    00&#39;27.1&quot;     Donec eu nisl commodo, elementum dui ut, gravi…</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; 3 3     00&#39;28.7&quot;    00&#39;29.1&quot;     Nulla aliquam,                                 </span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; 4 4     00&#39;29.9&quot;    00&#39;31.1&quot;     nibh cursus interdum volutpat,                 </span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; 5 5     00&#39;31.9&quot;    00&#39;33.1&quot;     dolor lacus hendrerit tellus, vel faucibus jus…</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 6 6     00&#39;33.9&quot;    00&#39;34.8&quot;     Suspendisse potenti.</span></span></code></pre></div>
+<p>The same call works for every supported format. Use
+<code>format = &quot;auto&quot;</code> (default) or supply the format
+explicitly.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>f_vtt <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_webvtt.vtt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">read_subtitles</span>(<span class="at">file =</span> f_vtt, <span class="at">format =</span> <span class="st">&quot;webvtt&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 4</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;   ID              Timecode_in Timecode_out Text_content                         </span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;           &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 1 1               00&#39;01&quot;      00&#39;04&quot;       Never drink liquid nitrogen.         </span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 2 2               00&#39;05&quot;      00&#39;09&quot;       — It will perforate your stomach. — …</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 3 A dangerous cue 00&#39;11&quot;      00&#39;14&quot;       Dès Noël où un zéphyr haï me vêt de …</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>f_ass <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_substation.ass&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">read_subtitles</span>(<span class="at">file =</span> f_ass, <span class="at">format =</span> <span class="st">&quot;substation&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 4</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content                                   </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                          </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 1 1     00&#39;22.5&quot;    00&#39;24.1&quot;     Lorem ipsum dolor sit amet, consectetur adipis…</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 2 2     00&#39;25.5&quot;    00&#39;27.1&quot;     Donec eu nisl commodo, elementum dui ut, gravi…</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 3 3     00&#39;28.7&quot;    00&#39;29.1&quot;     Nulla aliquam,                                 </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 4 4     00&#39;29.9&quot;    00&#39;31.1&quot;     nibh cursus interdum volutpat,                 </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 5 5     00&#39;31.9&quot;    00&#39;33.1&quot;     dolor lacus hendrerit tellus, vel faucibus jus…</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 6 6     00&#39;33.9&quot;    00&#39;34.8&quot;     Suspendisse potenti.</span></span></code></pre></div>
+</div>
+<div id="attaching-metadata-at-read-time" class="section level3">
+<h3>Attaching metadata at read time</h3>
+<p>Any descriptive information — season, episode, source, language — can
+be attached as a one-row tibble via the <code>metadata</code> argument.
+The values are repeated for every subtitle line, keeping the tidy
+structure intact.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>subs_meta <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">file =</span> f_srt,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Season =</span> <span class="dv">1</span><span class="dt">L</span>, <span class="at">Episode =</span> <span class="dv">3</span><span class="dt">L</span>, <span class="at">Language =</span> <span class="st">&quot;en&quot;</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>subs_meta</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 7</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content            Season Episode Language</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                    &lt;int&gt;   &lt;int&gt; &lt;chr&gt;   </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 1 1     00&#39;22.5&quot;    00&#39;24.1&quot;     Lorem ipsum dolor sit …      1       3 en      </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 2 2     00&#39;25.5&quot;    00&#39;27.1&quot;     Donec eu nisl commodo,…      1       3 en      </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 3 3     00&#39;28.7&quot;    00&#39;29.1&quot;     Nulla aliquam,               1       3 en      </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 4 4     00&#39;29.9&quot;    00&#39;31.1&quot;     nibh cursus interdum v…      1       3 en      </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 5 5     00&#39;31.9&quot;    00&#39;33.1&quot;     dolor lacus hendrerit …      1       3 en      </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 6 6     00&#39;33.9&quot;    00&#39;34.8&quot;     Suspendisse potenti.         1       3 en</span></span></code></pre></div>
+<p>Metadata columns travel with the object through all
+<code>subtools</code> operations.</p>
+</div>
+<div id="from-a-character-vector" class="section level3">
+<h3>From a character vector</h3>
+<p><code>as_subtitle()</code> parses an in-memory character vector,
+which is useful when the subtitle text is already loaded or generated
+programmatically.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="st">&quot;00:00:01,000 --&gt; 00:00:03,500&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="st">&quot;Hello, world.&quot;</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="st">&quot;&quot;</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="st">&quot;2&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="st">&quot;00:00:04,000 --&gt; 00:00:06,000&quot;</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="st">&quot;This is subtools.&quot;</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="fu">as_subtitle</span>(<span class="at">x =</span> raw, <span class="at">format =</span> <span class="st">&quot;srt&quot;</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content     </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;            </span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; 1 1     00&#39;01&quot;      00&#39;03.5&quot;     Hello, world.    </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; 2 2     00&#39;04&quot;      00&#39;06.0&quot;     This is subtools.</span></span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="exploring-the-subtitles-object" class="section level2">
+<h2>2. Exploring the subtitles object</h2>
+<div id="quick-summary" class="section level3">
+<h3>Quick summary</h3>
+<p><code>get_subtitles_info()</code> prints a compact summary: line
+count, overall duration, and attached metadata fields.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_subrip.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">get_subtitles_info</span>(<span class="at">x =</span> s)</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; subtitles object</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt;   Text lines: 6</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt;   Duration: 00:00:12.3</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt;   Metadata: 0</span></span></code></pre></div>
+</div>
+<div id="raw-text-extraction" class="section level3">
+<h3>Raw text extraction</h3>
+<p><code>get_raw_text()</code> collapses all subtitle lines into a
+single character string, useful when passing the whole transcript to
+external Natural Language Processing tools.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>transcript <span class="ot">&lt;-</span> <span class="fu">get_raw_text</span>(<span class="at">x =</span> s)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>transcript</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eu nisl commodo, elementum dui ut, gravida orci. Nulla aliquam, nibh cursus interdum volutpat, dolor lacus hendrerit tellus, vel faucibus justo nisi quis felis. Suspendisse potenti.&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># One line per subtitle, separated by newlines</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">get_raw_text</span>(<span class="at">x =</span> s, <span class="at">collapse =</span> <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>))</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; Donec eu nisl commodo, elementum dui ut, gravida orci.</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; Nulla aliquam,</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; nibh cursus interdum volutpat,</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; dolor lacus hendrerit tellus, vel faucibus justo nisi quis felis.</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; Suspendisse potenti.</span></span></code></pre></div>
+</div>
+<div id="accessing-individual-columns" class="section level3">
+<h3>Accessing individual columns</h3>
+<p>Because a <code>subtitles</code> object is a tibble, all
+<code>dplyr</code> verbs work directly:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># Lines spoken after the first 30 seconds</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>s <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">filter</span>(Timecode_in <span class="sc">&gt;</span> hms<span class="sc">::</span><span class="fu">as_hms</span>(<span class="st">&quot;00:00:30&quot;</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content                                   </span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                          </span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 1 5     00&#39;31.9&quot;    00&#39;33.1&quot;     dolor lacus hendrerit tellus, vel faucibus jus…</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; 2 6     00&#39;33.9&quot;    00&#39;34.8&quot;     Suspendisse potenti.</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co"># Duration of each subtitle cue (in seconds)</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>s <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">duration_s =</span> <span class="fu">as.numeric</span>(Timecode_out <span class="sc">-</span> Timecode_in)) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="fu">select</span>(ID, Text_content, duration_s)</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt;   ID    Text_content                                                  duration_s</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;                                                              &lt;dbl&gt;</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; 1 1     Lorem ipsum dolor sit amet, consectetur adipiscing elit.           1.60 </span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; 2 2     Donec eu nisl commodo, elementum dui ut, gravida orci.             1.60 </span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; 3 3     Nulla aliquam,                                                     0.400</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; 4 4     nibh cursus interdum volutpat,                                     1.20 </span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; 5 5     dolor lacus hendrerit tellus, vel faucibus justo nisi quis f…      1.20 </span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; 6 6     Suspendisse potenti.                                               0.900</span></span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="cleaning-subtitles" class="section level2">
+<h2>3. Cleaning subtitles</h2>
+<p>Subtitle files frequently contain formatting tags, closed-caption
+descriptions, and other non-speech artefacts that should be removed
+before text analysis.</p>
+<div id="remove-formatting-tags" class="section level3">
+<h3>Remove formatting tags</h3>
+<p><code>clean_tags()</code> strips HTML-style tags (used in SRT and
+WebVTT) and curly-brace override blocks (used in SubStation Alpha).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>tagged <span class="ot">&lt;-</span> <span class="fu">as_subtitle</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="st">&quot;1&quot;</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>    <span class="st">&quot;00:00:01,000 --&gt; 00:00:03,000&quot;</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    <span class="st">&quot;&lt;i&gt;This is &lt;b&gt;important&lt;/b&gt;.&lt;/i&gt;&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="st">&quot;&quot;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="st">&quot;2&quot;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>    <span class="st">&quot;00:00:04,000 --&gt; 00:00:06,000&quot;</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>    <span class="st">&quot;&lt;font color=</span><span class="sc">\&quot;</span><span class="st">red</span><span class="sc">\&quot;</span><span class="st">&gt;Warning!&lt;/font&gt;&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  ),</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">&quot;srt&quot;</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="at">clean.tags =</span> <span class="cn">FALSE</span>   <span class="co"># keep tags so we can demonstrate cleaning</span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>tagged<span class="sc">$</span>Text_content</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; [1] &quot;&lt;i&gt;This is &lt;b&gt;important&lt;/b&gt;.&lt;/i&gt;&quot;    &quot;&lt;font color=\&quot;red\&quot;&gt;Warning!&lt;/font&gt;&quot;</span></span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="fu">clean_tags</span>(<span class="at">x =</span> tagged)<span class="sc">$</span>Text_content</span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a><span class="co">#&gt; [1] &quot;This is important.&quot; &quot;Warning!&quot;</span></span></code></pre></div>
+</div>
+<div id="remove-closed-captions" class="section level3">
+<h3>Remove closed captions</h3>
+<p><code>clean_captions()</code> removes text enclosed in parentheses or
+square brackets — typically sound descriptions and speaker identifiers
+used in accessibility captions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>bb <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_breakingbad.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">clean.tags =</span> <span class="cn">FALSE</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>bb<span class="sc">$</span>Text_content</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Oh, my God. Christ!&quot;                         </span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; [2] &quot;Shit.&quot;                                       </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; [3] &quot;[SIRENS WAILING IN DISTANCE]&quot;                </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; [4] &quot;Oh, God. Oh, my God.&quot;                        </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; [5] &quot;Oh, my God. Oh, my God. Think, think, think.&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="fu">clean_captions</span>(<span class="at">x =</span> bb)<span class="sc">$</span>Text_content</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Oh, my God. Christ!&quot;                         </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; [2] &quot;Shit.&quot;                                       </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; [3] &quot;Oh, God. Oh, my God.&quot;                        </span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; [4] &quot;Oh, my God. Oh, my God. Think, think, think.&quot;</span></span></code></pre></div>
+</div>
+<div id="remove-arbitrary-patterns" class="section level3">
+<h3>Remove arbitrary patterns</h3>
+<p><code>clean_patterns()</code> accepts any regular expression, giving
+full flexibility for project-specific cleaning.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Remove speaker labels such as &quot;WALTER:&quot; or &quot;JESSE:&quot;</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>s_labeled <span class="ot">&lt;-</span> <span class="fu">as_subtitle</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>    <span class="st">&quot;1&quot;</span>, <span class="st">&quot;00:00:01,000 --&gt; 00:00:03,000&quot;</span>, <span class="st">&quot;WALTER: We need to cook.&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="st">&quot;&quot;</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>    <span class="st">&quot;2&quot;</span>, <span class="st">&quot;00:00:04,000 --&gt; 00:00:06,000&quot;</span>, <span class="st">&quot;JESSE: Yeah, Mr. White!&quot;</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>  ),</span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">&quot;srt&quot;</span>, <span class="at">clean.tags =</span> <span class="cn">FALSE</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>)</span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="fu">clean_patterns</span>(<span class="at">x =</span> s_labeled, <span class="at">pattern =</span> <span class="st">&quot;^[A-Z]+: &quot;</span>)<span class="sc">$</span>Text_content</span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; [1] &quot;We need to cook.&quot; &quot;Yeah, Mr. White!&quot;</span></span></code></pre></div>
+</div>
+<div id="chaining-cleaning-steps" class="section level3">
+<h3>Chaining cleaning steps</h3>
+<p>Because each cleaning function returns a <code>subtitles</code>
+object, steps can be piped:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>s_clean <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(<span class="at">file =</span> f_srt, <span class="at">clean.tags =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">clean_tags</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>  <span class="fu">clean_captions</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>  <span class="fu">clean_patterns</span>(<span class="at">pattern =</span> <span class="st">&quot;^-</span><span class="sc">\\</span><span class="st">s*&quot;</span>)   <span class="co"># remove leading dialogue dashes</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>s_clean<span class="sc">$</span>Text_content</span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt; [1] &quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&quot;         </span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt; [2] &quot;Donec eu nisl commodo, elementum dui ut, gravida orci.&quot;           </span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt; [3] &quot;Nulla aliquam,&quot;                                                   </span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt; [4] &quot;nibh cursus interdum volutpat,&quot;                                   </span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt; [5] &quot;dolor lacus hendrerit tellus, vel faucibus justo nisi quis felis.&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt; [6] &quot;Suspendisse potenti.&quot;</span></span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="combining-subtitles" class="section level2">
+<h2>4. Combining subtitles</h2>
+<div id="collapsing-multiple-objects-into-one" class="section level3">
+<h3>Collapsing multiple objects into one</h3>
+<p><code>bind_subtitles()</code> merges any number of
+<code>subtitles</code> (or <code>multisubtitles</code>) objects. With
+<code>collapse = TRUE</code> (default), timecodes are shifted so that
+each file follows the previous one sequentially.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_subrip.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Episode =</span> <span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>)</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_rushmore.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Episode =</span> <span class="dv">2</span><span class="dt">L</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>)</span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>combined <span class="ot">&lt;-</span> <span class="fu">bind_subtitles</span>(s1, s2)</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="fu">nrow</span>(combined)</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="fu">range</span>(combined<span class="sc">$</span>Timecode_in)</span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; Time differences in secs</span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; [1]   22.500 1292.851</span></span></code></pre></div>
+</div>
+<div id="keeping-a-list-structure" class="section level3">
+<h3>Keeping a list structure</h3>
+<p>Set <code>collapse = FALSE</code> to get a
+<code>multisubtitles</code> object — a named list of
+<code>subtitles</code> — when you want to process episodes independently
+before merging.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>multi <span class="ot">&lt;-</span> <span class="fu">bind_subtitles</span>(s1, s2, <span class="at">collapse =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="fu">class</span>(multi)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; [1] &quot;multisubtitles&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="fu">print</span>(multi)</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt; A multisubtitles object with 2 elements</span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt; subtitles object [[1]]</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 5</span></span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content                            Episode</span></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                     &lt;int&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="co">#&gt; 1 1     00&#39;22.5&quot;    00&#39;24.1&quot;     Lorem ipsum dolor sit amet, consectetu…       1</span></span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a><span class="co">#&gt; 2 2     00&#39;25.5&quot;    00&#39;27.1&quot;     Donec eu nisl commodo, elementum dui u…       1</span></span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a><span class="co">#&gt; 3 3     00&#39;28.7&quot;    00&#39;29.1&quot;     Nulla aliquam,                                1</span></span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a><span class="co">#&gt; 4 4     00&#39;29.9&quot;    00&#39;31.1&quot;     nibh cursus interdum volutpat,                1</span></span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a><span class="co">#&gt; 5 5     00&#39;31.9&quot;    00&#39;33.1&quot;     dolor lacus hendrerit tellus, vel fauc…       1</span></span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a><span class="co">#&gt; 6 6     00&#39;33.9&quot;    00&#39;34.8&quot;     Suspendisse potenti.                          1</span></span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt; subtitles object [[2]]</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 × 5</span></span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a><span class="co">#&gt;   ID    Timecode_in Timecode_out Text_content                            Episode</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;                                     &lt;int&gt;</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a><span class="co">#&gt; 1 180   21&#39;15.769&quot;  21&#39;23.069&quot;   Rushmore deserves an aquarium. A first…       2</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a><span class="co">#&gt; 2 181   21&#39;23.069&quot;  21&#39;25.670&quot;   - I don&#39;t know. What do you think, Ern…       2</span></span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a><span class="co">#&gt; 3 182   21&#39;25.746&quot;  21&#39;32.170&quot;   - What kind of fish? - Barracudas. Sti…       2</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a><span class="co">#&gt; 4 183   21&#39;32.851&quot;  21&#39;36.570&quot;   - Piranhas? Really? - Yes, I&#39;m talking…       2</span></span></code></pre></div>
+<p><code>get_subtitles_info()</code> also works on
+<code>multisubtitles</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">get_subtitles_info</span>(<span class="at">x =</span> multi)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="co">#&gt; multisubtitles object with 2 subtitles.</span></span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="reading-an-entire-series" class="section level2">
+<h2>5. Reading an entire series</h2>
+<p>For TV series organised in a standard directory tree,
+<code>subtools</code> provides convenience readers that handle the
+hierarchy automatically and extract Season/Episode metadata from folder
+and file names.</p>
+<pre><code>Series_Collection/
+|-- BreakingBad/
+|   |-- Season_01/
+|   |   |-- S01E01.srt
+|   |   |-- S01E02.srt
+|   |-- Season_02/
+|       |-- S02E01.srt</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># Read a single season</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>season1 <span class="ot">&lt;-</span> <span class="fu">read_subtitles_season</span>(<span class="at">dir =</span> <span class="st">&quot;BreakingBad/Season_01/&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co"># Read an entire series (all seasons)</span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>bb_all <span class="ot">&lt;-</span> <span class="fu">read_subtitles_serie</span>(<span class="at">dir =</span> <span class="st">&quot;BreakingBad/&quot;</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="co"># Read multiple series at once</span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a>collection <span class="ot">&lt;-</span> <span class="fu">read_subtitles_multiseries</span>(<span class="at">dir =</span> <span class="st">&quot;Series_Collection/&quot;</span>)</span></code></pre></div>
+<p>Each function returns a single collapsed <code>subtitles</code>
+object by default (<code>bind = TRUE</code>), with <code>Serie</code>,
+<code>Season</code>, and <code>Episode</code> columns populated from the
+directory structure. Pass <code>bind = FALSE</code> to get a
+<code>multisubtitles</code> list instead.</p>
+<hr />
+</div>
+<div id="adjusting-timecodes" class="section level2">
+<h2>6. Adjusting timecodes</h2>
+<p><code>move_subtitles()</code> shifts all timecodes by a fixed number
+of seconds. Positive values shift forward; negative values shift
+backward. This is useful when the subtitle file is out of sync with the
+video.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>subs_shifted <span class="ot">&lt;-</span> <span class="fu">move_subtitles</span>(<span class="at">x =</span> subs, <span class="at">lag =</span> <span class="fl">2.5</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="co"># Compare first cue before and after</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>subs<span class="sc">$</span>Timecode_in[<span class="dv">1</span>]</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a><span class="co">#&gt; 00:00:22.5</span></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>subs_shifted<span class="sc">$</span>Timecode_in[<span class="dv">1</span>]</span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="co">#&gt; 00:00:25</span></span></code></pre></div>
+<p><code>move_subtitles()</code> also works on
+<code>multisubtitles</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>multi_shifted <span class="ot">&lt;-</span> <span class="fu">move_subtitles</span>(<span class="at">x =</span> multi, <span class="at">lag =</span> <span class="sc">-</span><span class="fl">1.0</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>multi_shifted[[<span class="dv">1</span>]]<span class="sc">$</span>Timecode_in[<span class="dv">1</span>]</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a><span class="co">#&gt; 00:00:21.5</span></span></code></pre></div>
+<hr />
+</div>
+<div id="writing-subtitles-back-to-disk" class="section level2">
+<h2>7. Writing subtitles back to disk</h2>
+<p><code>write_subtitles()</code> serialises a <code>subtitles</code>
+object to a SubRip <code>.srt</code> file.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">write_subtitles</span>(<span class="at">x =</span> subs_shifted, <span class="at">file =</span> <span class="st">&quot;synced_episode.srt&quot;</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="text-analysis-with-tidytext" class="section level2">
+<h2>8. Text analysis with tidytext</h2>
+<div id="tokenising-into-words" class="section level3">
+<h3>Tokenising into words</h3>
+<p><code>unnest_tokens()</code> extends
+<code>tidytext::unnest_tokens()</code> with subtitle-aware timecode
+remapping: each token inherits a proportional slice of the original
+cue’s time window, enabling timeline-based analyses.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>words <span class="ot">&lt;-</span> <span class="fu">unnest_tokens</span>(<span class="at">tbl =</span> subs)</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>words</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 × 4</span></span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a><span class="co">#&gt;    ID    Timecode_in Timecode_out Text_content</span></span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt; &lt;time&gt;      &lt;time&gt;       &lt;chr&gt;       </span></span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a><span class="co">#&gt;  1 1     00&#39;22.5010&quot; 00&#39;22.6702&quot;  lorem       </span></span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a><span class="co">#&gt;  2 1     00&#39;22.6712&quot; 00&#39;22.8404&quot;  ipsum       </span></span>
+<span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a><span class="co">#&gt;  3 1     00&#39;22.8414&quot; 00&#39;23.0106&quot;  dolor       </span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a><span class="co">#&gt;  4 1     00&#39;23.0116&quot; 00&#39;23.1128&quot;  sit         </span></span>
+<span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a><span class="co">#&gt;  5 1     00&#39;23.1138&quot; 00&#39;23.2489&quot;  amet        </span></span>
+<span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a><span class="co">#&gt;  6 1     00&#39;23.2499&quot; 00&#39;23.6234&quot;  consectetur </span></span>
+<span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a><span class="co">#&gt;  7 1     00&#39;23.6244&quot; 00&#39;23.9638&quot;  adipiscing  </span></span>
+<span id="cb21-13"><a href="#cb21-13" tabindex="-1"></a><span class="co">#&gt;  8 1     00&#39;23.9648&quot; 00&#39;24.1000&quot;  elit        </span></span>
+<span id="cb21-14"><a href="#cb21-14" tabindex="-1"></a><span class="co">#&gt;  9 2     00&#39;25.5010&quot; 00&#39;25.6860&quot;  donec       </span></span>
+<span id="cb21-15"><a href="#cb21-15" tabindex="-1"></a><span class="co">#&gt; 10 2     00&#39;25.6870&quot; 00&#39;25.7605&quot;  eu          </span></span>
+<span id="cb21-16"><a href="#cb21-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 25 more rows</span></span></code></pre></div>
+<p>The <code>Timecode_in</code> / <code>Timecode_out</code> columns now
+reflect the estimated position of each word within its cue.</p>
+</div>
+<div id="tokenising-into-sentences-or-n-grams" class="section level3">
+<h3>Tokenising into sentences or n-grams</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="co"># Bigrams</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>bigrams <span class="ot">&lt;-</span> <span class="fu">unnest_tokens</span>(<span class="at">tbl =</span> subs, <span class="at">output =</span> Word, <span class="at">input =</span> Text_content,</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>                         <span class="at">token =</span> <span class="st">&quot;ngrams&quot;</span>, <span class="at">n =</span> <span class="dv">2</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>bigrams<span class="sc">$</span>Word</span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;lorem ipsum&quot;            &quot;ipsum dolor&quot;            &quot;dolor sit&quot;             </span></span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;sit amet&quot;               &quot;amet consectetur&quot;       &quot;consectetur adipiscing&quot;</span></span>
+<span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;adipiscing elit&quot;        &quot;donec eu&quot;               &quot;eu nisl&quot;               </span></span>
+<span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a><span class="co">#&gt; [10] &quot;nisl commodo&quot;           &quot;commodo elementum&quot;      &quot;elementum dui&quot;         </span></span>
+<span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a><span class="co">#&gt; [13] &quot;dui ut&quot;                 &quot;ut gravida&quot;             &quot;gravida orci&quot;          </span></span>
+<span id="cb22-10"><a href="#cb22-10" tabindex="-1"></a><span class="co">#&gt; [16] &quot;nulla aliquam&quot;          &quot;nibh cursus&quot;            &quot;cursus interdum&quot;       </span></span>
+<span id="cb22-11"><a href="#cb22-11" tabindex="-1"></a><span class="co">#&gt; [19] &quot;interdum volutpat&quot;      &quot;dolor lacus&quot;            &quot;lacus hendrerit&quot;       </span></span>
+<span id="cb22-12"><a href="#cb22-12" tabindex="-1"></a><span class="co">#&gt; [22] &quot;hendrerit tellus&quot;       &quot;tellus vel&quot;             &quot;vel faucibus&quot;          </span></span>
+<span id="cb22-13"><a href="#cb22-13" tabindex="-1"></a><span class="co">#&gt; [25] &quot;faucibus justo&quot;         &quot;justo nisi&quot;             &quot;nisi quis&quot;             </span></span>
+<span id="cb22-14"><a href="#cb22-14" tabindex="-1"></a><span class="co">#&gt; [28] &quot;quis felis&quot;             &quot;suspendisse potenti&quot;</span></span></code></pre></div>
+</div>
+<div id="word-frequency" class="section level3">
+<h3>Word frequency</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>words <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>  <span class="fu">count</span>(Text_content, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 × 2</span></span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a><span class="co">#&gt;    Text_content     n</span></span>
+<span id="cb23-8"><a href="#cb23-8" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;        &lt;int&gt;</span></span>
+<span id="cb23-9"><a href="#cb23-9" tabindex="-1"></a><span class="co">#&gt;  1 dolor            2</span></span>
+<span id="cb23-10"><a href="#cb23-10" tabindex="-1"></a><span class="co">#&gt;  2 adipiscing       1</span></span>
+<span id="cb23-11"><a href="#cb23-11" tabindex="-1"></a><span class="co">#&gt;  3 aliquam          1</span></span>
+<span id="cb23-12"><a href="#cb23-12" tabindex="-1"></a><span class="co">#&gt;  4 amet             1</span></span>
+<span id="cb23-13"><a href="#cb23-13" tabindex="-1"></a><span class="co">#&gt;  5 commodo          1</span></span>
+<span id="cb23-14"><a href="#cb23-14" tabindex="-1"></a><span class="co">#&gt;  6 consectetur      1</span></span>
+<span id="cb23-15"><a href="#cb23-15" tabindex="-1"></a><span class="co">#&gt;  7 cursus           1</span></span>
+<span id="cb23-16"><a href="#cb23-16" tabindex="-1"></a><span class="co">#&gt;  8 donec            1</span></span>
+<span id="cb23-17"><a href="#cb23-17" tabindex="-1"></a><span class="co">#&gt;  9 dui              1</span></span>
+<span id="cb23-18"><a href="#cb23-18" tabindex="-1"></a><span class="co">#&gt; 10 elementum        1</span></span></code></pre></div>
+<hr />
+</div>
+</div>
+<div id="advanced-cross-episode-analysis" class="section level2">
+<h2>9. Advanced: cross-episode analysis</h2>
+<p>The metadata columns added at read time make it straightforward to
+compare episodes or seasons. The example below simulates a two-episode
+corpus and computes per-episode word counts — a pattern that scales
+directly to a full series loaded with
+<code>read_subtitles_serie()</code>.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a>ep1 <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb24-2"><a href="#cb24-2" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_breakingbad.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Episode =</span> <span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" tabindex="-1"></a>)</span>
+<span id="cb24-5"><a href="#cb24-5" tabindex="-1"></a>ep2 <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb24-6"><a href="#cb24-6" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_rushmore.srt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb24-7"><a href="#cb24-7" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Episode =</span> <span class="dv">2</span><span class="dt">L</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" tabindex="-1"></a>)</span>
+<span id="cb24-9"><a href="#cb24-9" tabindex="-1"></a>ep3 <span class="ot">&lt;-</span> <span class="fu">read_subtitles</span>(</span>
+<span id="cb24-10"><a href="#cb24-10" tabindex="-1"></a>  <span class="at">file =</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ex_webvtt.vtt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;subtools&quot;</span>),</span>
+<span id="cb24-11"><a href="#cb24-11" tabindex="-1"></a>  <span class="at">metadata =</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(<span class="at">Episode =</span> <span class="dv">3</span><span class="dt">L</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" tabindex="-1"></a>)</span>
+<span id="cb24-13"><a href="#cb24-13" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" tabindex="-1"></a>corpus <span class="ot">&lt;-</span> <span class="fu">bind_subtitles</span>(ep1, ep2, ep3)</span>
+<span id="cb24-15"><a href="#cb24-15" tabindex="-1"></a></span>
+<span id="cb24-16"><a href="#cb24-16" tabindex="-1"></a>token_counts <span class="ot">&lt;-</span> <span class="fu">unnest_tokens</span>(corpus) <span class="sc">|&gt;</span></span>
+<span id="cb24-17"><a href="#cb24-17" tabindex="-1"></a>  <span class="fu">count</span>(Episode, Text_content, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-18"><a href="#cb24-18" tabindex="-1"></a></span>
+<span id="cb24-19"><a href="#cb24-19" tabindex="-1"></a>token_counts <span class="sc">|&gt;</span></span>
+<span id="cb24-20"><a href="#cb24-20" tabindex="-1"></a>  <span class="fu">slice_max</span>(n, <span class="at">n =</span> <span class="dv">5</span>, <span class="at">by =</span> Episode)</span>
+<span id="cb24-21"><a href="#cb24-21" tabindex="-1"></a><span class="co">#&gt; # A tibble: 51 × 3</span></span>
+<span id="cb24-22"><a href="#cb24-22" tabindex="-1"></a><span class="co">#&gt;    Episode Text_content     n</span></span>
+<span id="cb24-23"><a href="#cb24-23" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;        &lt;int&gt;</span></span>
+<span id="cb24-24"><a href="#cb24-24" tabindex="-1"></a><span class="co">#&gt;  1       1 god              5</span></span>
+<span id="cb24-25"><a href="#cb24-25" tabindex="-1"></a><span class="co">#&gt;  2       1 oh               5</span></span>
+<span id="cb24-26"><a href="#cb24-26" tabindex="-1"></a><span class="co">#&gt;  3       1 my               4</span></span>
+<span id="cb24-27"><a href="#cb24-27" tabindex="-1"></a><span class="co">#&gt;  4       1 think            3</span></span>
+<span id="cb24-28"><a href="#cb24-28" tabindex="-1"></a><span class="co">#&gt;  5       1 christ           1</span></span>
+<span id="cb24-29"><a href="#cb24-29" tabindex="-1"></a><span class="co">#&gt;  6       1 distance         1</span></span>
+<span id="cb24-30"><a href="#cb24-30" tabindex="-1"></a><span class="co">#&gt;  7       1 in               1</span></span>
+<span id="cb24-31"><a href="#cb24-31" tabindex="-1"></a><span class="co">#&gt;  8       1 shit             1</span></span>
+<span id="cb24-32"><a href="#cb24-32" tabindex="-1"></a><span class="co">#&gt;  9       1 sirens           1</span></span>
+<span id="cb24-33"><a href="#cb24-33" tabindex="-1"></a><span class="co">#&gt; 10       1 wailing          1</span></span>
+<span id="cb24-34"><a href="#cb24-34" tabindex="-1"></a><span class="co">#&gt; # ℹ 41 more rows</span></span></code></pre></div>
+<div id="tf-idf-across-episodes" class="section level3">
+<h3>TF-IDF across episodes</h3>
+<p>TF-IDF highlights words that are distinctive to each episode compared
+with the rest of the corpus.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a>token_counts <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" tabindex="-1"></a>  tidytext<span class="sc">::</span><span class="fu">bind_tf_idf</span>(Text_content, Episode, n) <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" tabindex="-1"></a>  <span class="fu">arrange</span>(Episode, <span class="fu">desc</span>(tf_idf)) <span class="sc">|&gt;</span></span>
+<span id="cb25-4"><a href="#cb25-4" tabindex="-1"></a>  <span class="fu">slice_max</span>(tf_idf, <span class="at">n =</span> <span class="dv">5</span>, <span class="at">by =</span> Episode)</span>
+<span id="cb25-5"><a href="#cb25-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 48 × 6</span></span>
+<span id="cb25-6"><a href="#cb25-6" tabindex="-1"></a><span class="co">#&gt;    Episode Text_content     n     tf   idf tf_idf</span></span>
+<span id="cb25-7"><a href="#cb25-7" tabindex="-1"></a><span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;        &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb25-8"><a href="#cb25-8" tabindex="-1"></a><span class="co">#&gt;  1       1 god              5 0.217  1.10  0.239 </span></span>
+<span id="cb25-9"><a href="#cb25-9" tabindex="-1"></a><span class="co">#&gt;  2       1 oh               5 0.217  1.10  0.239 </span></span>
+<span id="cb25-10"><a href="#cb25-10" tabindex="-1"></a><span class="co">#&gt;  3       1 my               4 0.174  1.10  0.191 </span></span>
+<span id="cb25-11"><a href="#cb25-11" tabindex="-1"></a><span class="co">#&gt;  4       1 think            3 0.130  0.405 0.0529</span></span>
+<span id="cb25-12"><a href="#cb25-12" tabindex="-1"></a><span class="co">#&gt;  5       1 christ           1 0.0435 1.10  0.0478</span></span>
+<span id="cb25-13"><a href="#cb25-13" tabindex="-1"></a><span class="co">#&gt;  6       1 distance         1 0.0435 1.10  0.0478</span></span>
+<span id="cb25-14"><a href="#cb25-14" tabindex="-1"></a><span class="co">#&gt;  7       1 shit             1 0.0435 1.10  0.0478</span></span>
+<span id="cb25-15"><a href="#cb25-15" tabindex="-1"></a><span class="co">#&gt;  8       1 sirens           1 0.0435 1.10  0.0478</span></span>
+<span id="cb25-16"><a href="#cb25-16" tabindex="-1"></a><span class="co">#&gt;  9       1 wailing          1 0.0435 1.10  0.0478</span></span>
+<span id="cb25-17"><a href="#cb25-17" tabindex="-1"></a><span class="co">#&gt; 10       2 aquarium         3 0.0612 1.10  0.0673</span></span>
+<span id="cb25-18"><a href="#cb25-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 38 more rows</span></span></code></pre></div>
+</div>
+<div id="dialogue-timeline" class="section level3">
+<h3>Dialogue timeline</h3>
+<p>Because timecodes are preserved through <code>unnest_tokens()</code>,
+words can be plotted along a timeline, e.g. to visualise how vocabulary
+density evolves across a film.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>words_ep1 <span class="ot">&lt;-</span> <span class="fu">unnest_tokens</span>(<span class="at">tbl =</span> ep1) <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">minute =</span> <span class="fu">as.numeric</span>(Timecode_in) <span class="sc">/</span> <span class="dv">60</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">requireNamespace</span>(<span class="st">&quot;ggplot2&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a>  <span class="fu">library</span>(ggplot2)</span>
+<span id="cb26-6"><a href="#cb26-6" tabindex="-1"></a>  <span class="fu">ggplot</span>(words_ep1, <span class="fu">aes</span>(<span class="at">x =</span> minute)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">colour =</span> <span class="st">&quot;white&quot;</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb26-9"><a href="#cb26-9" tabindex="-1"></a>      <span class="at">title =</span> <span class="st">&quot;Word density over time&quot;</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" tabindex="-1"></a>      <span class="at">x     =</span> <span class="st">&quot;Time (minutes)&quot;</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" tabindex="-1"></a>      <span class="at">y     =</span> <span class="st">&quot;Word count&quot;</span></span>
+<span id="cb26-12"><a href="#cb26-12" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb26-14"><a href="#cb26-14" tabindex="-1"></a>}</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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Gx3n9ddft+9TW5bMvgqi//Of/5jOrarybdu2zd599133o/ONTgrOp0+f7oLzpUuXRq+2xo0bW8OGDd1ync/GjRvdtI6rsmrZN998U2k/LViyZIkFH2PH2iiRdWlpqTu/kpKSSrsqCFYZgk0u1q5da2+99Za99957Futcly1b5sqs/LSdzj06qTyLFy92i3V+Ooauc7169axp06ZWt25dty54D6ic77zzjn3++ecR2c2fP98++OCDiGXBmarKG9yWaQQQQAABBPJCQK/izLZ00kknhfbYY4+IYh900EGhc845J+TVaoUaNGgQ+v3vfx9e7wWJet1oaMqUKeFlr732WmjPPfd0y71gw316tashL5gKb/PEE0+45V67U/epPO6///6Q9+g2NHjw4JD28/e9/vrr3TbXXXddeP9YE8nu67VZDe23334uT/8Y3uPi0IoVK8LZPv300269V3sZ8oLycBm9ZgYhr8Y3vJ33eD3kBVUReXk1xSGvOUN4mwMOOCCk/JVOOeWUcF465yuvvDL0xz/+0S3zgvDwPppYuHChW+7VnkYsD85UZe0FaKH69euHLr300uBubtr7oyHUtWtXN+0FjaGrr746VKdOHfdTUFDgzuuf//xnxH5dunRxeXlNCFzZ2rZt665ZcCPvD4+Ic9R5esFsSFaa9oJbt7lv/NRTT4W8AD28z1FHHRXygu7QT37yk/CyvfbaK+T9MRM+TLLlDe/ABAIIIIAAAnkioFqfrEv33Xef+6Xv1eS5sn/77bdu/sknn3TzAwYMCB122GHh87rhhhtCRUVFIa9GzC3zavJc4NK7d++QV3vlghOvljGkQOXQQw8NeTWPbjs/AG3dunVIAZaOq2NedtllLhh57rnn3L5e7WpIwYcCl6oC0GT2VWDYqlWrkPcYOOR1agopkPFq3kK77bZb6Jhjjgmflx8cKeD0OhCF5KBgr1mzZqHu3bu77RSQFxcXu4BZ560g67HHHnNlvfHGG8N5BQNQr/YzdPHFF4cKCwtdkOXVArrAXIGfgtFg8trduuBRQWSslKz1z3/+85Ccda5+0vko+Fbwq+R1lHLlvuaaa0LK16u5DP32t791y+TjJwWgut4nn3xySPfE448/7q8Kf5aXl4e8jkZu32uvvdadp1bGC0AV4E+cONEZX3XVVW6/5s2bh84///zQf//735D+YPBq4ENy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btSa/J717xkFFGpuQtopIBsFn9wzO000xX0S6cEcAgikTkAxVGFhWkK/Ko+TnlLEsezWrZtNnDjRWrRo4bbo0qWLjR07NmEA2rBhwzi51fzirVu3ugC0SZMm/NKM4lWHMt3ICs5JOwXU1ll/tDRt2pR7ZieLm9q8ebP7QuKeiYTR/UJCAAEE0iGgGCpdAWhV51OrVTTr16+3devWhcuodqDqkKTHuyQEEEAAAQQQQACB3BSo1QBUbRGGDx9uqmlU+7DJkydbnz59eCSVm/caZ4UAAggggAACCDiBWn0Ev/fee9vgwYNt6NChpvZhemx5yy23cGkQQAABBBBAAAEEclggrQGoernrJ5jOOeccO/vss01tChWAkhBAAAEEEEAAAQRyW6BWH8H7tOoFSvDpa/CJAAIIIIAAAgjktkBGBKC5TczZIYAAAggggAACCAQFCECDGkwjgAACCCCAAAIIpFyAADTlxBwAAQQQQAABBBBAIChAABrUYBoBBBBAAAEEEEAg5QIEoCkn5gAIIIAAAggggAACQQEC0KAG0wgggAACCCCAAAIpFyAATTkxB0AAAQQQQAABBBAIChCABjWYRgABBBBAAAEEEEi5AAFoyok5AAIIIIAAAggggEBQgAA0qME0AggggAACCCCAQMoFCEBTTswBEEAAAQQQQAABBIICBKBBDaYRQAABBBBAAAEEUi5AAJpyYg6AAAIIIIAAAgggEBRIOgA97rjjrKSkJLivm37sscfsrLPOqrScBQgggAACCCCAAAIIxBIojLXQX/b+++/btGnT3OyMGTPs9ttvtwYNGvirraKiwl544QXr2rVreBkTCCCAAAIIIIAAAggkEkgYgHbp0sVGjBhh27Zts+3bt9uUKVOsbt264fzq1atne+65p1177bXhZUwggAACCCCAAAIIIJBIIGEA2qpVK5s5c6bb/+STT7bx48db48aNE+XHOgQQQAABBBBAAAEEEgokDECDe06aNMnVhC5evNh9BtcpKO3QoUNwEdMIIIAAAggggAACCMQUSDoAfe655+yCCy6w9evXV8ro9NNPt2eeeabS8lQs2LRpk2sOkIq8o/NUG1clnXNBQUH06ryeLy8vtzp16tjmzZvz2iH65LlnokV2znPP7LQITqlZU1FRUXAR0wgggEBKBNSZfMeOHSnJOzrT4uJi00+8lHQAeskl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t956y+6///60vgu+fv36pp90JL0BSj8NGza0qiDTUZ5MOoZuYL0ZK13XIpPOPVFZSktLuWcSAOmvYe6ZSCC/1jxyKXMIIIBAzQsonktUK1nzR4yfY9LPlUePHu06IB1++OHWrl07a9mypZ144okuGL3iiiviH4E1CCCAAAIIIIAAAggEBBLWgKq2c7/99rOjjz7avX5zzpw59vrrr7uOR4qiDz74YOvdu3cgOyYRQAABBBBAAAEEEEgskDAA/eCDD+z66693bf2OOOIINwyThmIaPnw4nXISu7IWAQQQQAABBBBAII5Awkfwzz//vK1du9YmTZrkajqnTp1qRx11lLVu3drOOOMMGzNmjC1evDhO1ixGAAEEEEAAAQQQQKCyQMIAVJs3bdrUTjjhBNPj+Hfffde9DenZZ5+1Aw44wJ588knr3LmzXXzxxZVzZgkCCCCAAAIIIIAAAjEEEj6Cj95eQy7961//coHov//9b5s1a5YLQA888MDoTZlHAAEEEEAAAQQQQCCmQJUB6GeffWavvPKK6fH79OnT3RAqev/7aaedZg8//LDtvffeMTNmIQIIIIAAAggggAACsQQSBqB9+vSxGTNmuDceDRgwwG644Qb3Ok6N/0hCAAEEEEAAAQQQQOD7CCRsA7pp0yZr3ry57bPPPm4Ypi5durjBx7/PgdgHAQQQQAABBBBAAAEJJAxA33vvPVOHI73//e6773afPXr0sJEjR9obb7zh3oYEIwIIIIAAAggggAAC1RFIGIAWFRW5QejvuOMOmzdvni1ZssSGDRtmixYtstNPP929DWngwIE2ceLE6hyTbRFAAAEEEEAAAQTyWCBhG9Bol912283OP/98O+WUU1xP+LFjx7oxQhs1amQ//elPozdnHgEEEEAAAQQQQACBSgJJBaALFiywmTNnuh91Spo/f7516tTJjj32WBs3bpwdc8wxlTJmAQIIIIAAAggggAACsQQSBqCXXnqpTZgwwb777jv3uF3vhL/88std4KkOSSQEEEAAAQQQQAABBKorkDAA3bFjh40YMcIFnD179uT979XVZXsEEEAAAQQQQACBSgIJA9CHHnqo0g4sQAABBBBAAAEEEEBgVwQS9oLflYzZFwEEEEAAAQQQQACBWAIEoLFUWIYAAggggAACCCCQMgEC0JTRkjECCCCAAAIIIIBALIGEbUBj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" /><!-- --></p>
+<hr />
+</div>
+</div>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<table>
+<colgroup>
+<col width="37%" />
+<col width="62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Read a subtitle file</td>
+<td><code>read_subtitles()</code></td>
+</tr>
+<tr class="even">
+<td>Parse in-memory text</td>
+<td><code>as_subtitle()</code></td>
+</tr>
+<tr class="odd">
+<td>Read a full season/series</td>
+<td><code>read_subtitles_season()</code> /
+<code>read_subtitles_serie()</code> /
+<code>read_subtitles_multiseries()</code></td>
+</tr>
+<tr class="even">
+<td>Print a summary</td>
+<td><code>get_subtitles_info()</code></td>
+</tr>
+<tr class="odd">
+<td>Extract plain text</td>
+<td><code>get_raw_text()</code></td>
+</tr>
+<tr class="even">
+<td>Remove HTML/ASS tags</td>
+<td><code>clean_tags()</code></td>
+</tr>
+<tr class="odd">
+<td>Remove closed captions</td>
+<td><code>clean_captions()</code></td>
+</tr>
+<tr class="even">
+<td>Remove custom patterns</td>
+<td><code>clean_patterns()</code></td>
+</tr>
+<tr class="odd">
+<td>Merge subtitle objects</td>
+<td><code>bind_subtitles()</code></td>
+</tr>
+<tr class="even">
+<td>Shift timecodes</td>
+<td><code>move_subtitles()</code></td>
+</tr>
+<tr class="odd">
+<td>Write to <code>.srt</code></td>
+<td><code>write_subtitles()</code></td>
+</tr>
+<tr class="even">
+<td>Tokenise (words, n-grams, …)</td>
+<td><code>unnest_tokens()</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

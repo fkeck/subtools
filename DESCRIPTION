@@ -5,7 +5,7 @@ Version: 1.0.2
 Date: 2025-09-01
 Authors@R: c(
       person("Francois", "Keck", email = "francois.keck@gmail.com",
-             role =  c("aut", "cre"),
+             role =  c("aut", "cre", "cph"),
              comment = c(ORCID = "0000-0002-3323-4167")),
       person("Bob", "Rudis", email = "bob@rud.is", role = "ctb",
              comment = c(ORCID = "0000-0001-5670-2640")),
@@ -37,4 +37,5 @@ Suggests:
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 Config/testthat/parallel: false
+Config/testthat/start-first: *assert*, *utils*, *read*
 RoxygenNote: 7.3.3

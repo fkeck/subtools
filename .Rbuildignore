@@ -1,8 +1,8 @@
-^\.github/
+^\.github$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^.*\.html$
+^README\.html$
 ^doc$
 ^Meta$
 ^synced_episode.srt/

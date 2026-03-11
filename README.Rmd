@@ -8,16 +8,16 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
+  fig.path = "inst/figures/README-",
   out.width = "100%"
 )
 ```
 
-<img src="man/figures/subtools.png" width="120" align="right" />
+<img src="inst/figures/subtools.png" width="120" align="right" />
 
 # subtools
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check](https://github.com/albansagouis/subtools/workflows/R-CMD-check/badge.svg)](https://github.com/albansagouis/subtools/actions/)
+[![R-CMD-check.yaml](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
 
 ### Read, write and manipulate subtitles in R
 
@@ -28,7 +28,11 @@ Subtools is a R package to read, write and manipulate subtitles in R. This then 
 ### Install
 To install the package from Github you can use devtools:
 ```{r, eval = FALSE}
-devtools::install_github("fkeck/subtools")
+remotes::install_github(
+  repo = "fkeck/subtools",
+  build_manual = TRUE,
+  build_vignettes = TRUE
+)
 ```
 
 ```{r}
