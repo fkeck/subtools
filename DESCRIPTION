@@ -14,8 +14,8 @@ Authors@R: c(
     )
 Maintainer: Francois Keck <francois.keck@gmail.com>
 Description: A collection of functions to read, write and manipulate video subtitles.
-    Supported formats include "srt", "subrip", "sub", "subviewer", "microdvd",
-    "ssa", "ass", "substation", "vtt", and "webvtt".
+    Supported formats include 'srt', 'subrip', 'sub', 'subviewer', 'microdvd',
+    'ssa', 'ass', 'substation', 'vtt', and 'webvtt'.
 Language: en-GB
 License: GPL-3
 LazyData: TRUE

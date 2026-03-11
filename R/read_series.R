@@ -97,7 +97,7 @@ read_subtitles_serie <- function(
   res <- vector(mode = "list", length = n.season)
   for (i in 1:n.season) {
     res[[i]] <- read_subtitles_season(
-      file.list[i],
+      file.list[[i]],
       bind = FALSE,
       detect.meta = TRUE,
       quietly = TRUE,

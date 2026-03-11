@@ -54,11 +54,11 @@ as_subtitle.default <- function(
   # Trim empty lines at the beginning and end of the file
   subs <- x
   i <- 1
-  while (subs[i] == "") {
+  while (subs[[i]] == "") {
     i <- i + 1
   }
   j <- length(subs)
-  while (subs[j] == "") {
+  while (subs[[j]] == "") {
     j <- j - 1
   }
   subs <- subs[seq.int(i, j)]
@@ -84,7 +84,7 @@ as_subtitle.default <- function(
   # .sub can be microdvd or subviewer
   #This is a very light test to solve the .sub extension
   if (format == "sub") {
-    if (substr(subs[1], start = 1L, stop = 1L) == "{") {
+    if (startsWith(subs[[1]], prefix = "{")) {
       format <- "microdvd"
     } else {
       format <- "subviewer"
@@ -113,8 +113,8 @@ as_subtitle.default <- function(
     subs.txt <- sapply(subs.txt.li, function(x) paste(subs[x], collapse = " "))
 
     subs.time <- strsplit(subs.time, split = " --> ")
-    timecode.in <- sapply(subs.time, function(x) x[1])
-    timecode.out <- sapply(subs.time, function(x) x[2])
+    timecode.in <- sapply(subs.time, function(x) x[[1]])
+    timecode.out <- sapply(subs.time, function(x) x[[2]])
   }
 
   if (format %in% c("ssa", "ass", "substation")) {
@@ -124,7 +124,7 @@ as_subtitle.default <- function(
     subs.events <- subs[subs.events.li]
 
     comma.pos <- gregexpr(",", subs.events)
-    comma.min <- min(sapply(comma.pos, length))
+    comma.min <- min(lengths(comma.pos))
 
     subs.txt <- substr(
       subs.events,
@@ -145,7 +145,7 @@ as_subtitle.default <- function(
       sep = ",",
       quote = "",
       stringsAsFactors = FALSE,
-      fill = T
+      fill = TRUE
     )
 
     subs.txt <- gsub("\\\\[Nn]", " ", subs.txt)
@@ -194,14 +194,14 @@ as_subtitle.default <- function(
 
     subs.time <- subs[subs.time.li]
     subs.time <- strsplit(subs.time, split = ",")
-    timecode.in <- sapply(subs.time, function(x) x[1])
-    timecode.out <- sapply(subs.time, function(x) x[2])
+    timecode.in <- sapply(subs.time, function(x) x[[1]])
+    timecode.out <- sapply(subs.time, function(x) x[[2]])
 
     subs.n <- order(timecode.in)
   }
 
   if (format %in% c("webvtt", "vtt")) {
-    if (!grepl("^WEBVTT", subs[1])) {
+    if (!grepl("^WEBVTT", subs[[1]])) {
       stop("Invalid WebVTT format")
     }
 
@@ -213,7 +213,7 @@ as_subtitle.default <- function(
       subs.newlines[-length(subs.newlines)] + 1,
       subs.newlines[-1] - 1
     )
-    blocks <- apply(blocks.delim, 1, function(x) subs[x[1]:x[2]])
+    blocks <- apply(blocks.delim, 1, function(x) subs[x[[1]]:x[[2]]])
 
     blocks <- blocks[sapply(blocks, function(x) {
       any(sapply(x, function(y) .test_cuetiming(y)))
@@ -224,7 +224,7 @@ as_subtitle.default <- function(
     })
 
     subs.n <- mapply(
-      function(x, y, z) ifelse(y == 1, z, x[1]),
+      function(x, y, z) ifelse(y == 1, z, x[[1]]),
       x = blocks,
       y = blocks.tc.pos,
       z = seq(1, length(blocks))
@@ -253,8 +253,8 @@ as_subtitle.default <- function(
     subs.txt <- gsub("&nbsp;", " ", subs.txt)
 
     subs.time <- strsplit(subs.time, split = "[[:blank:]]+-->[[:blank:]]+")
-    timecode.in <- sapply(subs.time, function(x) x[1])
-    timecode.out <- sapply(subs.time, function(x) x[2])
+    timecode.in <- sapply(subs.time, function(x) x[[1]])
+    timecode.out <- sapply(subs.time, function(x) x[[2]])
   }
 
   res <- subtitles(
@@ -434,7 +434,7 @@ get_subtitles_info <- function(x) {
     cat("\n  Text lines:", nrow(x))
     cat(
       "\n  Duration:",
-      as.character(hms::as_hms(x$Timecode_out[nrow(x)] - x$Timecode_in[1]))
+      as.character(hms::as_hms(x$Timecode_out[[nrow(x)]] - x$Timecode_in[[1]]))
     )
 
     metadata <- setdiff(
