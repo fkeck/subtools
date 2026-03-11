@@ -22,7 +22,7 @@
 bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
   input <- list(...)
   sl <- list()
-  for (i in 1:length(input)) {
+  for (i in seq_along(input)) {
     if (is(input[[i]], "multisubtitles")) {
       sl <- append(sl, unlist(input[i], recursive = FALSE))
     } else {
@@ -33,24 +33,24 @@ bind_subtitles <- function(..., collapse = TRUE, sequential = TRUE) {
   lapply(sl, .assert_subtitles)
 
   if (isTRUE(sequential)) {
-    tcout.max <- hms::as_hms("00:00:00.000")
-    for (i in 1:length(sl)) {
-      sl[[i]]$Timecode_in <- sapply(
-        sl[[i]]$Timecode_in,
-        `+`,
-        y = tcout.max,
-        USE.NAMES = FALSE
-      )
-      sl[[i]]$Timecode_in <- hms::as_hms(sl[[i]]$Timecode_in)
-      sl[[i]]$Timecode_out <- sapply(
-        sl[[i]]$Timecode_out,
-        `+`,
-        y = tcout.max,
-        USE.NAMES = FALSE
-      )
-      sl[[i]]$Timecode_out <- hms::as_hms(sl[[i]]$Timecode_out)
-      tcout.max <- max(sl[[i]]$Timecode_out)
-    }
+    offsets <- c(
+      0,
+      cumsum(vapply(
+        sl[-length(sl)],
+        function(x) max(x$Timecode_out),
+        numeric(1)
+      ))
+    )
+    sl <- mapply(
+      function(s, offset) {
+        s$Timecode_in <- hms::as_hms(s$Timecode_in + offset)
+        s$Timecode_out <- hms::as_hms(s$Timecode_out + offset)
+        s
+      },
+      sl,
+      offsets,
+      SIMPLIFY = FALSE
+    )
   }
 
   if (isTRUE(collapse)) {
