@@ -7,7 +7,7 @@
 bind_subtitles(..., collapse = TRUE, sequential = TRUE)
 }
 \arguments{
-\item{...}{\code{subtitles} or \code{multisubtitles} objects to be binded.}
+\item{...}{\code{subtitles} or \code{multisubtitles} objects to be bound.}
 
 \item{collapse}{logical. If \code{TRUE}, subtitles are combined in a single \code{subtitles} object.}
 

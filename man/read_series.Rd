@@ -39,10 +39,10 @@ read_subtitles_multiseries(
 \item{format}{a character string specifying the format of the subtitles
 (default is "\code{auto}", see \code{\link{read_subtitles}} for details).}
 
-\item{bind}{a logical. If \code{TRUE} (default), subtitles are binded with \code{\link{bind_subtitles}}}
+\item{bind}{a logical. If \code{TRUE} (default), subtitles are bound with \code{\link{bind_subtitles}}}
 
 \item{detect.meta}{a logical. If \code{TRUE} (default), the function tries to automatically detect
-metadata (Serie, Season and Episode) from file names. This will overide user metadata with the same name.}
+metadata (Serie, Season and Episode) from file names. This will override user metadata with the same name.}
 
 \item{quietly}{a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.}
 

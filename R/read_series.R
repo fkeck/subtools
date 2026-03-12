@@ -5,11 +5,11 @@
 #'
 #' @param dir the name of the directory which the subtitles are to be read from (see Details).
 #' @param detect.meta a logical. If \code{TRUE} (default), the function tries to automatically detect
-#' metadata (Serie, Season and Episode) from file names. This will overide user metadata with the same name.
+#' metadata (Serie, Season and Episode) from file names. This will override user metadata with the same name.
 #' @param quietly a logical. If \code{FALSE} (default), a message indicating the number of imported files is printed.
 #' @param format a character string specifying the format of the subtitles
 #' (default is "\code{auto}", see \code{\link{read_subtitles}} for details).
-#' @param bind a logical. If \code{TRUE} (default), subtitles are binded with \code{\link{bind_subtitles}}
+#' @param bind a logical. If \code{TRUE} (default), subtitles are bound with \code{\link{bind_subtitles}}
 #' @param ... further arguments to be passed to \code{\link{read_subtitles}}.
 #'
 #' @details These functions read subtitles files at different levels from a 3-levels directory (see the tree below).
@@ -97,7 +97,7 @@ read_subtitles_serie <- function(
   res <- vector(mode = "list", length = n.season)
   for (i in 1:n.season) {
     res[[i]] <- read_subtitles_season(
-      file.list[i],
+      file.list[[i]],
       bind = FALSE,
       detect.meta = TRUE,
       quietly = TRUE,

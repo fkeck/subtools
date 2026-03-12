@@ -8,7 +8,7 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check.yaml](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
+[![R-CMD-check](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
 [![Code Coverage:
 82%](https://img.shields.io/badge/code_coverage-82%25-green)](#code-coverage)
 
@@ -25,11 +25,13 @@ with `tidytext` for a tidy approach of subtitle text mining.
 
 ### Install
 
-To install the package from Github you can use devtools:
+You can install the package directly from CRAN with
+`install.packages("subtools")` or get the latest, in development,
+version with:
 
 ``` r
 remotes::install_github(
-  repo = "fkeck/subtools",
+  repo = "fkeck/subtools@dev",
   build_manual = TRUE,
   build_vignettes = TRUE
 )
@@ -97,7 +99,7 @@ bb_sub
 
 ##### Series
 
-If you want to analyze subtitles of series with different seasons and
+If you want to analyse subtitles of series with different seasons and
 episodes, you will have to import many files at once. The
 `read_subtitles_season()`, `read_subtitles_serie()` and
 `read_subtitles_multiseries()` functions can make your life much easier,
@@ -116,7 +118,7 @@ information that might be present in text content. Three functions can
 be used for this task. First, `clean_tags()` cleans formatting tags. By
 default, this function is automatically executed by the
 `read_subtitles*()` functions, so you probably don’t need to run it
-again. Second, `clean_captions()` can be used to supress closed
+again. Second, `clean_captions()` can be used to suppress closed
 captions, i.e. descriptions of non-speech elements in parentheses or
 squared brackets. Finally, `clean_patterns()` is a more general function
 to clean subtitles based on regex pattern matching.
@@ -271,7 +273,7 @@ Note that unlike the `data.frame` method, the `input` and `output`
 arguments are optional. This is because here the `Text_content` column
 can be assumed to be the column of interest.
 
-Once your data are ready, you can analyze them. I recommend you to have
+Once your data are ready, you can analyse them. I recommend you to have
 a look at [Text Mining with R: A Tidy
 Approach](https://www.tidytextmining.com/) by Julia Silge and David
 Robinson. This is a great place to get started with text mining in R.
