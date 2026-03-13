@@ -206,7 +206,7 @@
   "fileSize": "184.059KB",
   "codeRepository": "https://github.com/fkeck/subtools",
   "releaseNotes": "https://github.com/fkeck/subtools/blob/master/NEWS.md",
-  "readme": "https://github.com/fkeck/subtools/blob/master/README.md",
+  "readme": "https://github.com/fkeck/subtools/blob/main/README.md",
   "contIntegration": "https://github.com/fkeck/subtools/actions/workflows/check-standard.yml",
   "developmentStatus": "https://www.repostatus.org/#active"
 }
