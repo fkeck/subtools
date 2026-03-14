@@ -8,19 +8,34 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "inst/figures/README-",
+  fig.path = "man/figures/README-",
   out.width = "100%"
 )
 library(covr)
-coverage <- round(percent_coverage(package_coverage()), 0)
+coverage <- floor(percent_coverage(package_coverage()))
+
+# Create badge colour based on coverage
+if (coverage >= 90) {
+  colour <- "brightgreen"
+} else if (coverage >= 80) {
+  colour <- "green"
+} else if (coverage >= 70) {
+  colour <- "yellowgreen"
+} else if (coverage >= 60) {
+  colour <- "yellow"
+} else if (coverage >= 50) {
+  colour <- "orange"
+} else {
+  colour <- "red"
+}
 ```
 
-<img src="inst/figures/subtools.png" width="120" align="right" />
+<img src="man/figures/subtools.png" width="120" align="right" />
 
 # subtools
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
-[![Code Coverage: `r coverage`%](https://img.shields.io/badge/code_coverage-`r coverage`%25-green)](#code-coverage)
+[![Code Coverage: `r coverage`%](https://img.shields.io/badge/code_coverage-`r coverage`%25-`r colour`)]
 
 ### Read, write and manipulate subtitles in R
 
@@ -156,10 +171,3 @@ by [tudosgar](https://twitter.com/tudosgar)
 
 [*Term Frequencies by Season*](https://twitter.com/tdawry/status/919055698427809792)
 by [tdawry](https://twitter.com/tdawry)
-
-
-### Code Coverage
-
-```{r codecov, echo=FALSE}
-covr::package_coverage()
-```

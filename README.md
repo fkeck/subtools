@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<img src="inst/figures/subtools.png" width="120" align="right" />
+<img src="man/figures/subtools.png" width="120" align="right" />
 
 # subtools
 
@@ -9,8 +9,8 @@
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
-[![Code Coverage:
-82%](https://img.shields.io/badge/code_coverage-82%25-green)](#code-coverage)
+\[![Code Coverage:
+82%](https://img.shields.io/badge/code_coverage-82%25-green)\]
 
 ### Read, write and manipulate subtitles in R
 
@@ -296,19 +296,3 @@ Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/) by
 [*Term Frequencies by
 Season*](https://twitter.com/tdawry/status/919055698427809792) by
 [tdawry](https://twitter.com/tdawry)
-
-### Code Coverage
-
-    #> subtools Coverage: 82.50%
-    #> R/read_mkv.R: 3.70%
-    #> R/read_series.R: 72.46%
-    #> R/read_subtitles.R: 87.83%
-    #> R/utils_regexes.R: 98.61%
-    #> R/assert_objects.R: 100.00%
-    #> R/clean_subtitles.R: 100.00%
-    #> R/coerce_subtitles.R: 100.00%
-    #> R/combine_subtitles.R: 100.00%
-    #> R/move_subtitles.R: 100.00%
-    #> R/unnest_tokens.R: 100.00%
-    #> R/utils_time.R: 100.00%
-    #> R/write_subtitles.R: 100.00%
