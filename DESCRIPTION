@@ -2,7 +2,7 @@ Package: subtools
 Type: Package
 Title: Read and Manipulate Video Subtitles
 Version: 1.1.0
-Date: 2026-03-11
+Date: 2026-03-16
 Authors@R: c(
       person("Francois", "Keck", email = "francois.keck@gmail.com",
              role =  c("aut", "cre", "cph"),
@@ -40,3 +40,5 @@ Config/testthat/edition: 3
 Config/testthat/parallel: false
 Config/testthat/start-first: *assert*, *utils*, *read*
 RoxygenNote: 7.3.3
+X-schema.org-applicationCategory: Text Processing
+X-schema.org-keywords: subtitles, video, text, srt, vtt, ssa, natural language processing

@@ -203,7 +203,9 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "169.162KB",
+  "applicationCategory": "TextProcessing",
+  "keywords": ["subtitles", "video", "text", "srt", "vtt", "ssa", "naturallanguageprocessing"],
+  "fileSize": "183.692KB",
   "codeRepository": "https://github.com/fkeck/subtools",
   "releaseNotes": "https://github.com/fkeck/subtools/blob/master/NEWS.md",
   "readme": "https://github.com/fkeck/subtools/blob/main/README.md",

@@ -8,3 +8,4 @@
 ^synced_episode.srt/
 ^cran-comments\.md$
 ^codemeta\.json$
+^CRAN-SUBMISSION$
