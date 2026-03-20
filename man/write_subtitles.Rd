@@ -16,6 +16,9 @@ Not used (only SubRip format is currently implemented).}
 
 \item{encoding}{the name of the encoding to be used.}
 }
+\value{
+Called for its side effects (writing to \code{file}). Returns \code{NULL} invisibly.
+}
 \description{
 This function writes a \code{subtitles} object in a file.
 }

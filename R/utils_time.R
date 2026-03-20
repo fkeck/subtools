@@ -1,4 +1,14 @@
-# Format time as HH:MM:SS.mS
+#' Parse subtitle timecode strings into hms objects
+#'
+#' Accepts timecode strings in \code{HH:MM:SS.mS} or \code{MM:SS.mS} format
+#' (comma as decimal separator is also accepted). Missing hour components are
+#' padded to zero.
+#'
+#' @param x a character vector of timecode strings.
+#'
+#' @returns An \code{hms} vector (from the \pkg{hms} package), the same length as \code{x}.
+#'
+#' @noRd
 .format_subtime <- function(x) {
   x <- gsub(",", ".", x)
   x <- strsplit(x, split = ":")

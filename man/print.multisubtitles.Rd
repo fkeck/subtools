@@ -13,6 +13,9 @@
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+Called for its side effects (printing to the console). Returns \code{NULL} invisibly.
+}
 \description{
 Print method for multisubtitles
 }

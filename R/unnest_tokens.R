@@ -162,6 +162,9 @@ unnest_tokens.subtitles <- function(
 #' The default method (\code{unnest_tokens.default}) delegates to the original implementation.
 #' See "?unnest_tokens.subtitles" for the \code{subtools} specific documentation.
 #' @inheritParams tidytext::unnest_tokens
+#'
+#' @returns A tibble.
+#'
 #' @export
 unnest_tokens <- function(
   tbl,

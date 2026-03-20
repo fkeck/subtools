@@ -13,9 +13,9 @@ Authors@R: c(
              comment = c(ORCID = "0000-0002-3827-1063"))
     )
 Maintainer: Francois Keck <francois.keck@gmail.com>
-Description: A collection of functions to read, write and manipulate video subtitles.
-    Supported formats include 'srt', 'subrip', 'sub', 'subviewer', 'microdvd',
-    'ssa', 'ass', 'substation', 'vtt', and 'webvtt'.
+Description: A collection of functions to read, write and manipulate video
+    subtitles. Supported formats include 'srt', 'subrip', 'sub', 'subviewer',
+    'microdvd', 'ssa', 'ass', 'substation', 'vtt', and 'webvtt'.
 Language: en-GB
 License: GPL-3
 LazyData: TRUE

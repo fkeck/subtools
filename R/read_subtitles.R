@@ -14,6 +14,9 @@
 #' @param encoding the name of the encoding to be used. Default is "\code{auto}" and
 #' uses \code{\link[readr]{guess_encoding}} to detect encoding.
 #' @param ... passed on to downstream methods.
+#'
+#' @returns An object of class \code{subtitles} (see \code{\link{subtitles}}).
+#'
 #' @importFrom utils read.csv
 #' @export
 #' @examples
@@ -431,6 +434,8 @@ subtitles <- function(
 #' @param printlen the maximum number of subtitles to print.
 #' @param ... further arguments passed to or from other methods.
 #'
+#' @returns Called for its side effects (printing to the console). Returns \code{NULL} invisibly.
+#'
 #' @examples
 #' f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 #' s <- read_subtitles(f)
@@ -454,6 +459,8 @@ print.multisubtitles <- function(x, printlen = 10L, ...) {
 #' Get basic informations for subtitle objects
 #'
 #' @param x a \code{subtitles} or \code{multisubtitles} object.
+#'
+#' @returns Called for its side effects (printing to the console). Returns \code{NULL} invisibly.
 #'
 #' @examples
 #' s <- read_subtitles(

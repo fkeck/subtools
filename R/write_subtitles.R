@@ -8,6 +8,8 @@
 #' Not used (only SubRip format is currently implemented).
 #' @param encoding the name of the encoding to be used.
 #'
+#' @returns Called for its side effects (writing to \code{file}). Returns \code{NULL} invisibly.
+#'
 #' @export
 #'
 write_subtitles <- function(x, file, format = "srt", encoding = "UTF-8") {

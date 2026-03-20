@@ -9,6 +9,9 @@ get_subtitles_info(x)
 \arguments{
 \item{x}{a \code{subtitles} or \code{multisubtitles} object.}
 }
+\value{
+Called for its side effects (printing to the console). Returns \code{NULL} invisibly.
+}
 \description{
 Get basic informations for subtitle objects
 }
