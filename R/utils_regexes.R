@@ -7,8 +7,49 @@
 
 # Extract extension from file name
 .extr_extension <- function(x) {
+  x <- sub("[?#].*$", "", x)
+  is_url <- grepl("^[[:alpha:]][[:alnum:].+-]*://", x)
+  x[is_url] <- sub("^[[:alpha:]][[:alnum:].+-]*://[^/]+/?", "", x[is_url])
+  x <- tolower(x)
   x <- regmatches(x, regexpr("(?<=\\.)[0-9a-z]+$", x, perl = TRUE))
   return(x)
+}
+
+# Guess subtitle format from subtitle content when no file extension is
+# available, e.g. when parsing literal text.
+.guess_subtitle_format <- function(x) {
+  x <- as.character(x)
+  x <- x[!is.na(x) & x != ""]
+
+  if (length(x) == 0) {
+    stop("Could not detect subtitle format from empty input.", call. = FALSE)
+  }
+
+  if (grepl("^WEBVTT", x[[1]])) {
+    return("webvtt")
+  }
+
+  if (any(grepl("^Format:.*Start,.*Text", x)) && any(grepl("^Dialogue:", x))) {
+    return("substation")
+  }
+
+  if (grepl("^\\{[0-9]+\\}\\{[0-9]+\\}", x[[1]])) {
+    return("microdvd")
+  }
+
+  if (any(grepl("[[:blank:]]+-->[[:blank:]]+", x))) {
+    return("subrip")
+  }
+
+  subviewer_time <- paste0(
+    "^[0-9]{2}:[0-9]{2}:[0-9]{2}[\\.,][0-9]{2,3},",
+    "[0-9]{2}:[0-9]{2}:[0-9]{2}[\\.,][0-9]{2,3}$"
+  )
+  if (any(grepl(subviewer_time, x))) {
+    return("subviewer")
+  }
+
+  stop("Could not detect subtitle format; please specify `format`.", call. = FALSE)
 }
 
 # Extract Season number

@@ -14,12 +14,13 @@ read_subtitles(
 )
 }
 \arguments{
-\item{file}{the name of the file which the subtitles are to be read from.
-If it does not contain an absolute path, the file name is relative to the current working directory.}
+\item{file}{a file path, URL, or literal text. If a file path does not
+contain an absolute path, it is relative to the current working directory.
+Literal text can be a multi-line string or a character vector.}
 
 \item{format}{a character string specifying the format of the subtitles.
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
-Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
+Default is \code{"auto"} which tries to detect automatically the format of the file from its extension or its content.}
 
 \item{clean.tags}{logical. If \code{"TRUE"} (default), formatting tags are deleted from subtitles using \code{\link{clean_tags}}.}
 
@@ -37,7 +38,7 @@ uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 An object of class \code{subtitles} (see \code{\link{subtitles}}).
 }
 \description{
-Reads subtitles from a file.
+Reads subtitles from a file, URL, or text.
 }
 \details{
 The support of WebVTT is basic and experimental.
@@ -48,5 +49,8 @@ The support of WebVTT is basic and experimental.
 f <- system.file("extdata", "ex_subrip.srt", package = "subtools")
 f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 read_subtitles(f)
+
+# read literal subtitle text
+read_subtitles("WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello")
 
 }

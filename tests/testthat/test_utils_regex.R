@@ -13,6 +13,8 @@ test_that(".extr_extension file extension extraction", {
   expect_equal(.extr_extension("ab.cd.txt"), "txt")
   expect_equal(.extr_extension("dir.dir/ab.cd.txt"), "txt")
   expect_equal(.extr_extension("dir/dir//.cd.txt"), "txt")
+  expect_equal(.extr_extension("https://example.com/subtitles.SRT?dl=1"), "srt")
+  expect_length(.extr_extension("https://example.com"), 0)
 })
 
 
