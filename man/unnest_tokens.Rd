@@ -90,6 +90,8 @@ to take into account the split of the input column.}
 }
 \value{
 A tibble.
+
+A tibble.
 }
 \description{
 This function extends unnest_tokens to subtitles objects. The main difference with the data.frame method

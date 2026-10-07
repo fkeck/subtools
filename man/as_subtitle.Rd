@@ -57,6 +57,9 @@ uses \code{\link[readr]{guess_encoding}} to detect encoding.}
 
 \item{...}{passed on to downstream methods.}
 }
+\value{
+An object of class \code{subtitles} (see \code{\link{subtitles}}).
+}
 \description{
 Convert an R object to a \code{subtitles} object
 }
