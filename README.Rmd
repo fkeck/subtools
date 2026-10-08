@@ -161,11 +161,8 @@ A list of cool projects using `subtools`.
 
 Note that these project used the branch 0.x of `subtools`. The API is totally different from `subtools 1.0`.
 
-[*You beautiful, naïve, sophisticated newborn series*](https://masalmon.eu/2017/11/05/newborn-serie/)
-by [ma_salmon](https://x.com/ma_salmon)
+[*You beautiful, naïve, sophisticated newborn series*](https://masalmon.eu/2017/11/05/newborn-serie/) by Maëlle Salmon.
 
-[*A tidy text analysis of Rick and Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/)
-by [tudosgar](https://x.com/tudosgar)
+[*A tidy text analysis of Rick and Morty*](http://tamaszilagyi.com/blog/2017/2017-10-07-tidyrick/) by Tamas Szilagyi.
 
-[*Term Frequencies by Season*](https://x.com/tdawry/status/919055698427809792)
-by [tdawry](https://x.com/tdawry)
+[*Term Frequencies by Season*](https://x.com/tdawry/status/919055698427809792) by Travis Dawry.
