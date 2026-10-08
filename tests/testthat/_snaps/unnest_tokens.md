@@ -1,7 +1,7 @@
 # unnest_token.subtitles works as expected
 
     Code
-      unnest_tokens(tbl = s)
+      print(unnest_tokens(tbl = s), n = Inf, width = 80)
     Output
       # A tibble: 36 x 5
          ID              Timecode_in Timecode_out Text_content test 

@@ -27,7 +27,7 @@ test_that("unnest_token.subtitles works as expected", {
   f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
   s <- read_subtitles(file = f, metadata = data.frame(test = "Test"))
   testthat::expect_snapshot(
-    unnest_tokens(tbl = s)
+    print(unnest_tokens(tbl = s), n = Inf, width = 80)
   )
 })
 
