@@ -37,7 +37,7 @@ if (coverage >= 90) {
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml/badge.svg)](https://github.com/fkeck/subtools/actions/workflows/check-standard.yml)
-[![Code Coverage: `r coverage`%](https://img.shields.io/badge/code_coverage-`r coverage`%25-`r colour`)](https://img.shields.io/badge/code_coverage-`r coverage`%25-`r colour`)
+![Code Coverage: `r coverage`%](https://img.shields.io/badge/code_coverage-`r coverage`%25-`r colour`)
 
 ### Read, write and manipulate subtitles in R
 
@@ -48,11 +48,7 @@ Subtools is a R package to read, write and manipulate subtitles in R. This then 
 ### Install
 You can install the package directly from CRAN with `install.packages("subtools")` or get the latest, in development, version with:
 ```{r, eval = FALSE}
-remotes::install_github(
-  repo = "fkeck/subtools@dev",
-  build_manual = TRUE,
-  build_vignettes = TRUE
-)
+pak::pkg_install("fkeck/subtools@dev")
 ```
 
 ```{r}

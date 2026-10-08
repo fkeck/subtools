@@ -32,6 +32,18 @@
   return(x)
 }
 
+#' Extract season number from file paths
+#'
+#' Parses the file name component of each path and attempts to detect the season
+#' number using four common naming conventions:
+#' \code{S01}, \code{SEASON.2}, \code{S03E05}, and \code{2X05}.
+#' Returns \code{NA} for paths where no convention matches.
+#'
+#' @param x a character vector of file or directory paths.
+#'
+#' @returns A numeric vector of season numbers, the same length as \code{x}.
+#'
+#' @noRd
 # Guess subtitle format from subtitle content when no file extension is
 # available, e.g. when parsing literal text.
 .guess_subtitle_format <- function(x) {
