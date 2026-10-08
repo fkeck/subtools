@@ -91,6 +91,22 @@ test_that("All example files produce same object", {
 # that exactly match the others (time)
 
 
+test_that("read_subtitles parses literal text string", {
+  f_srt <- system.file("extdata", "test_lorem_subrip.srt", package = "subtools")
+  text <- paste(readLines(f_srt), collapse = "\n")
+
+  expect_equal(read_subtitles(text), read_subtitles(f_srt))
+})
+
+
+test_that("read_subtitles parses character vector as text", {
+  f_vtt <- system.file("extdata", "test_lorem_webvtt.vtt", package = "subtools")
+  text <- readLines(f_vtt)
+
+  expect_equal(read_subtitles(text), read_subtitles(f_vtt))
+})
+
+
 test_that("read_subtitles errors on non-existent file", {
   expect_error(
     read_subtitles("non_existent_file.srt"),

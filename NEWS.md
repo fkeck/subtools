@@ -1,3 +1,9 @@
+
+# subtools 1.2.0
+## New feature
+
+  * read_subtitles() can now read subtitles from URLs and literal subtitle text.
+
 # subtools 1.1.0
 ## New feature
 

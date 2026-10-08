@@ -51,8 +51,8 @@ oss_sub <- read_subtitles("ex_OSS_117.srt")
 ``` r
 rushmore_sub
 #> # A tibble: 4 × 4
-#>   ID    Timecode_in Timecode_out Text_content                                   
-#>   <chr> <time>      <time>       <chr>                                          
+#>   ID    Timecode_in Timecode_out Text_content
+#>   <chr> <time>      <time>       <chr>
 #> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first class a…
 #> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie - Aqu…
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingrays. …
@@ -60,10 +60,10 @@ rushmore_sub
 
 oss_sub
 #> # A tibble: 3 × 4
-#>   ID    Timecode_in Timecode_out Text_content                                   
-#>   <chr> <time>      <time>       <chr>                                          
+#>   ID    Timecode_in Timecode_out Text_content
+#>   <chr> <time>      <time>       <chr>
 #> 1 264   20'22.967"  20'27.427"   Si vous voulez. Ça sera surtout l'occasion de …
-#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.       
+#> 2 265   20'30.347"  20'32.297"   Et non pas le gratin de pommes de terre.
 #> 3 266   20'35.587"  20'37.697"   Parce que ça ressemble à carotte, cairote.
 ```
 
@@ -180,14 +180,14 @@ multi_sub
 #> A multisubtitles object with 2 elements
 #> subtitles object [[1]]
 #> # A tibble: 4 × 4
-#>   ID    Timecode_in Timecode_out Text_content                                   
-#>   <chr> <time>      <time>       <chr>                                          
+#>   ID    Timecode_in Timecode_out Text_content
+#>   <chr> <time>      <time>       <chr>
 #> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first class a…
 #> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie - Aqu…
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingrays. …
 #> 4 183   20'58.051"  21'01.770"   - Piranhas? Really? - Yes, I'm talking to a gu…
-#> 
-#> 
+#>
+#>
 #> subtitles object [[2]]
 #> # A tibble: 4 × 7
 #>   ID    Timecode_in Timecode_out Text_content               Name  Season Episode
@@ -228,8 +228,8 @@ timecode remapping according to the tokenisation process.
 ``` r
 rushmore_sub
 #> # A tibble: 4 × 4
-#>   ID    Timecode_in Timecode_out Text_content                                   
-#>   <chr> <time>      <time>       <chr>                                          
+#>   ID    Timecode_in Timecode_out Text_content
+#>   <chr> <time>      <time>       <chr>
 #> 1 180   20'40.969"  20'48.269"   Rushmore deserves an aquarium. A first class a…
 #> 2 181   20'48.269"  20'50.870"   - I don't know. What do you think, Ernie - Aqu…
 #> 3 182   20'50.946"  20'57.370"   - What kind of fish? - Barracudas. Stingrays. …

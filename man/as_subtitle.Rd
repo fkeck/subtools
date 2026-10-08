@@ -41,7 +41,7 @@ as_subtitle(
 
 \item{format}{a character string specifying the format of the subtitles.
 Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
-Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.}
+Default is \code{"auto"} which tries to detect automatically the format of the file from its extension or its content.}
 
 \item{clean.tags}{logical. If \code{"TRUE"} (default), formatting tags are deleted from subtitles using \code{\link{clean_tags}}.}
 

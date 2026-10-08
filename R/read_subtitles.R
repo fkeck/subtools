@@ -4,7 +4,7 @@
 #' @param x an R object that can be coerced into a `subtitles` object
 #' @param format a character string specifying the format of the subtitles.
 #' Four formats can be read: \code{"subrip"}, \code{"substation"}, \code{"microdvd"}, \code{"subviewer"} (v.2) and \code{"webvtt"}.
-#' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension.
+#' Default is \code{"auto"} which tries to detect automatically the format of the file from its extension or its content.
 #' @param clean.tags logical. If \code{"TRUE"} (default), formatting tags are deleted from subtitles using \code{\link{clean_tags}}.
 #' @param metadata a one-row dataframe or tibble, or any object that can be coerced
 #' into a one-row tibble by \code{link[tibble]{as_tibble}}.
@@ -83,6 +83,10 @@ as_subtitle.default <- function(
     ),
     several.ok = FALSE
   )
+
+  if (format == "auto") {
+    format <- .guess_subtitle_format(subs)
+  }
 
   # .sub can be microdvd or subviewer
   #This is a very light test to solve the .sub extension
@@ -281,10 +285,11 @@ as_subtitle.character <- as_subtitle.default
 
 #' Read subtitles
 #'
-#' Reads subtitles from a file.
+#' Reads subtitles from a file, URL, or text.
 #'
-#' @param file the name of the file which the subtitles are to be read from.
-#' If it does not contain an absolute path, the file name is relative to the current working directory.
+#' @param file a file path, URL, or literal text. If a file path does not
+#' contain an absolute path, it is relative to the current working directory.
+#' Literal text can be a multi-line string or a character vector.
 #' @inheritParams as_subtitle
 #'
 #' @details The support of WebVTT is basic and experimental.
@@ -299,6 +304,9 @@ as_subtitle.character <- as_subtitle.default
 #' f <- system.file("extdata", "ex_webvtt.vtt", package = "subtools")
 #' read_subtitles(f)
 #'
+#' # read literal subtitle text
+#' read_subtitles("WEBVTT\n\n00:00:01.000 --> 00:00:02.000\nHello")
+#'
 #' @export
 read_subtitles <- function(
   file,
@@ -308,21 +316,47 @@ read_subtitles <- function(
   frame.rate = NA,
   encoding = "auto"
 ) {
-  stopifnot("file not found" = file.exists(file))
+  is_url <- length(file) == 1 && grepl("^(https?|ftps?)://", file)
+  is_text <- inherits(file, "AsIs") ||
+    length(file) > 1 ||
+    any(grepl("[\r\n]", file))
+  is_local_file <- length(file) == 1 && file.exists(file)
+
+  if (!is_url && !is_text && !is_local_file) {
+    stop("file not found", call. = FALSE)
+  }
+
   if (format == "auto") {
-    format <- .extr_extension(file)
+    if (!is_text) {
+      extension <- .extr_extension(file)
+      if (length(extension) > 0 && nzchar(extension)) {
+        format <- extension
+      }
+    }
   }
 
   if (encoding == "auto") {
-    encoding <- readr::guess_encoding(file)$encoding[1]
+    if (is_text && length(file) > 1 && !inherits(file, "AsIs")) {
+      encoding <- "UTF-8"
+    } else if (is_text) {
+      encoding <- readr::guess_encoding(I(file))$encoding[1]
+    } else {
+      encoding <- readr::guess_encoding(file)$encoding[1]
+    }
   }
 
-  if (encoding == "ASCII") {
-    subs <- readLines(file)
+  if (is_text && length(file) > 1 && !inherits(file, "AsIs")) {
+    subs <- as.character(file)
+  } else if (is_text) {
+    subs <- readr::read_lines(
+      I(file),
+      locale = readr::locale(encoding = encoding)
+    )
   } else {
-    con <- file(file, encoding = encoding)
-    subs <- readLines(con, warn = FALSE, encoding = encoding)
-    close(con)
+    subs <- readr::read_lines(
+      file,
+      locale = readr::locale(encoding = encoding)
+    )
   }
 
   as_subtitle(
